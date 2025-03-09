@@ -18,5 +18,6 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
         public string ChairmanName { get; set; } = null!;
         public List<ArbitratorDto> Arbitrators { get; set; } = new List<ArbitratorDto>();
         public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+        public List<ArbitratorDto> Officers { get; set; } = new List<ArbitratorDto>();
     }
 }

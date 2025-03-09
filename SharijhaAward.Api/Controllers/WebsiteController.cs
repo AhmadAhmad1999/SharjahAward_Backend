@@ -24,6 +24,7 @@ using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailMessa
 using SharijhaAward.Application.Features.Cycles.Queries.GetAllCycles;
 using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd;
 using SharijhaAward.Application.Features.Event.Queries.GetEventById;
+using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Application.Features.GeneralFAQCategories.Queries.GetAllGeneralFAQCategory;
 using SharijhaAward.Application.Features.HomePageSliderItems.Queries.GetAllHomePageSliderItems;
 using SharijhaAward.Application.Features.InviteeForm.Group.Queries.GetAllGroupInvitees;
@@ -893,6 +894,7 @@ namespace SharijhaAward.Api.Controllers
                 HeaderValue = "en";
 
             query.lang = HeaderValue!;
+            query.intoWebsite = true;
 
             BaseResponse<GetMainPagesWithSubPagesResponse> Response = await _Mediator.Send(query);
 
@@ -1169,6 +1171,25 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(Response),
                 _ => BadRequest(Response)
             };
+        }
+        [HttpGet("ExplanatoryGuide/{Id}", Name = "ExplanatoryGuide")]
+        public async Task<IActionResult> GetExplanatoryGuideByCategoryId(int Id)
+        {
+            //get Language from header
+            var Language = HttpContext.Request.Headers["lang"];
+            var response = await _Mediator.Send(new GetExplanatoryGuideByCategoryIdQuery()
+            {
+                CategoryId = Id,
+                lang = Language!
+            });
+            return response.statusCode switch
+            {
+                // Return the file as a downloadable response
+                200 => File(response.data!.fileContent, "application/pdf", response.data.fileFileName),
+                404 => NotFound(response),
+                _ => BadRequest(response)
+            };
+
         }
     }
 }

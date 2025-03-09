@@ -33,7 +33,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                     ArabicTitle = VirtualTableForSections.ArabicTitle,
                     Title = Request.lang == "en"
                         ? VirtualTableForSections.EnglishTitle
-                        : VirtualTableForSections.ArabicTitle
+                        : VirtualTableForSections.ArabicTitle,
+                    isOpen = VirtualTableForSections.isOpen
                 });
             else
             {

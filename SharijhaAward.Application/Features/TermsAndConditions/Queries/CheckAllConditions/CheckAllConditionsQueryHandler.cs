@@ -101,8 +101,8 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.CheckAll
                             if (!AllConditionAttachmentEntititesForThisTerm.Any())
                             {
                                 msg = request.lang == "en"
-                                    ? $"You must upload at least on file for this term: {terms[i].EnglishTitle}"
-                                    : $"يجب رفع ملف واحد على الأقل للشرط الخاص التالي: {terms[i].ArabicTitle}";
+                                    ? $"You must upload at least on file for this term: {terms[i].EnglishDescription}"
+                                    : $"يجب رفع ملف واحد على الأقل للشرط الخاص التالي: {terms[i].ArabicDescription}";
 
                                 return new BaseResponse<object>(msg, false, 400);
                             }

@@ -9,6 +9,10 @@ using SharijhaAward.Application.Features.ExtraAttachments.Commands.UpdateExtraAt
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.CheckAllExtraAttachment;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Features.Classes.Commands.UpdateClass;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.ExtraAttachments.Commands.AcceptRequestForExtraAttachment;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -17,11 +21,11 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class ExtraAttachmentController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
 
         public ExtraAttachmentController(IMediator mediator)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
         }
 
         [HttpPost(Name = "CreateExtraAttachment")]
@@ -32,7 +36,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -50,7 +54,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             command.lang = language!;
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -65,7 +69,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteExtraAttachmentCommand()
+            var response = await _Mediator.Send(new DeleteExtraAttachmentCommand()
             {
                 Id = Id,
                 lang = language!
@@ -80,15 +84,16 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("GetExtraAttachmentByFormId/{FormId}", Name="GetExtraAttachmentByFormId")]
-        public async Task<IActionResult> GetExtraAttachmentByFormId(int FormId)
+        public async Task<IActionResult> GetExtraAttachmentByFormId(int FormId, bool GetOnlyTheRequests)
         {
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllExtraAttachmentByFormIdQuery()
+            var response = await _Mediator.Send(new GetAllExtraAttachmentByFormIdQuery()
             {
                 formId = FormId,
-                lang = language!
+                lang = language!,
+                GetOnlyTheRequests = GetOnlyTheRequests
             });
 
             return response.statusCode switch
@@ -106,7 +111,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -122,7 +127,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteExtraAttachmentFileCommand()
+            var response = await _Mediator.Send(new DeleteExtraAttachmentFileCommand()
             {
                 FileId = FileId,
                 lang = language!
@@ -142,7 +147,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             query.lang = language;
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -159,7 +164,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            var response = await _mediator.Send(new CheckAllExtraAttachmentQuery()
+            var response = await _Mediator.Send(new CheckAllExtraAttachmentQuery()
             {
                 formId = formId,
                 token = token!,
@@ -171,6 +176,33 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(response),
                 404 => NotFound(response),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpPut("AcceptRequestForExtraAttachment")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> AcceptRequestForExtraAttachment(int ExtraAttachmentId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            BaseResponse<object>? Response = await _Mediator.Send(new AcceptRequestForExtraAttachmentCommand()
+            {
+                ExtraAttachmentId = ExtraAttachmentId,
+                lang = !string.IsNullOrEmpty(HeaderValue)
+                    ? HeaderValue
+                    : "en"
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

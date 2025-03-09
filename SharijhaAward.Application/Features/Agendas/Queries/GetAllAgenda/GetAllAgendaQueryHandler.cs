@@ -1,63 +1,99 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AgendaModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda
 {
     public class GetAllAgendaQueryHandler
         : IRequestHandler<GetAllAgendaQuery, BaseResponse<List<AgendaListVm>>>
     {
-        private readonly IAsyncRepository<Agenda> _agendaRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Agenda> _AgendaRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAllAgendaQueryHandler(IAsyncRepository<Agenda> agendaRepository, IMapper mapper)
+        public GetAllAgendaQueryHandler(IAsyncRepository<Agenda> _AgendaRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _agendaRepository = agendaRepository;
-            _mapper = mapper;
+            this._AgendaRepository = _AgendaRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAllAgendaQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAllAgendaQuery Request, CancellationToken cancellationToken)
         {
-            var agendas = await _agendaRepository
-                .OrderByDescending(x => x.CreatedAt, request.page, request.perPage).Where(a=>!a.IsPrivate)
-                .ToListAsync();
+            string ResponseMessage = string.Empty;
 
-            foreach (var agenda in agendas)
+            List<Agenda> AgendaEntities = new List<Agenda>();
+
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-                if (DateTime.Now >= agenda.StartDate && DateTime.Now <= agenda.EndDate)
-                {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
-                }
-                else if (DateTime.Now > agenda.StartDate && DateTime.Now > agenda.EndDate)
-                {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
-                }
-                else if (DateTime.Now < agenda.StartDate && DateTime.Now < agenda.EndDate)
-                {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
-                }
-                await _agendaRepository.UpdateAsync(agenda);
+                AgendaEntities = _AgendaRepository
+                    .Where(x => !x.IsPrivate)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .AsEnumerable()
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .AsEnumerable()
+                    .ToList();
+            }
+            else
+            {
+                AgendaEntities = _AgendaRepository
+                    .Where(x => !x.IsPrivate)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .AsEnumerable()
+                    .AsEnumerable()
+                    .ToList();
             }
 
-            var data = _mapper.Map<List<AgendaListVm>>(agendas);
-         
-            for(int i=0; i < data.Count; i++)
+            foreach (Agenda Agenda in AgendaEntities)
             {
-                data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
+                if (DateTime.Now >= Agenda.StartDate && DateTime.Now <= Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
+
+                else if (DateTime.Now > Agenda.StartDate && DateTime.Now > Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
+
+                else if (DateTime.Now < Agenda.StartDate && DateTime.Now < Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
+
+                await _AgendaRepository.UpdateAsync(Agenda);
             }
-            
-            int count = await _agendaRepository.GetCountAsync(null);
-            Pagination pagination = new Pagination(request.page,request.perPage,count);
-            
-            return new BaseResponse<List<AgendaListVm>>("", true, 200, data, pagination);
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<AgendaListVm> Response = AgendaEntities
+                .Select(x => new AgendaListVm()
+                {
+                    Id = x.Id,
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishTitle = x.EnglishTitle,
+                    Icon = x.Icon.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.Icon.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.Icon.Replace("\\", "/"),
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    CurrentDate = x.CurrentDate,
+                    Status = x.Status,
+                    DateType = x.DateType,
+                    IsPrivate = x.IsPrivate,
+                    CycleId = x.CycleId
+                }).ToList();
+
+            int TotalCount = _AgendaRepository
+                .GetCount(x => !x.IsPrivate);
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
+
+            return new BaseResponse<List<AgendaListVm>>(ResponseMessage, true, 200, Response, Pagination);
         }
     }
 }

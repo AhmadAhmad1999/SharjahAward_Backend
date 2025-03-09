@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DigitalSignatureModel;
-using System.Net.Http;
 
 namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.UpdateDigitalSignature
 {
@@ -67,18 +66,12 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.U
                 if (File.Exists(DigitalSignatureEntityToUpdate.ImageUrl))
                     File.Delete(DigitalSignatureEntityToUpdate.ImageUrl);
 
-                string? FileName = $"{Request.Id}-{Request.UserName}";
+                string? FileName = $"{Request.Id}-{Request.Image.FileName}";
 
-                string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/DigitalSignatures/{FileName}";
+                string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                 string? FolderPathToCreate = Request.WWWRootFilePath!;
-                string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
-
-                while (File.Exists(FilePathToSaveIntoDataBase))
-                {
-                    FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                    FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                }
+                string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                 using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                 {
@@ -88,12 +81,24 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.U
                 DigitalSignatureEntityToUpdate.ImageUrl = FilePathToSaveIntoDataBase;
             }
 
-            DigitalSignatureEntityToUpdate.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: DigitalSignatureEntityToUpdate.Password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
+            if (!string.IsNullOrEmpty(DigitalSignatureEntityToUpdate.Password))
+            {
+                DigitalSignatureEntityToUpdate.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: DigitalSignatureEntityToUpdate.Password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: 100000,
+                    numBytesRequested: 256 / 8));
+            }
+            else
+            {
+                DigitalSignatureEntityToUpdate.Password = Request.OldPassword;
+            }
+
+            if (string.IsNullOrEmpty(DigitalSignatureEntityToUpdate.UserName))
+            {
+                DigitalSignatureEntityToUpdate.UserName = Request.OldUserName;
+            }
 
             await _DigitalSignatureRepository.UpdateAsync(DigitalSignatureEntityToUpdate);
 

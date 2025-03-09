@@ -1,10 +1,5 @@
 ﻿using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment
 {
@@ -18,7 +13,7 @@ namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtr
         public string ArabicDescription { get; set; } = string.Empty;
         public string EnglishDescription { get; set; } = string.Empty;
         public int RequiredAttachmentNumber { get; set; }
-        public AttachmentType AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
         public bool? Rejected { get; set; } = false;
         public int SizeOfAttachmentInKB { get; set; }
         public List<AttachmentDto>? AttachmentList { get; set; }

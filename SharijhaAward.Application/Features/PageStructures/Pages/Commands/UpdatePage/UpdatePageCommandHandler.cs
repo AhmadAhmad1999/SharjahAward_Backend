@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.Models;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Commands.UpdateDarkCard;
@@ -14,7 +13,6 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.PageStructureModel;
 using SharijhaAward.Domain.Entities.PageStructureModels;
-using System.Net.Http;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Commands.UpdatePage

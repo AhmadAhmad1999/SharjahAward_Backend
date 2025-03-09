@@ -57,6 +57,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Commands.CreateMessa
                     EmailMessage NewEmailMessageEntity = _Mapper.Map<EmailMessage>(Request);
 
                     NewEmailMessageEntity.IsRead = false;
+                    NewEmailMessageEntity.CreatedAt = DateTime.UtcNow;
 
                     if (string.IsNullOrEmpty(Request.token))
                     {

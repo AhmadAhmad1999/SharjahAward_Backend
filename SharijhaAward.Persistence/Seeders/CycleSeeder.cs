@@ -33,13 +33,8 @@ namespace SharijhaAward.Persistence.Seeders
                        RegistrationPortalOpeningDate = new DateTime(2024, 1, 1),
                        RegistrationPortalClosingDate = new DateTime(2030, 5, 1),
                        SubscriberPortalClosingDate = null,
-                       InitialArbitrationStartDate = null,
-                       InitialArbitrationEndDate = null,
-                       FinalArbitrationStartDate = null,
-                       FinalArbitrationEndDate = null,
                        IndividualCategoryNumber = 1,
                        TheUpperLimitForObtainingInformation = 10,
-                       MarginOfDifferenceBetweenArbitrators = 10,
                        GroupCategoryNumber = 1
                    });
                 await _context.SaveChangesAsync();

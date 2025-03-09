@@ -1,24 +1,10 @@
 ﻿using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using MimeKit;
-using MimeKit.Utils;
 using System.Net.Mime;
-using static System.Net.Mime.MediaTypeNames;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using Microsoft.Extensions.Configuration;
-using MailKit.Security;
-using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Application.Helpers.RecipientsWithViewsHelper;
-using PdfSharpCore.Pdf;
 using SelectPdf;
 
 namespace SharijhaAward.Infrastructure.EmailSernder
@@ -281,25 +267,23 @@ namespace SharijhaAward.Infrastructure.EmailSernder
                                         From = new MailAddress(SenderEmail),
                                         Subject = Subject,
                                         IsBodyHtml = false, // Plain text body
-                                        Body = "Please find the attached PDF for details."
+                                        Body = "Please find the attached PDF for details - الرجاء مراجعة الملف المرفق لمعرفة التفاصيل"
                                     };
-                                    //MailMessage Message = new MailMessage
-                                    //{
-                                    //    From = new MailAddress(SenderEmail),
-                                    //    Subject = Subject,
-                                    //    IsBodyHtml = true,
-                                    //    Body = Recipient.Body
-                                    //};
+                                    
+                                    // Add the PDF as an attachment
+                                    using (MemoryStream pdfStream = new MemoryStream(pdfData))
+                                    {
+                                        Attachment pdfAttachment = new Attachment(pdfStream, "details.pdf", MediaTypeNames.Application.Pdf);
+                                        pdfAttachment.ContentDisposition.Inline = false; // Ensure it's treated as an attachment
+                                        pdfAttachment.ContentDisposition.DispositionType = DispositionTypeNames.Attachment;
+                                        Message.Attachments.Add(pdfAttachment);
 
-                                    // Attach the PDF
-                                    MemoryStream pdfStream = new MemoryStream(pdfData);
-                                    Attachment pdfAttachment = new Attachment(pdfStream, "details.pdf", "application/pdf");
-                                    Message.Attachments.Add(pdfAttachment);
+                                        // Add the recipient
+                                        Message.To.Add(Recipient.Recipient);
 
-                                    Message.AlternateViews.Add(Recipient.AlternateView!);
-
-                                    Message.To.Add(Recipient.Recipient);
-                                    Client.Send(Message);
+                                        // Send the email
+                                        Client.Send(Message);
+                                    }
                                 }
                                 catch (SmtpException)
                                 {

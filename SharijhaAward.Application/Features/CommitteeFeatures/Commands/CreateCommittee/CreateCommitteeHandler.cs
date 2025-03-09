@@ -15,16 +15,19 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCo
         private readonly IAsyncRepository<Committee> _CommitteeRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
         private readonly IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository;
+        private readonly IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository;
 
-        public CreateCommitteeHandler(IMapper Mapper,
-            IAsyncRepository<Committee> CommitteeRepository,
-            IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
-            IAsyncRepository<CategoryCommittee> CategoryCommitteeRepository)
+        public CreateCommitteeHandler(IMapper _Mapper,
+            IAsyncRepository<Committee> _CommitteeRepository,
+            IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository,
+            IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository,
+            IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository)
         {
-            _Mapper = Mapper;
-            _CommitteeRepository = CommitteeRepository;
-            _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
-            _CategoryCommitteeRepository = CategoryCommitteeRepository;
+            this._Mapper = _Mapper;
+            this._CommitteeRepository = _CommitteeRepository;
+            this._ComitteeArbitratorRepository = _ComitteeArbitratorRepository;
+            this._CategoryCommitteeRepository = _CategoryCommitteeRepository;
+            this._ComitteeOfficerRepository = _ComitteeOfficerRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateCommitteeCommand Request, CancellationToken cancellationToken)
@@ -46,23 +49,41 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCo
 
                     await _CommitteeRepository.AddAsync(NewCommitteeEntity);
 
-                    List<ComitteeArbitrator> NewComitteeArbitratorEntities = Request.ArbitratorsIds
-                        .Select(x => new ComitteeArbitrator()
-                        {
-                            ArbitratorId = x,
-                            CommitteeId = NewCommitteeEntity.Id
-                        }).ToList();
+                    if (Request.ArbitratorsIds.Any())
+                    {
+                        List<ComitteeArbitrator> NewComitteeArbitratorEntities = Request.ArbitratorsIds
+                            .Select(x => new ComitteeArbitrator()
+                            {
+                                ArbitratorId = x,
+                                CommitteeId = NewCommitteeEntity.Id
+                            }).ToList();
 
-                    await _ComitteeArbitratorRepository.AddRangeAsync(NewComitteeArbitratorEntities);
+                        await _ComitteeArbitratorRepository.AddRangeAsync(NewComitteeArbitratorEntities);
+                    }
 
-                    List<CategoryCommittee> NewCategoryCommitteeEntities = Request.CategoriesIds
-                        .Select(x => new CategoryCommittee()
-                        {
-                            CategoryId = x,
-                            CommitteeId = NewCommitteeEntity.Id
-                        }).ToList();
+                    if (Request.CategoriesIds.Any())
+                    {
+                        List<CategoryCommittee> NewCategoryCommitteeEntities = Request.CategoriesIds
+                            .Select(x => new CategoryCommittee()
+                            {
+                                CategoryId = x,
+                                CommitteeId = NewCommitteeEntity.Id
+                            }).ToList();
 
-                    await _CategoryCommitteeRepository.AddRangeAsync(NewCategoryCommitteeEntities);
+                        await _CategoryCommitteeRepository.AddRangeAsync(NewCategoryCommitteeEntities);
+                    }
+
+                    if (Request.OfficersIds.Any())
+                    {
+                        List<ComitteeOfficer> NewCategoryCommitteeEntities = Request.OfficersIds
+                            .Select(x => new ComitteeOfficer()
+                            {
+                                ArbitratorId = x,
+                                CommitteeId = NewCommitteeEntity.Id
+                            }).ToList();
+
+                        await _ComitteeOfficerRepository.AddRangeAsync(NewCategoryCommitteeEntities);
+                    }
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"

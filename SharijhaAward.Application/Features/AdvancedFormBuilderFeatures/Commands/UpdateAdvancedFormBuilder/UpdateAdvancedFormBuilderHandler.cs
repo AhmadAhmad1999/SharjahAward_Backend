@@ -75,7 +75,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
                 .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id);
 
             List<AdvancedFormBuilderDependency> AdvancedFormBuilderDependenciesEntities = await _AdvancedFormBuilderDependencyRepository
-                .Where(x => x.MainAdvancedFormBuilderId == Request.Id)
+                .Where(x => x.MainAdvancedFormBuilderId == Request.Id &&
+                    x.AdvancedFormBuilderId != null)
                 .ToListAsync();
 
             List<AdvancedFormBuilderDependencyValidation> AdvancedFormBuilderDependencyValidationEntities = await _AdvancedFormBuilderDependencyValidationRepository
@@ -193,6 +194,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Command
                                 AdvancedFormBuilderDependency NewAdvancedFormBuilderDependencyEntity = _Mapper.Map<AdvancedFormBuilderDependency>(DependencyDTO);
                                 NewAdvancedFormBuilderDependencyEntity.AdvancedFormBuilderDependencyGroupId = NewAdvancedFormBuilderGroup.Id;
                                 NewAdvancedFormBuilderDependencyEntity.MainAdvancedFormBuilderId = Request.Id;
+                                NewAdvancedFormBuilderDependencyEntity.AdvancedFormBuilderId = DependencyDTO.DynamicAttributeId;
                                 await _AdvancedFormBuilderDependencyRepository.AddAsync(NewAdvancedFormBuilderDependencyEntity);
                             }
 

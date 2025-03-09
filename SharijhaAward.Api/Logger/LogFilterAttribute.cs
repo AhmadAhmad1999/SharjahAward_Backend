@@ -57,6 +57,9 @@ namespace SharijhaAward.Api.Logger
                     Controller_Function_Name[0].ToString() != "MigrateAndSeedDatabase" &&
                     Controller_Function_Name[0].ToString() != "DownloadTempletAsPdf" &&
                     Controller_Function_Name[0].ToString() != "UpdateDatabaseToLastMigration" &&
+                    Controller_Function_Name[0].ToString() != "GetExplanatoryGuideByCategoryId" &&
+                    Controller_Function_Name[0].ToString() != "ResetPassword" &&
+                    Controller_Function_Name[0].ToString() != "ForgetPassword" &&
                     (Controller_Function_Name[1].ToString() != "Website"))
                 {
                     if (!string.IsNullOrEmpty(token) && token.ToLower() != "bearer null" &&
@@ -68,8 +71,10 @@ namespace SharijhaAward.Api.Logger
                         token = token.Replace("Bearer ", string.Empty);
                         token = token.Replace("bearer ", string.Empty);
 
+                        int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(token));
+
                         UserToken? CheckUserId = await _UserTokenRepository!
-                            .FirstOrDefaultAsync(x => x.UserId == int.Parse(_JwtProvider.GetUserIdFromToken(token)) &&
+                            .FirstOrDefaultAsync(x => x.UserId == UserId &&
                                 x.Token == token);
 
                         if (CheckUserId is not null)

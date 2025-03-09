@@ -23,7 +23,11 @@ namespace SharijhaAward.Application.Features.Authentication.ForgetPassword
             string ResponseMessage = string.Empty;
 
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower());
+                .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.Email.ToLower() &&
+                    (Request.intoAdminDashboard
+                        ? x.SubscriberId == null
+                        : x.SubscriberId != null) &&
+                    x.isValidAccount);
 
             if (UserEntity == null)
             {

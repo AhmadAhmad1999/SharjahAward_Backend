@@ -27,10 +27,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> CreateAchievements([FromBody] CreateAchievementCommand command)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+            
             command.token = token!;
             var response = await _mediator.Send(command);
 
@@ -47,10 +44,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAchievements()
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             var response = await _mediator.Send(new GetAchievementsPageQuery()
             {
@@ -70,10 +63,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAchievementsById(int userId)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             var response = await _mediator.Send(new GetAchievementsByIdQuery()
             {
@@ -94,10 +83,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> UpdateAchievement(UpdateAchievementCommand command)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+            
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
@@ -119,10 +105,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> UpdateAchievementById(UpdateAchievementByIdCommand command)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+            
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
@@ -144,10 +127,7 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> AcceptOnAchievement(AcceptOnAchievementQuery query)
         {
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
+            
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 

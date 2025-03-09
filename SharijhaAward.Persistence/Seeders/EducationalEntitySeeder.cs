@@ -26,7 +26,8 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         // Id = 1,
                         EnglishName = "Educational Entity 1",
-                        ArabicName = "جهة تعليمية 1"
+                        ArabicName = "جهة تعليمية 1",
+                        CycleId = 1
                     }, new EducationalEntity()
                     {
                         isDeleted = false,
@@ -37,7 +38,8 @@ namespace SharijhaAward.Persistence.Seeders
                         LastModifiedBy = null,
                         // Id = 2,
                         EnglishName = "Educational Entity 2",
-                        ArabicName = "جهة تعليمية 2"
+                        ArabicName = "جهة تعليمية 2",
+                        CycleId = 1
                     });
                 await _context.SaveChangesAsync();
             }

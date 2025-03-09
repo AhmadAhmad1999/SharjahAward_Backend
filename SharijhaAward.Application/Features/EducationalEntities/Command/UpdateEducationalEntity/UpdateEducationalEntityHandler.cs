@@ -75,7 +75,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.UpdateE
 
             List<Category> AllCategoryEntitiesRelatedToEducationalEntitites = await _CategoryRepository
                 .Where(x => x.RelatedToEducationalEntities &&
-                    x.ParentId != null)
+                    x.ParentId != null &&
+                    x.CycleId == EducationalEntityToUpdate.CycleId)
                 .ToListAsync();
 
             TransactionOptions TransactionOptions = new TransactionOptions

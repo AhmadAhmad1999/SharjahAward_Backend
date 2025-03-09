@@ -53,7 +53,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 return new BaseResponse<GetDynamicAttributeByIdDto>(ResponseMessage, false, 404);
             }
 
-            DynamicAttribute.GeneralValidation = _Mapper.Map<GeneralValidationDto>(await _GeneralValidationRepository
+            DynamicAttribute.GeneralValidationObject = _Mapper.Map<GeneralValidationDto>(await _GeneralValidationRepository
                 .FirstOrDefaultAsync(x => x.DynamicAttributeId == Request.Id));
 
             IQueryable<IGrouping<int, Dependency>> Dependencies = _DependencyRepository
@@ -74,7 +74,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                 {
                     DependencyValidationDto? DependencyValidationDto = new DependencyValidationDto()
                     {
-                        Id = DependencyValidation.Id,
+                        DependencyValidationId = DependencyValidation.Id,
                         Value = DependencyValidation.Value,
                         Operation = DependencyValidation.AttributeOperation!.OperationAsString,
                         Dependencies = Dependency.Select(x => new DependencyDto()
@@ -88,11 +88,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.Ge
                                     : x.StaticAttribute!.ArabicLabel)
                                 : (Request.lang == "en"
                                     ? x.DynamicAttribute!.EnglishLabel
-                                    : x.DynamicAttribute!.ArabicLabel)
-                        }).ToList()
+                                    : x.DynamicAttribute!.ArabicLabel),
+                            AttributeOperationId = x.AttributeOperationId,
+                            DynamicAttributeId = x.DynamicAttributeId != null
+                                ? x.DynamicAttributeId!.Value
+                                : 0
+                        }).ToList(),
+                        AttributeOperationId = DependencyValidation.AttributeOperation!.Id
                     };
 
-                    DynamicAttribute.ListOfDependencies.Add(DependencyValidationDto);
+                    DynamicAttribute.DependencyValidations.Add(DependencyValidationDto);
                 }
             }
 

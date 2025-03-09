@@ -56,6 +56,16 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null
+                }, new AttributeTableName()
+                {
+                    // Id =5,
+                    Name = "Roles",
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
                 });
 
                 await _context.SaveChangesAsync();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
@@ -19,25 +20,40 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
 
-        public GetAllCriterionByCategoryIdHandler(IMapper Mapper,
-            IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
-            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository)
+        public GetAllCriterionByCategoryIdHandler(IMapper _Mapper,
+            IAsyncRepository<Category> _CategoryRepository,
+            IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository,
+            IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository,
+            IHttpContextAccessor _HttpContextAccessor,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository)
         {
-            _Mapper = Mapper;
-            _CategoryRepository = CategoryRepository;
-            _CriterionRepository = CriterionRepository;
-            _CriterionItemRepository = CriterionItemRepository;
-            _CriterionAttachmentRepository = CriterionAttachmentRepository;
-            _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
+            this._Mapper = _Mapper;
+            this._CategoryRepository = _CategoryRepository;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CriterionAttachmentRepository = _CriterionAttachmentRepository;
+            this._CriterionItemAttachmentRepository = _CriterionItemAttachmentRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
         }
         public async Task<BaseResponse<List<MainCriterionListVM>>> Handle(GetAllCriterionByCategoryIdQuery Request,
             CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
@@ -71,6 +87,16 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         : x.EnglishTitle
                 }).ToList();
 
+            List<CriterionAttachmentType> CriterionAttachmentTypeEntities = _CriterionAttachmentTypeRepository
+                .Where(x => AllCriterionsEntities
+                    .Select(y => y.Id).Contains(x.CriterionId) && x.AttachmentType != null)
+                .ToList();
+
+            List<CriterionItemAttachmentType> CriterionItemAttachmentTypeEntities = _CriterionItemAttachmentTypeRepository
+                .Where(x => AllCriterionsEntities
+                    .Select(y => y.Id).Contains(x.CriterionItem!.CriterionId))
+                .ToList();
+
             foreach (MainCriterionListVM MainCriterionObject in MainCriterionObjects)
             {
                 MainCriterionObject.SubCriterionListVM = AllCriterionsEntities
@@ -86,7 +112,10 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         MaxAttachmentNumber = x.MaxAttachmentNumber != null
                             ? x.MaxAttachmentNumber.Value
                             : null,
-                        AttachmentType = x.AttachmentType,
+                        AttachmentType = CriterionAttachmentTypeEntities
+                            .Where(y => y.CriterionId == x.Id)
+                            .Select(y => y.AttachmentType!.Value)
+                            .ToList(),
                         AttachFilesOnSubCriterion = (x.AttachFilesOnSubCriterion != null
                             ? x.AttachFilesOnSubCriterion.Value
                             : false)
@@ -94,18 +123,24 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
 
                 foreach (SubCriterionListVM SubCriterionObject in MainCriterionObject.SubCriterionListVM)
                 {
-                    SubCriterionObject.SubCriterionAttachments = await _CriterionAttachmentRepository
+                    SubCriterionObject.SubCriterionAttachments = _CriterionAttachmentRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.ProvidedFormId)
-                        .Select(x => new AttachmentListVM()
+                        .ToList()
+                        .Select(x =>
                         {
-                            Id = x.Id,
-                            Name = x.Name,
-                            Description = x.Description,
-                            AttachementPath = x.AttachementPath,
-                            SizeOfAttachmentInKB = x.Criterion!.SizeOfAttachmentInKB,
-                            IsAccept = x.IsAccepted,
-                            ReasonOfReject = x.ReasonForRejecting
-                        }).ToListAsync();
+                            return new AttachmentListVM()
+                            {
+                                Id = x.Id,
+                                Name = x.Name,
+                                Description = x.Description,
+                                AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                    ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : x.AttachementPath.Replace("\\", "/"),
+                                SizeOfAttachmentInKB = x.Criterion!.SizeOfAttachmentInKB,
+                                IsAccept = x.IsAccepted,
+                                ReasonOfReject = x.ReasonForRejecting
+                            };
+                        }).ToList();
 
                     if (SubCriterionObject.SubCriterionAttachments.Any(a => a.IsAccept == false))
                     {
@@ -116,7 +151,9 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                     {
                         SubCriterionObject.CriterionItemListVM = _CriterionItemRepository
                             .Where(x => x.CriterionId == SubCriterionObject.Id)
+                            .AsEnumerable()
                             .OrderBy(x => x.OrderId)
+                            .AsEnumerable()
                             .Select(x => new CriterionItemListVM()
                             {
                                 Id = x.Id,
@@ -125,27 +162,36 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                                     : x.EnglishName,
                                 SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                                 MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                AttachmentType = x.AttachmentType
-
+                                AttachmentType = CriterionItemAttachmentTypeEntities
+                                    .AsEnumerable()
+                                    .Where(y => y.CriterionItemId == x.Id)
+                                    .AsEnumerable()
+                                    .Select(y => y.AttachmentType)
+                                    .ToList()
                             }).ToList();
 
                         foreach (CriterionItemListVM CriterionItemObject in SubCriterionObject.CriterionItemListVM)
                         {
-                            CriterionItemObject.CriterionItemAttachments = await _CriterionItemAttachmentRepository
+                            CriterionItemObject.CriterionItemAttachments = _CriterionItemAttachmentRepository
                                 .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.ProvidedFormId)
-                                .Select(x => new AttachmentListVM
+                                .ToList()
+                                .Select(x =>
                                 {
-                                    Id = x.Id,
-                                    Name = x.Name,
-                                    Description = x.Description,
-                                    AttachementPath = x.AttachementPath,
-                                    SizeOfAttachmentInKB = x.CriterionItem!.SizeOfAttachmentInKB != null 
-                                        ? x.CriterionItem!.SizeOfAttachmentInKB.Value 
-                                        : 0,
-                                    IsAccept = x.IsAccepted,
-                                    ReasonOfReject = x.ReasonForRejecting
-                                })
-                                .ToListAsync();
+                                    return new AttachmentListVM
+                                    {
+                                        Id = x.Id,
+                                        Name = x.Name,
+                                        Description = x.Description,
+                                        AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                            : x.AttachementPath.Replace("\\", "/"),
+                                        SizeOfAttachmentInKB = x.CriterionItem!.SizeOfAttachmentInKB != null
+                                            ? x.CriterionItem!.SizeOfAttachmentInKB.Value
+                                            : 0,
+                                        IsAccept = x.IsAccepted,
+                                        ReasonOfReject = x.ReasonForRejecting
+                                    };
+                                }).ToList();
 
                             if (CriterionItemObject.CriterionItemAttachments.Any(a => a.IsAccept == false))
                             {

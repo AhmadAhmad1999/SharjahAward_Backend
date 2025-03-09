@@ -25,7 +25,7 @@ namespace SharijhaAward.Persistence.Seeders
                        LastModifiedBy = null,
                        CreatedAt = DateTime.UtcNow,
                        CreatedBy = null,
-                       ArabicText = "يمكنك البحث عن منسق لإرشادك في عملية المشاركة في الجائزة من خلال نحديد المعلومات الموجودة أدناه لتتمكن من اختيار المنسق الذي تريده.",
+                       ArabicText = "يمكنك البحث عن منسق لإرشادك في عملية المشاركة في الجائزة من خلال تحديد المعلومات الموجودة أدناه لتتمكن من اختيار المنسق الذي تريده.",
                        EnglishText = "You can search for a coordinator to guide you in the process of participating in the award by specifying the information below so that you can choose the coordinator you want.",
                        Type = TypeOfExplantoryMessage.SearchForCoordinator
                    }, new ExplanatoryMessage()

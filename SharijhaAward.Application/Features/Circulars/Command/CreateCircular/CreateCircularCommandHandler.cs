@@ -7,139 +7,268 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CircularModel;
-using SharijhaAward.Domain.Entities.ContactUsModels;
 using SharijhaAward.Domain.Entities.CoordinatorModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.IdentityModels;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.Circulars.Command.CreateCircular
 {
     public class CreateCircularCommandHandler
         : IRequestHandler<CreateCircularCommand, BaseResponse<int>>
     {
-        private readonly IAsyncRepository<Circular> _circularRepository;
-        private readonly IAsyncRepository<Coordinator> _coordinatorRepository;
-        private readonly IAsyncRepository<Arbitrator> _arbitratorRepository;
-        private readonly IAsyncRepository<CircularAttachment> _circularAttachmentRepository;
-        private readonly IAsyncRepository<CircularArbitrator> _circularArbitratorRepository;
-        private readonly IAsyncRepository<CircularCoordinator> _circularCoordinatorRepository;
-        private readonly IAsyncRepository<CircularChairman> _circularChairmanRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IFileService _fileService;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Circular> _CircularRepository;
+        private readonly IAsyncRepository<Coordinator> _CoordinatorRepository;
+        private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<CircularAttachment> _CircularAttachmentRepository;
+        private readonly IAsyncRepository<CircularArbitrator> _CircularArbitratorRepository;
+        private readonly IAsyncRepository<CircularCoordinator> _CircularCoordinatorRepository;
+        private readonly IAsyncRepository<CircularChairman> _CircularChairmanRepository;
+        private readonly IAsyncRepository<CircularUser> _CircularUserRepository;
+        private readonly IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IFileService _FileService;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
 
-        public CreateCircularCommandHandler(IUserRepository userRepository, IJwtProvider jwtProvider, IAsyncRepository<CircularChairman> circularChairmanRepository, IAsyncRepository<Circular> circularRepository, IAsyncRepository<Coordinator> coordinatorRepository, IAsyncRepository<Arbitrator> arbitratorRepository, IAsyncRepository<CircularAttachment> circularAttachmentRepository, IAsyncRepository<CircularArbitrator> circularArbitratorRepository, IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, IFileService fileService, IMapper mapper)
+        public CreateCircularCommandHandler(IUserRepository _UserRepository,
+            IJwtProvider _JwtProvider, 
+            IAsyncRepository<CircularChairman> _CircularChairmanRepository, 
+            IAsyncRepository<Circular> _CircularRepository, 
+            IAsyncRepository<Coordinator> _CoordinatorRepository, 
+            IAsyncRepository<Arbitrator> _ArbitratorRepository, 
+            IAsyncRepository<CircularAttachment> _CircularAttachmentRepository, 
+            IAsyncRepository<CircularArbitrator> _CircularArbitratorRepository, 
+            IAsyncRepository<CircularCoordinator> _CircularCoordinatorRepository,
+            IAsyncRepository<CircularUser> _CircularUserRepository,
+            IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository,
+            IAsyncRepository<UserRole> _UserRoleRepository,
+            IFileService _FileService, 
+            IMapper _Mapper)
         {
-            _circularRepository = circularRepository;
-            _coordinatorRepository = coordinatorRepository;
-            _arbitratorRepository = arbitratorRepository;
-            _circularAttachmentRepository = circularAttachmentRepository;
-            _circularArbitratorRepository = circularArbitratorRepository;
-            _circularCoordinatorRepository = circularCoordinatorRepository;
-            _circularChairmanRepository = circularChairmanRepository;
-            _userRepository = userRepository;
-            _fileService = fileService;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._CircularRepository = _CircularRepository;
+            this._CoordinatorRepository = _CoordinatorRepository;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._CircularAttachmentRepository = _CircularAttachmentRepository;
+            this._CircularArbitratorRepository = _CircularArbitratorRepository;
+            this._CircularCoordinatorRepository = _CircularCoordinatorRepository;
+            this._CircularChairmanRepository = _CircularChairmanRepository;
+            this._CircularUserRepository = _CircularUserRepository;
+            this._UserRepository = _UserRepository;
+            this._FileService = _FileService;
+            this._CiruclarSubcommitteeOfficerRepository = _CiruclarSubcommitteeOfficerRepository;
+            this._UserRoleRepository = _UserRoleRepository;
+            this._JwtProvider = _JwtProvider;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<int>> Handle(CreateCircularCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<int>> Handle(CreateCircularCommand Request, CancellationToken cancellationToken)
         {
-            var userId = _jwtProvider.GetUserIdFromToken(request.token!);
-
-            var user = await _userRepository.GetByIdAsync(int.Parse(userId));
-            
-            if(user == null)
+            TransactionOptions TransactionOptions = new TransactionOptions
             {
-                return new BaseResponse<int>("unAuth", false, 401);
-            }
-           
-            var Circular = _mapper.Map<Circular>(request);
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
-            Circular.IsRead = false;
-
-            var data = await _circularRepository.AddAsync(Circular, user.ArabicName);
-
-            var Coordinators = request.AllCoordinators == true
-                ? await _coordinatorRepository.Select(c=>c.Id).ToListAsync()
-                : request.CoordinatorId;
-           
-            if(Coordinators != null)
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
             {
-                foreach (var coordinatorId in Coordinators!)
+                try
                 {
-                    CircularCoordinator circularCoordinator = new CircularCoordinator()
-                    {
-                        CoordinatorId = coordinatorId,
-                        CircularId = data.Id
-                    };
+                    int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token!));
 
-                    await _circularCoordinatorRepository.AddAsync(circularCoordinator, user.ArabicName);
+                    Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
+                        .FirstOrDefaultAsync(x => x.Id == UserId);
+
+                    var Circular = _Mapper.Map<Circular>(Request);
+
+                    Circular? Response = await _CircularRepository.AddAsync(Circular, UserEntity!.ArabicName);
+
+                    List<int>? CoordinatorEntitiesIds = Request.AllCoordinators
+                        ? await _CoordinatorRepository.Select(x => x.Id).ToListAsync()
+                        : Request.CoordinatorId;
+
+                    if (CoordinatorEntitiesIds != null 
+                        ? CoordinatorEntitiesIds.Any()
+                        : false)
+                    {
+                        List<CircularCoordinator> NewCircularCoordinatorEntities = CoordinatorEntitiesIds
+                            .Select(x => new CircularCoordinator()
+                            {
+                                CoordinatorId = x,
+                                CircularId = Response.Id,
+                                IsRead = false
+                            }).ToList();
+
+                        await _CircularCoordinatorRepository.AddRangeAsync(NewCircularCoordinatorEntities);
+                    }
+
+                    List<int>? ArbitratorEntitiesIds = Request.AllArbitrators
+                        ? await _ArbitratorRepository.Select(x => x.Id).ToListAsync()
+                        : Request.ArbitratorId;
+
+                    if (ArbitratorEntitiesIds != null
+                        ? ArbitratorEntitiesIds.Any()
+                        : false)
+                    {
+                        List<CircularArbitrator> NewCircularArbitratorEntities = ArbitratorEntitiesIds
+                            .Select(x => new CircularArbitrator()
+                            {
+                                ArbitratorId = x,
+                                CircularId = Response.Id,
+                                IsRead = false
+                            }).ToList();
+
+                        await _CircularArbitratorRepository.AddRangeAsync(NewCircularArbitratorEntities);
+                    }
+
+                    List<int>? ChairmanEntitiesIds = Request.AllChairmans
+                        ? await _ArbitratorRepository
+                            .Where(x => x.isChairman)
+                            .Select(x => x.Id)
+                            .ToListAsync()
+                        : Request.ChairmanId;
+
+                    if (ChairmanEntitiesIds != null
+                        ? ChairmanEntitiesIds.Any()
+                        : false)
+                    {
+                        List<CircularChairman> NewCircularChairmanEntities = ChairmanEntitiesIds
+                            .Select(x => new CircularChairman()
+                            {
+                                ChairmanId = x,
+                                CircularId = Response.Id,
+                                IsRead = false
+                            }).ToList();
+
+                        await _CircularChairmanRepository.AddRangeAsync(NewCircularChairmanEntities);
+                    }
+
+                    if (Request.CircularFiles != null
+                        ? Request.CircularFiles.Any()
+                        : false)
+                    {
+                        List<CircularAttachment> NewCircularAttachmentEntities = Request.CircularFiles!
+                            .Select(x =>
+                            {
+                                Task<string> AttachementPath = _FileService.SaveFileAsync(x.CircularFile, SystemFileType.Circulars);
+
+                                return new CircularAttachment()
+                                {
+                                    AttachementPath = AttachementPath.Result,
+                                    CircularId = Response.Id,
+                                    FileName = x.FileName
+                                };
+                            }).ToList();
+
+                        await _CircularAttachmentRepository.AddRangeAsync(NewCircularAttachmentEntities);
+                    }
+
+                    if ((Request.SubcommitteeOfficerId != null
+                        ? Request.SubcommitteeOfficerId.Any()
+                        : false) || Request.AllSubcommitteeOfficers)
+                    {
+                        List<int>? SubcommitteeOfficerEntitiesIds = Request.AllChairmans
+                            ? await _ArbitratorRepository
+                                .Where(x => x.isSubcommitteeOfficer)
+                                .Select(x => x.Id)
+                                .ToListAsync()
+                            : Request.SubcommitteeOfficerId;
+
+                        List<CiruclarSubcommitteeOfficer> NewCCiruclarSubcommitteeOfficerEntities = SubcommitteeOfficerEntitiesIds
+                            .Select(x => new CiruclarSubcommitteeOfficer()
+                            {
+                                SubcommitteeOfficerId = x,
+                                CircularId = Response.Id,
+                                IsRead = false
+                            }).ToList();
+
+                        await _CiruclarSubcommitteeOfficerRepository.AddRangeAsync(NewCCiruclarSubcommitteeOfficerEntities);
+                    }
+                    if ((Request.ChairmanOfCommitteesId != null
+                        ? Request.ChairmanOfCommitteesId.Any()
+                        : false) || Request.AllChairmanOfCommittees)
+                    {
+                        List<int> UserRoleIds = await _UserRoleRepository
+                            .Where(x => x.Role!.EnglishName.ToLower() == "Chairman of Committees".ToLower() &&
+                                x.Role!.ArabicName == "رئيس اللجان" &&
+                                (Request.AllChairmanOfCommittees 
+                                    ? true
+                                    : Request.ChairmanOfCommitteesId.Contains(x.Id)))
+                            .Select(x => x.Id)
+                            .ToListAsync();
+
+                        IEnumerable<CircularUser> NewCircularUserEntities = UserRoleIds
+                            .Select(x => new CircularUser()
+                            {
+                                CircularId = Response.Id,
+                                UserRoleId = x,
+                                IsRead = false
+                            });
+
+                        await _CircularUserRepository.AddRangeAsync(NewCircularUserEntities);
+                    }
+                    if ((Request.ExpertId != null
+                        ? Request.ExpertId.Any()
+                        : false) || Request.AllExperts)
+                    {
+                        List<int> UserRoleIds = await _UserRoleRepository
+                            .Where(x => x.Role!.EnglishName.ToLower() == "Expert".ToLower() &&
+                                x.Role!.ArabicName == "خبير" &&
+                                (Request.AllExperts
+                                    ? true
+                                    : Request.ExpertId.Contains(x.Id)))
+                            .Select(x => x.Id)
+                            .ToListAsync();
+
+                        IEnumerable<CircularUser> NewCircularUserEntities = UserRoleIds
+                            .Select(x => new CircularUser()
+                            {
+                                CircularId = Response.Id,
+                                UserRoleId = x,
+                                IsRead = false
+                            });
+
+                        await _CircularUserRepository.AddRangeAsync(NewCircularUserEntities);
+                    }
+                    if ((Request.QualityId != null
+                        ? Request.QualityId.Any()
+                        : false) || Request.AllQualities)
+                    {
+                        List<int> UserRoleIds = await _UserRoleRepository
+                            .Where(x => x.Role!.EnglishName.ToLower() == "Quality".ToLower() &&
+                                x.Role!.ArabicName == "الجودة" &&
+                                (Request.AllQualities
+                                    ? true
+                                    : Request.QualityId.Contains(x.Id)))
+                            .Select(x => x.Id)
+                            .ToListAsync();
+
+                        IEnumerable<CircularUser> NewCircularUserEntities = UserRoleIds
+                            .Select(x => new CircularUser()
+                            {
+                                CircularId = Response.Id,
+                                UserRoleId = x,
+                                IsRead = false
+                            });
+
+                        await _CircularUserRepository.AddRangeAsync(NewCircularUserEntities);
+                    }
+
+                    string ResponseMessage = Request.lang == "en"
+                        ? "Circular has benn created"
+                        : "تم إضافة التعميم";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<int>(ResponseMessage, true, 200, Response.Id);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
                 }
             }
-         
-
-            var Arbitrators = request.AllArbitrators == true
-                ? await _arbitratorRepository.Select(c => c.Id).ToListAsync()
-                : request.ArbitratorId;
-
-            if(Arbitrators != null)
-            {
-                foreach (var arbitratorId in Arbitrators!)
-                {
-                    CircularArbitrator circularArbitrator = new CircularArbitrator()
-                    {
-                        ArbitratorId = arbitratorId,
-                        CircularId = data.Id
-                    };
-
-                    await _circularArbitratorRepository.AddAsync(circularArbitrator, user.ArabicName);
-                }
-            }
-            
-
-            var Chairmans = request.AllChairmans == true
-                ? await _arbitratorRepository.Where(a => a.isChairman).Select(a => a.Id).ToListAsync()
-                : request.ChairmanId;
-
-            if(Chairmans != null)
-            {
-                foreach (var chairmanId in Chairmans!)
-                {
-                    CircularChairman circularChairman = new CircularChairman()
-                    {
-                        ChairmanId = chairmanId,
-                        CircularId = data.Id
-                    };
-
-                    await _circularChairmanRepository.AddAsync(circularChairman, user.ArabicName);
-                }
-            }    
-           
-
-            if (request.CircularFiles != null)
-            {
-                foreach (var attachment in request.CircularFiles!)
-                {
-                    CircularAttachment circularAttachment = new CircularAttachment()
-                    {
-                        AttachementPath = await _fileService.SaveFileAsync(attachment, SystemFileType.Circulars),
-                        CircularId = data.Id
-                    };
-
-                    await _circularAttachmentRepository.AddAsync(circularAttachment, user.ArabicName);
-                }
-            }
-
-            string msg = request.lang == "en"
-                ? "Circular has benn Created"
-                : "تم إضافة التعميم";
-
-            return new BaseResponse<int>(msg, true, 200, data.Id);
         }
     }
 }

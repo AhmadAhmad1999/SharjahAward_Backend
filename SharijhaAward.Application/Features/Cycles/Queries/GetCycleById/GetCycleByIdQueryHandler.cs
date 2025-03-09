@@ -3,11 +3,6 @@ using MediatR;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Cycles.Queries.GetCycleById
 {

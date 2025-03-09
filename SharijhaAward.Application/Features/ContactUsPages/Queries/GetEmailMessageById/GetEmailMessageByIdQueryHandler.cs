@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -18,8 +19,15 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
         private readonly IUserRepository _UserRepository;
         private readonly IJwtProvider _JwtProvider;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetEmailMessageByIdQueryHandler(IAsyncRepository<MessageType> _MessageTypeRepository, IAsyncRepository<EmailMessage> _EmailMessageRepository, IAsyncRepository<EmailAttachment> _EmailAttachmentRepository, IUserRepository _UserRepository, IJwtProvider _JwtProvider, IMapper _Mapper)
+        public GetEmailMessageByIdQueryHandler(IAsyncRepository<MessageType> _MessageTypeRepository,
+            IAsyncRepository<EmailMessage> _EmailMessageRepository, 
+            IAsyncRepository<EmailAttachment> _EmailAttachmentRepository, 
+            IUserRepository _UserRepository, 
+            IJwtProvider _JwtProvider, 
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._EmailMessageRepository = _EmailMessageRepository;
             this._EmailAttachmentRepository = _EmailAttachmentRepository;
@@ -27,11 +35,18 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             this._UserRepository = _UserRepository;
             this._JwtProvider = _JwtProvider;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<EmailMessageDto>> Handle(GetEmailMessageByIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token));
             
@@ -43,7 +58,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
             if (EmailMessageEntity is null)
             {
                 ResponseMessage = Request.lang == "en"
-                    ? "Message Not Found"
+                    ? "Message is not found"
                     : "الرسالة غير موجودة";
 
                 return new BaseResponse<EmailMessageDto>(ResponseMessage, false, 404);
@@ -57,11 +72,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
 
             EmailMessageDto Response = _Mapper.Map<EmailMessageDto>(EmailMessageEntity);
 
-            Response.Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(await _EmailAttachmentRepository
-                .Where(x => x.MessageId == Response.Id).ToListAsync());
-
             Response.PersonalPhotoUrl = EmailMessageEntity.User is not null
-                ? EmailMessageEntity.User.ImageURL!
+                ? (EmailMessageEntity.User.ImageURL!.Contains("wwwroot")
+                    ? (WWWRootFilePath + EmailMessageEntity.User.ImageURL!.Split("wwwroot")[1]).Replace("\\", "/")
+                    : EmailMessageEntity.User.ImageURL!.Replace("\\", "/"))
                 : string.Empty;
 
             Response.Gender = EmailMessageEntity.User is not null
@@ -77,9 +91,32 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
                     x.Id != EmailMessageEntity.Id)
                 .ToListAsync();
 
-            List<EmailAttachment> AllEmailAttachmentEntities = await _EmailAttachmentRepository
+            Response.Attachments = _EmailAttachmentRepository
+                .Where(x => x.MessageId == Response.Id)
+                .ToList()
+                .Select(x => new EmailAttachmentListVm()
+                {
+                    Id = x.Id,
+                    MessageId = x.MessageId,
+                    AttachmentUrl = x.AttachmentUrl.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.AttachmentUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.AttachmentUrl.Replace("\\", "/")
+                }).ToList();
+
+            List<EmailAttachmentListVm> AllEmailAttachmentEntities = _EmailAttachmentRepository
                 .Where(x => ReplayMessages.Select(y => y.Id).Contains(x.MessageId))
-                .ToListAsync();
+                .ToList()
+                .Select(x =>
+                {
+                    return new EmailAttachmentListVm()
+                    {
+                        Id = x.Id,
+                        MessageId = x.MessageId,
+                        AttachmentUrl = x.AttachmentUrl.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.AttachmentUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.AttachmentUrl.Replace("\\", "/")
+                    };
+                }).ToList();
 
             Response.ReplayMessages = ReplayMessages
                 .Select(x => new EmailMessageDto()
@@ -101,16 +138,18 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMess
                         ? false
                         : true,
                     CreatedAt = x.CreatedAt,
-                    PersonalPhotoUrl = User!.ImageURL!,
+                    PersonalPhotoUrl = User!.ImageURL!.Contains("wwwroot")
+                        ? (WWWRootFilePath + User!.ImageURL!.Split("wwwroot")[1]).Replace("\\", "/")
+                        : User!.ImageURL!.Replace("\\", "/"),
                     Gender = User!.Gender!,
-                    Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
+                    Attachments = AllEmailAttachmentEntities
                         .Where(y => x.Id == y.MessageId)
-                        .ToList()),
+                        .ToList(),
                     FromWebsite = EmailMessageEntity.UserId == null
                         ? true : false
                 }).ToList();
 
-            return new BaseResponse<EmailMessageDto>("", true, 200, Response);
+            return new BaseResponse<EmailMessageDto>(string.Empty, true, 200, Response);
         }
     }
 }

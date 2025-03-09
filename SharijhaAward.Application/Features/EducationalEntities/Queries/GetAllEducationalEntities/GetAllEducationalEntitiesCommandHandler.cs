@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -10,45 +9,52 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
     public class GetAllEducationalEntitiesCommandHandler
         : IRequestHandler<GetAllEducationalEntitiesCommand, BaseResponse<List<EducationalEntitiesListVm>>>
     {
-        private readonly IAsyncRepository<EducationalEntity> _eucationalEntityRepository;
+        private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
 
-        public GetAllEducationalEntitiesCommandHandler(IAsyncRepository<EducationalEntity> eucationalEntityRepository)
+        public GetAllEducationalEntitiesCommandHandler(IAsyncRepository<EducationalEntity> _EducationalEntityRepository)
         {
-            _eucationalEntityRepository = eucationalEntityRepository;
+            this._EducationalEntityRepository = _EducationalEntityRepository;
         }
 
-        public async Task<BaseResponse<List<EducationalEntitiesListVm>>> Handle(GetAllEducationalEntitiesCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<EducationalEntitiesListVm>>> 
+            Handle(GetAllEducationalEntitiesCommand Request, CancellationToken cancellationToken)
         {
-            var EducationalEntities = await _eucationalEntityRepository
+            var EducationalEntities = await _EducationalEntityRepository
                 .OrderByDescending(x => x.CreatedAt, 0, -1).ToListAsync();
 
-            if (request.ArabicName != null && request.EnglishName != null && EducationalEntities.Count() > 0)
+            if (Request.ArabicName != null && Request.EnglishName != null && EducationalEntities.Count() > 0)
             {
-                EducationalEntities = _eucationalEntityRepository
-                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower()) &&
-                        e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower()))
+                EducationalEntities = _EducationalEntityRepository
+                    .Where(x => x.ArabicName.ToLower().Contains(Request.ArabicName!.ToLower()) &&
+                        x.EnglishName.ToLower().Contains(Request.EnglishName!.ToLower()) &&
+                        x.CycleId == Request.CycleId)
                     .OrderByDescending(x => x.CreatedAt).ToList();
             }
-            else if (request.EnglishName != null && EducationalEntities.Count() > 0)
+            else if (Request.EnglishName != null && EducationalEntities.Count() > 0)
             {
-                EducationalEntities = _eucationalEntityRepository
-                    .Where(e => e.EnglishName.ToLower().Contains(request.EnglishName!.ToLower()))
+                EducationalEntities = _EducationalEntityRepository
+                    .Where(x => x.EnglishName.ToLower().Contains(Request.EnglishName!.ToLower()) &&
+                        x.CycleId == Request.CycleId)
                     .OrderByDescending(x => x.CreatedAt).ToList();
             }
-            else if (request.ArabicName != null && EducationalEntities.Count() > 0)
+            else if (Request.ArabicName != null && EducationalEntities.Count() > 0)
             {
-                EducationalEntities = _eucationalEntityRepository
-                    .Where(e => e.ArabicName.ToLower().Contains(request.ArabicName!.ToLower()))
+                EducationalEntities = _EducationalEntityRepository
+                    .Where(x => x.ArabicName.ToLower().Contains(Request.ArabicName!.ToLower()) &&
+                        x.CycleId == Request.CycleId)
                     .OrderByDescending(x => x.CreatedAt).ToList();
             }
-            var data = EducationalEntities.Select(x => new EducationalEntitiesListVm()
-            {
-                Id = x.Id,
-                Name = request.lang == "en"
-                    ? x.EnglishName
-                    : x.ArabicName
-            }).ToList();
-            return new BaseResponse<List<EducationalEntitiesListVm>>("", true, 200, data);
+
+            List<EducationalEntitiesListVm> Response = EducationalEntities
+                .Select(x => new EducationalEntitiesListVm()
+                {
+                    Id = x.Id,
+                    Name = Request.lang == "en"
+                        ? x.EnglishName
+                        : x.ArabicName
+                }).ToList();
+
+            return new BaseResponse<List<EducationalEntitiesListVm>>(string.Empty, true, 200, Response);
         }
     }
 }

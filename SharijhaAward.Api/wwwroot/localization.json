@@ -42,8 +42,8 @@
     "CategoryClassification": "تصنيف الفئة",
     "FinalArbitrationQualificationMark": "علامة التأهل للتحكيم النهائي",
     "ExpectedNumberOfWinners": "عدد الفائزين المتوقع",
-    "MinimumAmountToObtainAStatement": "العلامة الدنيا للحصول على إفادة",
-    "MaximumAmountToObtainAStatement": "العلامة العليا للحصول على إفادة",
+    "MinimumAmountToObtainAStatement2": "العلامة الدنيا للحصول على إفادة 2",
+    "MaximumAmountToObtainAStatement2": "العلامة العليا للحصول على إفادة 2",
     "MinimumRequirementToObtainACertificate": "العلامة العليا للحصول على شهادة",
     "MaximumRequirementToObtainACertificate": "العلامة الدنيا للحصول على شهادة",
     "MinimumWinningScore": "علامة النجاح الدنيا",
@@ -128,6 +128,7 @@
     "ArbitrationLevelForThisForm": "مرحلة التحكيم التي وصلت إليها الاستمارة",
     "ArbitratorsForThisForm": "محكمين هذه الاستمارة",
     "ArbitratorId": "معرف المحكم",
-    "ArbitratorName": "اسم المحكم"
+    "ArbitratorName": "اسم المحكم",
+    "ContainStatment1": "تحوي الفئة على إفادة 1"
   }
 }

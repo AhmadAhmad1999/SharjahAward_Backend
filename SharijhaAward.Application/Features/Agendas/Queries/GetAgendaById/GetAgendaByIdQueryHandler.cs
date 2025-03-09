@@ -1,48 +1,61 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AgendaModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById
 {
     public class GetAgendaByIdQueryHandler
         : IRequestHandler<GetAgendaByIdQuery, BaseResponse<AgendaDto>>
     {
-        private readonly IAsyncRepository<Agenda> _agendaRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Agenda> _AgendaRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAgendaByIdQueryHandler(IAsyncRepository<Agenda> agendaRepository, IMapper mapper)
+        public GetAgendaByIdQueryHandler(IAsyncRepository<Agenda> _AgendaRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _agendaRepository = agendaRepository;
-            _mapper = mapper;
+            this._AgendaRepository = _AgendaRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<AgendaDto>> Handle(GetAgendaByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AgendaDto>> Handle(GetAgendaByIdQuery Request, CancellationToken cancellationToken)
         {
-            var agenda = await _agendaRepository.GetByIdAsync(request.Id);
+            string ResponseMessage = string.Empty;
 
-            if(agenda == null)
+            Agenda? AgendaEntity = _AgendaRepository
+                .FirstOrDefault(x => x.Id == Request.Id);
+
+            if (AgendaEntity is null)
             {
-                string msg = request.lang == "en"
-                    ? "The Agenda is Not Found"
+                ResponseMessage = Request.lang == "en"
+                    ? "Agenda is not found"
                     : "الأجندة غير موجودة";
 
-                return new BaseResponse<AgendaDto>(msg, false, 404);
+                return new BaseResponse<AgendaDto>(ResponseMessage, false, 404);
             }
-            else
-            {
-                var data = _mapper.Map<AgendaDto>(agenda);
 
-                data.Title = request.lang == "en" ? data.EnglishTitle : data.ArabicTitle; 
+            AgendaDto Response = _Mapper.Map<AgendaDto>(AgendaEntity);
 
-                return new BaseResponse<AgendaDto>("", true, 200, data);
-            }
+            Response.Title = Request.lang == "en" 
+                ? Response.EnglishTitle 
+                : Response.ArabicTitle;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            Response.Icon = Response.Icon.Contains("wwwroot")
+                ? (WWWRootFilePath + Response.Icon.Split("wwwroot")[1]).Replace("\\", "/")
+                : Response.Icon.Replace("\\", "/");
+
+            return new BaseResponse<AgendaDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

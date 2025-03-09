@@ -11,5 +11,6 @@ namespace SharijhaAward.Domain.Entities.NotificationModel
         public int NotificationId { get; set; }
         public Notification? Notification { get; set; }
         public bool isReaded { get; set; }
+        public string? Action { get; set; }
     }
 }

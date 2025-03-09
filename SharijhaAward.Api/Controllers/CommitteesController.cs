@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommitteeB
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.CommitteeFeatures.Queries.ExportToExcel;
+using SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetAllOfficerArbitrators;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -192,6 +193,33 @@ namespace SharijhaAward.Api.Controllers
                 404 => NotFound(response),
                 200 => File(response.data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Committees.xlsx"),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetAllOfficerArbitrators")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllOfficerArbitrators()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllChairmanArbitratorsListVM>> Response = await _Mediator.Send(new GetAllOfficerArbitratorsQuery()
+            {
+                lang = HeaderValue!,
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

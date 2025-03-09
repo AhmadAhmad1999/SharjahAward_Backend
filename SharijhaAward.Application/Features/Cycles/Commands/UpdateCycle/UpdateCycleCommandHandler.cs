@@ -36,6 +36,19 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.UpdateCycle
         {
             string ResponseMessage = string.Empty;
 
+            Cycle? CheckCycleNumberValidation = await _cycleRepository
+                .FirstOrDefaultAsync(x => x.CycleNumber == Request.CycleNumber &&
+                    x.Id != Request.Id);
+
+            if (CheckCycleNumberValidation is not null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Cycle number is already used"
+                    : "رقم الدورة مستخدم مسبقاً, الرجاء إدخال قيمة مختلفة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             if (Request.Year is not null
                 ? Request.Year.Contains('-')
                 : false)

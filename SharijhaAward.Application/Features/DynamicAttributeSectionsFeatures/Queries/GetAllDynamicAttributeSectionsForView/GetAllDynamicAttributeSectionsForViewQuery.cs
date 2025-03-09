@@ -10,6 +10,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         public bool? isArbitrator { get; set; }
         public int? EventId { get; set; }
         public InviteeTypes? InviteeType { get; set; }
+        public int? RoleId { get; set; }
         public string lang { get; set; } = string.Empty;
         public string WWWRootFilePath { get; set; } = string.Empty;
         public int page { get; set; }

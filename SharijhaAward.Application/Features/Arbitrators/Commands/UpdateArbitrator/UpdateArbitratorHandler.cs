@@ -20,31 +20,35 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         private readonly IAsyncRepository<UserToken> _UserTokenRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository;
 
-        public UpdateArbitratorCommandHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
-            IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
-            IAsyncRepository<UserToken> UserTokenRepository,
-            IUserRepository UserRepository,
-            IMapper Mapper)
+        public UpdateArbitratorCommandHandler(IAsyncRepository<Arbitrator> _ArbitratorRepository,
+            IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository,
+            IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository,
+            IAsyncRepository<UserToken> _UserTokenRepository,
+            IUserRepository _UserRepository,
+            IMapper _Mapper,
+            IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository)
         {
-            _ArbitratorRepository = ArbitratorRepository;
-            _CategoryArbitratorRepository = CategoryArbitratorRepository;
-            _ArbitratorClassRepository = ArbitratorClassRepository;
-            _UserTokenRepository = UserTokenRepository;
-            _UserRepository = UserRepository;
-            _Mapper = Mapper;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._CategoryArbitratorRepository = _CategoryArbitratorRepository;
+            this._ArbitratorClassRepository = _ArbitratorClassRepository;
+            this._UserTokenRepository = _UserTokenRepository;
+            this._UserRepository = _UserRepository;
+            this._Mapper = _Mapper;
+            this._SubcommitteeCategoryRepository = _SubcommitteeCategoryRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateArbitratorCommand Request, CancellationToken cancellationToken)
         {
-            var ArbitratorToUpdate = await _ArbitratorRepository.GetByIdAsync(Request.Id);
+            Arbitrator? ArbitratorEntityToUpdate = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
             string ResponseMessage = Request.lang == "en"
                 ? "Arbitrator has been Updated"
-                : "تم تعديل المنسق";
+                : "تم تعديل المحكم";
 
-            if (ArbitratorToUpdate == null)
+            if (ArbitratorEntityToUpdate is null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Arbitrator not found"
@@ -56,7 +60,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == Request.Id);
 
-            if (UserEntity == null)
+            if (UserEntity is null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "User not found"
@@ -65,7 +69,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            _Mapper.Map(Request, ArbitratorToUpdate, typeof(UpdateArbitratorCommand), typeof(Arbitrator));
+            _Mapper.Map(Request, ArbitratorEntityToUpdate, typeof(UpdateArbitratorCommand), typeof(Arbitrator));
 
             UserEntity.Email = Request.Email;
             UserEntity.ArabicName = Request.ArabicName;
@@ -105,6 +109,10 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
                 .Where(x => !IntersectArbitratorClassIds.Contains(x))
                 .ToList();
 
+            List<SubcommitteeCategory> SubcommitteeCategoryEntities = await _SubcommitteeCategoryRepository
+                .Where(x => x.ArbitratorId == Request.Id)
+                .ToListAsync();
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -116,12 +124,12 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
             {
                 try
                 {
-                    if (Request.isChairman != ArbitratorToUpdate.isChairman)
+                    if (Request.isChairman != ArbitratorEntityToUpdate.isChairman)
                         _UserTokenRepository
                             .Where(x => x.UserId == Request.Id)
                             .ExecuteUpdate(x => x.SetProperty(y => y.isDeleted, true));
 
-                    await _ArbitratorRepository.UpdateAsync(ArbitratorToUpdate);
+                    await _ArbitratorRepository.UpdateAsync(ArbitratorEntityToUpdate);
                     await _UserRepository.UpdateAsync(UserEntity);
 
                     IQueryable<CategoryArbitrator> DeleteCategoryArbitratorEntites = _CategoryArbitratorRepository
@@ -169,6 +177,22 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
 
                     if (NewArbitratorClassEntites.Count() > 0)
                         await _ArbitratorClassRepository.AddRangeAsync(NewArbitratorClassEntites);
+
+                    if (SubcommitteeCategoryEntities.Any())
+                        await _SubcommitteeCategoryRepository.DeleteListAsync(SubcommitteeCategoryEntities);
+
+                    if (Request.SubcommitteeOfficerCategories.Any() &&
+                        Request.isSubcommitteeOfficer)
+                    {
+                        List<SubcommitteeCategory> NewSubcommitteeCategoryEntitiesAsOfficer = Request.SubcommitteeOfficerCategories
+                            .Select(x => new SubcommitteeCategory()
+                            {
+                                ArbitratorId = ArbitratorEntityToUpdate.Id,
+                                CategoryId = x
+                            }).ToList();
+
+                        await _SubcommitteeCategoryRepository.AddRangeAsync(NewSubcommitteeCategoryEntitiesAsOfficer);
+                    }
 
                     Transaction.Complete();
                 }

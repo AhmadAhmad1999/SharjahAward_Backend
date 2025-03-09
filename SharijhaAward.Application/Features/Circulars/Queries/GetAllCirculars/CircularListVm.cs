@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Application.Features.Circulars.Queries.GetCircularById;
 
 namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
 {

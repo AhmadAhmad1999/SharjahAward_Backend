@@ -11,6 +11,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetExcelFilePrototype;
 using SharijhaAward.Application.Features.EducationalInstitutions.Queries.ImportDataFormExcel;
+using SharijhaAward.Application.Features.EducationalInstitutions.Queries.GetAllEducationalInstitutionsByCategoryId;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -197,6 +198,32 @@ namespace SharijhaAward.Api.Controllers
                 200 => Ok(response),
                 403 => StatusCode(response.statusCode, response),
                 _ => BadRequest(response)
+            };
+        }
+        [HttpGet("GetAllEducationalInstitutionsByCategoryId")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllEducationalInstitutionsByCategoryId([FromQuery] GetAllEducationalInstitutionsByCategoryIdQuery GetAllEducationalInstitutionsByCategoryIdQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllEducationalInstitutionsByCategoryIdQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllEducationalInstitutionsByCategoryIdListVM>> Response = await _Mediator.Send(GetAllEducationalInstitutionsByCategoryIdQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
             };
         }
     }

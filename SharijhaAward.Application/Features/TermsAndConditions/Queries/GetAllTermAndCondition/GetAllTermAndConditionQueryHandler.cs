@@ -5,56 +5,86 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermAndCondition
 {
     public class GetAllTermAndConditionQueryHandler
         : IRequestHandler<GetAllTermAndConditionQuery, BaseResponse<List<TermAndConditionListVM>>>
     {
-        private readonly IAsyncRepository<TermAndCondition> _termAndConditionRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<TermAndCondition> _TermAndConditionRepository;
+        private readonly IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository;
 
-        public GetAllTermAndConditionQueryHandler(IAsyncRepository<TermAndCondition> termAndConditionRepository, IMapper mapper)
+        public GetAllTermAndConditionQueryHandler(IAsyncRepository<TermAndCondition> _TermAndConditionRepository,
+            IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository)
         {
-            _termAndConditionRepository = termAndConditionRepository;
-            _mapper = mapper;
+            this._TermAndConditionRepository = _TermAndConditionRepository;
+            this._TermAndConditionAttachmentTypeRepository = _TermAndConditionAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermAndConditionQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TermAndConditionListVM>>> 
+            Handle(GetAllTermAndConditionQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var termsAndConditions = await _termAndConditionRepository
-                .WhereThenFilter(x => request.CategoryId != null 
-                    ? x.CategoryId == request.CategoryId
-                    : true, filterObject)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((request.page - 1) * request.perPage)
-                .Take(request.perPage)
-                .ToListAsync();
-            
-            var data = _mapper.Map<List<TermAndConditionListVM>>(termsAndConditions);
-            if(data.Count != 0)
+            List<TermAndCondition> TermAndConditionEntities = new List<TermAndCondition>();
+
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-           
-                for(int i = 0; i < data.Count; i++)
-                {
-                    data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
-                    data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
-                }
+                TermAndConditionEntities = await _TermAndConditionRepository
+                    .WhereThenFilter(x => Request.CategoryId != null
+                        ? x.CategoryId == Request.CategoryId
+                        : true, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .ToListAsync();
             }
-            var count = request.CategoryId == null
-                ? await _termAndConditionRepository.GetCountAsync(t => t.isDeleted == false)
-                : await _termAndConditionRepository.GetCountAsync(t => t.CategoryId == request.CategoryId);
+            else
+            {
+                TermAndConditionEntities = await _TermAndConditionRepository
+                    .WhereThenFilter(x => Request.CategoryId != null
+                        ? x.CategoryId == Request.CategoryId
+                        : true, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToListAsync();
+            }
 
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
-            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data, pagination);    
-            
+            List<TermAndConditionAttachmentType> TermAndConditionAttachmentTypeEntities = _TermAndConditionAttachmentTypeRepository
+                .Where(x => TermAndConditionEntities.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.AttachmentType != null)
+                .ToList();
+
+            List<TermAndConditionListVM> Response = TermAndConditionEntities
+                .Select(x => new TermAndConditionListVM()
+                {
+                    ArabicDescription = x.ArabicDescription,
+                    AttachmentType = TermAndConditionAttachmentTypeEntities
+                        .Where(y => y.TermAndConditionId == x.Id)
+                        .Select(y => y.AttachmentType!.Value)
+                        .ToList(),
+                    Id = x.Id,
+                    CategoryId = x.CategoryId,
+                    CreateAt = x.CreatedAt,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    IsSpecial = true,
+                    NeedAttachment = x.NeedAttachment,
+                    RequiredAttachmentNumber = x.RequiredAttachmentNumber,
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                }).ToList();
+
+            int TotalCount = await _TermAndConditionRepository
+                .WhereThenFilter(x => Request.CategoryId != null
+                    ? x.CategoryId == Request.CategoryId
+                    : true, FilterObject)
+                .CountAsync();
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
+
+            return new BaseResponse<List<TermAndConditionListVM>>(string.Empty, true, 200, Response, Pagination);    
         }
     }
 }

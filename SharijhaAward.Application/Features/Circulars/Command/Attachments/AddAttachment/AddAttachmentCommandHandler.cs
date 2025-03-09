@@ -4,12 +4,6 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.CircularModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Circulars.Command.Attachments.AddAttachment
 {
@@ -41,7 +35,8 @@ namespace SharijhaAward.Application.Features.Circulars.Command.Attachments.AddAt
             CircularAttachment circularAttachment = new CircularAttachment()
             {
                 AttachementPath = await _fileService.SaveFileAsync(request.CircularFile, SystemFileType.Circulars),
-                CircularId = request.CircularId
+                CircularId = request.CircularId,
+                FileName = request.FileName
             };
 
             await _circularAttachmentRepository.AddAsync(circularAttachment);

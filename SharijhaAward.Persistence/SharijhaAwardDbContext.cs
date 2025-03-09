@@ -88,6 +88,7 @@ using SharijhaAward.Domain.Entities.StaticNotificationModel;
 using SharijhaAward.Domain.Entities.NewsTickerModel;
 using SharijhaAward.Domain.Entities.SavedCertificateModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
+using SharijhaAward.Domain.Entities.WebSiteResponseModel;
 
 namespace SharijhaAward.Persistence
 {
@@ -110,6 +111,19 @@ namespace SharijhaAward.Persistence
             _Configuration = Configuration;
         }
 
+        public DbSet<CiruclarSubcommitteeOfficer> CiruclarSubcommitteeOfficers { get; set; }
+        public DbSet<CircularUser> CircularUsers { get; set; }
+        public DbSet<RequestForChangeInterviewEligibilityStatus> RequestForChangeInterviewEligibilityStatuses { get; set; }
+        public DbSet<UserNoteOnFormForArbitration> UserNoteOnFormForArbitrations { get; set; }
+        public DbSet<UserCategory> UserCategories { get; set; }
+        public DbSet<ComitteeOfficer> ComitteeOfficers { get; set; }
+        public DbSet<SubcommitteeCategory> SubcommitteeCategories { get; set; }
+        public DbSet<ExtraAttachmentAttachmentType> ExtraAttachmentAttachmentTypes { get; set; }
+        public DbSet<TrainingWorkshopAttachmentType> TrainingWorkshopAttachmentTypes { get; set; }
+        public DbSet<CriterionAttachmentType> CriterionAttachmentTypes { get; set; }
+        public DbSet<CriterionItemAttachmentType> CriterionItemAttachmentTypes { get; set; }
+        public DbSet<TermAndConditionAttachmentType> TermAndConditionAttachmentTypes { get; set; }
+        public DbSet<CycleConditionAttachmentType> CycleConditionAttachmentTypes { get; set; }
         public DbSet<SwitchArbitration> SwitchArbitrations { get; set; }
         public DbSet<ViewWhenRelation> ViewWhenRelations { get; set; }
         public DbSet<ArbitrationResult> ArbitrationResults { get; set; }
@@ -254,6 +268,8 @@ namespace SharijhaAward.Persistence
         public DbSet<StaticNotification> StaticNotifications { get; set; }
         public DbSet<NewsTicker> NewsTickers { get; set; }
         public DbSet<SavedCertificate> SavedCertificates { get; set; }
+        public DbSet<WebSiteResponse> WebSiteResponses { get; set; }
+        public DbSet<WebSiteResponseAttachment> WebSiteResponseAttachments { get; set; }
         
 
         public DbSet<AdvancedFormBuilderViewWhenRelation> AdvancedFormBuilderViewWhenRelations { get; set; }
@@ -307,10 +323,68 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Achievement>()
                 .Navigation(p => p.User)
                 .AutoInclude();
+            modelBuilder.Entity<ExtraAttachmentAttachmentType>()
+                .Navigation(p => p.ExtraAttachment)
+                .AutoInclude();
+            modelBuilder.Entity<SubcommitteeCategory>()
+                .Navigation(p => p.Arbitrator)
+                .AutoInclude();
+            modelBuilder.Entity<ComitteeOfficer>()
+                .Navigation(p => p.Arbitrator)
+                .AutoInclude();
+            modelBuilder.Entity<UserCategory>()
+                .Navigation(p => p.Category)
+                .AutoInclude();
+            modelBuilder.Entity<CiruclarSubcommitteeOfficer>()
+                .Navigation(p => p.SubcommitteeOfficer)
+                .AutoInclude();
+            modelBuilder.Entity<CiruclarSubcommitteeOfficer>()
+                .Navigation(p => p.Circular)
+                .AutoInclude();
+            modelBuilder.Entity<CircularUser>()
+                .Navigation(p => p.UserRole)
+                .AutoInclude();
+            modelBuilder.Entity<CircularUser>()
+                .Navigation(p => p.Circular)
+                .AutoInclude();
+            modelBuilder.Entity<RequestForChangeInterviewEligibilityStatus>()
+                .Navigation(p => p.RequestedBy)
+                .AutoInclude();
+            modelBuilder.Entity<RequestForChangeInterviewEligibilityStatus>()
+                .Navigation(p => p.ProvidedForm)
+                .AutoInclude();
+            modelBuilder.Entity<UserNoteOnFormForArbitration>()
+                .Navigation(p => p.Chairman)
+                .AutoInclude();
+            modelBuilder.Entity<UserNoteOnFormForArbitration>()
+                .Navigation(p => p.ProvidedForm)
+                .AutoInclude();
+            modelBuilder.Entity<UserCategory>()
+                .Navigation(p => p.UserRole)
+                .AutoInclude();
+            modelBuilder.Entity<ComitteeOfficer>()
+                .Navigation(p => p.Committee)
+                .AutoInclude();
+            modelBuilder.Entity<SubcommitteeCategory>()
+                .Navigation(p => p.Category)
+                .AutoInclude();
+            modelBuilder.Entity<TrainingWorkshopAttachmentType>()
+                .Navigation(p => p.TrainingWorkshopAttachment)
+                .AutoInclude();
 
+            modelBuilder.Entity<CircularUser>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<RequestForChangeInterviewEligibilityStatus>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserNoteOnFormForArbitration>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<UserCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ComitteeOfficer>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<SubcommitteeCategory>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<ExtraAttachmentAttachmentType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TrainingWorkshopAttachmentType>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<TrainingWorkshopAttachment>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Achievement>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Template>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<WebSiteResponse>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<WebSiteResponseAttachment>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<ChatBotQuestion>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<WorkflowQuestion>().HasQueryFilter(p => !p.isDeleted);
@@ -318,6 +392,15 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<CriterionAttachment>()
                 .Navigation(p => p.Criterion)
+                .AutoInclude();
+            modelBuilder.Entity<WebSiteResponse>()
+                .Navigation(p => p.EmailMessage)
+                .AutoInclude();
+            modelBuilder.Entity<WebSiteResponse>()
+                .Navigation(p => p.User)
+                .AutoInclude();
+            modelBuilder.Entity<WebSiteResponseAttachment>()
+                .Navigation(p => p.WebSiteResponse)
                 .AutoInclude();
 
             modelBuilder.Entity<TrainingWorkshopAttachment>()
@@ -374,7 +457,11 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<Arbitration>()
                 .Navigation(p => p.DoneArbitrationUser)
                 .AutoInclude();
+            modelBuilder.Entity<CycleConditionAttachmentType>()
+                .Navigation(p => p.CycleCondition)
+                .AutoInclude();
 
+            modelBuilder.Entity<CycleConditionAttachmentType>().HasQueryFilter(p => !p.isDeleted);
             modelBuilder.Entity<Arbitration>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<Notification>().HasQueryFilter(p => !p.isDeleted);
@@ -513,8 +600,20 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<AdvancedFormBuilderListValue>()
                 .Navigation(p => p.AdvancedFormBuilder)
                 .AutoInclude();
+            modelBuilder.Entity<TermAndConditionAttachmentType>()
+                .Navigation(p => p.TermAndCondition)
+                .AutoInclude();
+            modelBuilder.Entity<CriterionAttachmentType>()
+                .Navigation(p => p.Criterion)
+                .AutoInclude();
+            modelBuilder.Entity<CriterionItemAttachmentType>()
+                .Navigation(p => p.CriterionItem)
+                .AutoInclude();
 
             modelBuilder.Entity<AdvancedFormBuilderListValue>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<TermAndConditionAttachmentType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionAttachmentType>().HasQueryFilter(p => !p.isDeleted);
+            modelBuilder.Entity<CriterionItemAttachmentType>().HasQueryFilter(p => !p.isDeleted);
 
             modelBuilder.Entity<AdvancedFormBuilder>()
                 .Navigation(p => p.AdvancedFormBuilderSection)
@@ -931,6 +1030,9 @@ namespace SharijhaAward.Persistence
             modelBuilder.Entity<ProvidedForm>()
                 .Navigation(p => p.User)
                 .AutoInclude();
+            modelBuilder.Entity<ProvidedForm>()
+                .Navigation(p => p.EducationalInstitution)
+                .AutoInclude();
 
             modelBuilder.Entity<ProvidedForm>()
                 .Navigation(p => p.Category)
@@ -974,6 +1076,9 @@ namespace SharijhaAward.Persistence
 
             modelBuilder.Entity<EducationalInstitution>()
                 .Navigation(p => p.EducationalEntity)
+                .AutoInclude();
+            modelBuilder.Entity<EducationalEntity>()
+                .Navigation(p => p.Cycle)
                 .AutoInclude();
 
             modelBuilder.Entity<EducationalInstitution>().HasQueryFilter(p => !p.isDeleted);

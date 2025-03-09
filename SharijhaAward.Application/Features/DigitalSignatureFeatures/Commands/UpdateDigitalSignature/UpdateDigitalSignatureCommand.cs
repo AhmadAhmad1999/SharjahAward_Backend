@@ -10,9 +10,9 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.U
         public int Id { get; set; }
         public IFormFile? Image { get; set; }
         public bool UpdateOnImage { get; set; }
-        public string UserName { get; set; } = null!;
+        public string? UserName { get; set; }
         [PasswordValidation]
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; }
         public string OldUserName { get; set; } = null!;
         public string OldPassword { get; set; } = null!;
         public string ArabicFullName { get; set; } = null!;

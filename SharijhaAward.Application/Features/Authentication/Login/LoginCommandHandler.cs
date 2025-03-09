@@ -63,8 +63,8 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
 
             var user =  _mapper.Map<Domain.Entities.IdentityModels.User>(request);
-            
-            var response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
+
+            AuthenticationResponse response = await _userRepository.LogInAsync(user, request.lang, request.intoAdminDashboard);
 
             int? ForUseUserId = response.ActiveCycleId;
 
@@ -129,7 +129,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     .ToListAsync();
 
                 List<string> UserRolesNames = AllUserRolesEntities
-                    .Select(x => x.Role!.EnglishName)
+                    .Select(x => request.lang == "en"
+                        ? x.Role!.EnglishName
+                        : x.Role!.ArabicName)
                     .ToList();
 
                 response.user.RoleId = UserRolesIds;
@@ -138,6 +140,18 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 if (AllUserRolesEntities.Any(x => x.Role!.HaveFullAccess))
                     response.user.HasFullAccess = true;
 
+                if (AllUserRolesEntities.Any(x => x.Role!.EnglishName.ToLower() == "Chairman of Committees".ToLower() &&
+                    x.Role!.ArabicName.ToLower() == "رئيس اللجان".ToLower()))
+                    response.user.isChairmanOfCommittees = true;
+
+                if (AllUserRolesEntities.Any(x => x.Role!.EnglishName.ToLower() == "Expert".ToLower() &&
+                    x.Role!.ArabicName.ToLower() == "خبير".ToLower()))
+                    response.user.isExpert = true;
+
+                if (AllUserRolesEntities.Any(x => x.Role!.EnglishName.ToLower() == "Quality".ToLower() &&
+                    x.Role!.ArabicName.ToLower() == "الجودة".ToLower()))
+                    response.user.isQuality = true;
+
                 response.UserPermissions = await _RolePermissionRepository
                     .Where(x => UserRolesIds.Contains(x.RoleId))
                     .Select(x => new UserPermissionsDto()
@@ -145,20 +159,16 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                         Action = x.Permission!.Action,
                         Subject = x.Permission!.PermissionHeader!.EnglishName
                     }).ToListAsync();
-            }
 
-            if (response.user == null && ForUseUserId != null)
-                response.OutUserId = ForUseUserId!.Value;
-
-            if (response.user != null)
-            {
                 Arbitrator? CheckIfLogInUserIsArbitrator = await _ArbitratorRepository
                     .FirstOrDefaultAsync(x => x.Id == response.user.Id);
 
                 if (CheckIfLogInUserIsArbitrator is not null)
                 {
                     response.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+                    response.isSubcommitteeOfficer = CheckIfLogInUserIsArbitrator.isSubcommitteeOfficer;
                     response.user.isChairman = CheckIfLogInUserIsArbitrator.isChairman;
+                    response.user.isSubcommitteeOfficer = CheckIfLogInUserIsArbitrator.isSubcommitteeOfficer;
 
                     List<DynamicAttributeSection> DynamicAttributeSectionEntities = await _DynamicAttributeSectionRepository
                         .Where(x => x.AttributeTableNameId == 3)
@@ -167,7 +177,7 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                     if (DynamicAttributeSectionEntities.Any())
                     {
                         List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
-                            .Where(x => x.IsRequired && 
+                            .Where(x => x.IsRequired &&
                                 DynamicAttributeSectionEntities.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                             .ToListAsync();
 
@@ -186,7 +196,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                 else
                 {
                     response.isChairman = null;
+                    response.isSubcommitteeOfficer = null;
                     response.user.isChairman = null;
+                    response.user.isSubcommitteeOfficer = null;
 
                     Coordinator? CheckIfLogInUserIsCoordinator = await _CoordinatorRepository
                         .FirstOrDefaultAsync(x => x.Id == response.user.Id);
@@ -217,7 +229,34 @@ namespace SharijhaAward.Application.Features.Authentication.Login
                         }
                     }
                 }
+
+                List<DynamicAttributeSection> DynamicAttributeSectionEntitiesForUser = await _DynamicAttributeSectionRepository
+                    .Where(x => AllUserRolesEntities.Select(y => y.RoleId).Any(y => y == x.RecordIdOnRelation) &&
+                        x.AttributeTableNameId == 5)
+                    .ToListAsync();
+
+                if (DynamicAttributeSectionEntitiesForUser.Any())
+                {
+                    List<DynamicAttribute> DynamicAttributeEntities = await _DynamicAttributeRepository
+                        .Where(x => x.IsRequired &&
+                            DynamicAttributeSectionEntitiesForUser.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
+                        .ToListAsync();
+
+                    if (DynamicAttributeEntities.Any())
+                    {
+                        List<DynamicAttributeValue> DynamicAttributeValueEntities = await _DynamicAttributeValueRepository
+                            .Where(x => DynamicAttributeEntities.Select(y => y.Id).Contains(x.DynamicAttributeId) &&
+                                x.RecordId == response.user.Id)
+                            .ToListAsync();
+
+                        if (DynamicAttributeValueEntities.Count() != DynamicAttributeEntities.Count())
+                            response.DoesContainsRequiredFieldsForRoles = true;
+                    }
+                }
             }
+
+            if (response.user == null && ForUseUserId != null)
+                response.OutUserId = ForUseUserId!.Value;
 
             return response;
         }

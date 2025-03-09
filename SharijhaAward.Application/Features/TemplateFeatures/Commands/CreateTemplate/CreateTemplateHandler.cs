@@ -55,18 +55,12 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Commands.CreateTem
 
                     if (Request.BackgroundImageFile is not null)
                     {
-                        string? FileName = $"{NewTemplateEntity.TemplateType}-{NewTemplateEntity.TemplateVersion}";
+                        string? FileName = $"{NewTemplateEntity.TemplateType}-{Request.BackgroundImageFile.FileName}";
 
-                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/CertificateTemplates/{FileName}";
+                        string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
-
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
 
                         using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {

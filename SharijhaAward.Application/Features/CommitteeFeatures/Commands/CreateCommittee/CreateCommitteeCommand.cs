@@ -16,6 +16,7 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.CreateCo
         public int ChairmanId { get; set; }
         public List<int> CategoriesIds { get; set; } = new List<int>();
         public List<int> ArbitratorsIds { get; set; } = new List<int>();
+        public List<int> OfficersIds { get; set; } = new List<int>();
         public string? lang { get; set; }
     }
 }

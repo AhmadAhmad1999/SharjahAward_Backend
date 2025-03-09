@@ -204,7 +204,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                     .AsEnumerable()
                                     .Select(y => y.ProvidedFormId)
                                     .Contains(x.Id),
-                                SubscriberId = x.userId
+                                SubscriberId = x.userId,
+                                Email = x.User!.Email,
+                                PhoneNumber = x.User!.PhoneNumber
                             }).ToList()
                             : forms.AsEnumerable().Select(x => new FormListVm()
                             {
@@ -238,7 +240,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id),
-                                SubscriberId = x.userId
+                                SubscriberId = x.userId,
+                                Email = x.User!.Email,
+                                PhoneNumber = x.User!.PhoneNumber
                             })
                             .Where(x => x.SubscriberName!.Contains(Request.SubscriberName))
                             .ToList();
@@ -467,7 +471,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsFor
                                 .AsEnumerable()
                                 .Select(y => y.ProvidedFormId)
                                 .Contains(x.Id),
-                            SubscriberId = x.userId
+                            SubscriberId = x.userId,
+                            Email = x.User!.Email,
+                            PhoneNumber = x.User!.PhoneNumber
                         }).ToList();
 
                         List<CycleConditionAttachment> AllCycleConditionAttachmentEntities = await _CycleConditionAttachmentRepository

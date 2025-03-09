@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
@@ -27,5 +28,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         public List<ArbitratorCateogryClassesCommand> ArbitratorCateogryClasses { get; set; } = new List<ArbitratorCateogryClassesCommand>();
         public string? WWWRootFilePath { get; set; }
         public bool SendEmail { get; set; }
+        public bool isSubcommitteeOfficer { get; set; } = false;
+        public List<int> SubcommitteeOfficerCategories { get; set; } = new List<int>();
     }
 }

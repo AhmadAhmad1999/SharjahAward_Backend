@@ -24,6 +24,7 @@ using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWithAll
 using SharijhaAward.Application.Features.ProvidedForm.Queries.ExportFormsWithAllItsDataToExcel;
 using SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByFormId;
 using Microsoft.AspNetCore.Hosting;
+using SharijhaAward.Application.Features.ProvidedForm.Command.OpenFormForUpdate;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -99,11 +100,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
-
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             query.lang = Language!;
             query.token = token!;
@@ -193,12 +189,8 @@ namespace SharijhaAward.Api.Controllers
             var token = HttpContext.Request.Headers.Authorization;
             var language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
-            query.lang = language.IsNullOrEmpty() ? "ar" : language!;
+            query.lang = string.IsNullOrEmpty(language) ? "ar" : language!;
 
             query.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
 
@@ -220,10 +212,6 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             var response = await _Mediator.Send(new GetFormsBySubscriberIdQuery()
             {
                 lang = Language!,
@@ -249,10 +237,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
             query.lang = Language!;
 
@@ -275,10 +259,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
             query.lang = Language!;
 
@@ -301,10 +281,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
             query.lang = Language!;
 
@@ -327,10 +303,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
             query.lang = Language!;
 
@@ -352,10 +324,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
             query.token = token!;
             query.lang = Language!;
 
@@ -473,6 +441,34 @@ namespace SharijhaAward.Api.Controllers
             BaseResponse<List<GetAllFilesByFormIdMainResponse>> Response = await _Mediator.Send(new GetAllFilesByFormIdQuery()
             {
                 Id = Id,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("OpenFormForUpdate")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> OpenFormForUpdate(int ProvidedFormId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new OpenFormForUpdateCommand()
+            {
+                ProvidedFormId = ProvidedFormId,
                 lang = HeaderValue!
             });
 

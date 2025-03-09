@@ -1,12 +1,4 @@
-﻿using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
-using SharijhaAward.Application.Features.PageStructures.ParagraphCards.Queries.GetAllParagraphCardsByPageId;
-using SharijhaAward.Domain.Constants;
-using SharijhaAward.Domain.Entities.PageStructureModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPageById
 {

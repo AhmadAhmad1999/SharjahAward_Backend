@@ -108,10 +108,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (CriterionAttachment CriterionAttachmentEntity in CriterionAttachmentEntities)
                 {
-                    List<string> FilePath = CriterionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
+                    if (CriterionAttachmentEntity.AttachementPath.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = CriterionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
 
-                    CriterionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        CriterionAttachmentEntity.AttachementPath = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        CriterionAttachmentEntity.AttachementPath = CriterionAttachmentEntity.AttachementPath.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionAttachmentes = CriterionAttachmentEntities
@@ -197,10 +203,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (CriterionItemAttachment CriterionItemAttachmentEntity in CriterionItemAttachmentEntities)
                 {
-                    List<string> FilePath = CriterionItemAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
+                    if (CriterionItemAttachmentEntity.AttachementPath.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = CriterionItemAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
 
-                    CriterionItemAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        CriterionItemAttachmentEntity.AttachementPath = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        CriterionItemAttachmentEntity.AttachementPath = CriterionItemAttachmentEntity.AttachementPath.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesFromCriterionItemAttachmentes = CriterionItemAttachmentEntities
@@ -286,10 +298,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (ConditionAttachment ConditionAttachmentEntity in ConditionAttachmentEntities)
                 {
-                    List<string> FilePath = ConditionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
+                    if (ConditionAttachmentEntity.AttachementPath.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = ConditionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
 
-                    ConditionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        ConditionAttachmentEntity.AttachementPath = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        ConditionAttachmentEntity.AttachementPath = ConditionAttachmentEntity.AttachementPath.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesFromSpecialConditions = ConditionAttachmentEntities
@@ -375,10 +393,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (CycleConditionAttachment CycleConditionAttachmentEntity in CycleConditionAttachmentEntities)
                 {
-                    List<string> FilePath = CycleConditionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
+                    if (CycleConditionAttachmentEntity.AttachementPath.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = CycleConditionAttachmentEntity.AttachementPath.Split("wwwroot").ToList();
 
-                    CycleConditionAttachmentEntity.AttachementPath = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        CycleConditionAttachmentEntity.AttachementPath = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        CycleConditionAttachmentEntity.AttachementPath = CycleConditionAttachmentEntity.AttachementPath.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesFromGeneralConditions = CycleConditionAttachmentEntities
@@ -492,10 +516,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
                 {
-                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeTableValue1.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeTableValue1.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeTableValue1.Value = DynamicAttributeTableValue1.Value.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesValues1 = DynamicAttributeTableValueList1
@@ -537,10 +567,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
                 {
-                    List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeValue2.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeValue2.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeValue2.Value = DynamicAttributeValue2.Value.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FilesValues2 = DynamicAttributeValueList2
@@ -668,10 +704,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
                 {
-                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeTableValue1.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeTableValue1.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeTableValue1.Value = DynamicAttributeTableValue1.Value.Replace("\\", "/");
+                    }
                 }
                 
                 List<GetAllFilesByFilterListVM> FirstFilesValues = DynamicAttributeTableValueList1
@@ -714,10 +756,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 
                 foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
                 {
-                    List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeValue2.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeValue2.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeValue2.Value = DynamicAttributeValue2.Value.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> SecondFilesValues = DynamicAttributeValueList2
@@ -846,10 +894,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
 
                 foreach (DynamicAttributeTableValue DynamicAttributeTableValue1 in DynamicAttributeTableValueList1)
                 {
-                    List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeTableValue1.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeTableValue1.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeTableValue1.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeTableValue1.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeTableValue1.Value = DynamicAttributeTableValue1.Value.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> FirstFilesValues = DynamicAttributeTableValueList1
@@ -892,10 +946,16 @@ namespace SharijhaAward.Application.Features.FilesManagementFeatures.Queries.Get
                 
                 foreach (DynamicAttributeValue DynamicAttributeValue2 in DynamicAttributeValueList2)
                 {
-                    List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
+                    if (DynamicAttributeValue2.Value.Contains("wwwroot"))
+                    {
+                        List<string> FilePath = DynamicAttributeValue2.Value.Split("wwwroot").ToList();
 
-                    DynamicAttributeValue2.Value = Request.wwwRootFilePath!.Replace("\\", "/") +
-                        FilePath[1];
+                        DynamicAttributeValue2.Value = (Request.wwwRootFilePath! + FilePath[1]).Replace("\\", "/");
+                    }
+                    else
+                    {
+                        DynamicAttributeValue2.Value = DynamicAttributeValue2.Value.Replace("\\", "/");
+                    }
                 }
 
                 List<GetAllFilesByFilterListVM> SecondFilesValues = DynamicAttributeValueList2

@@ -2,11 +2,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.CreateArbitrationAudit;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration
@@ -17,61 +17,26 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IMapper _Mapper;
 
         public CreateInitialArbitrationHandler(IAsyncRepository<InitialArbitration> InitialArbitrationRepository,
             IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
+            IAsyncRepository<FinalArbitration> _FinalArbitrationRepository,
             IMapper Mapper)
         {
             _InitialArbitrationRepository = InitialArbitrationRepository;
             _ArbitrationRepository = ArbitrationRepository;
             _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            this._FinalArbitrationRepository = _FinalArbitrationRepository;
             _Mapper = Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateInitialArbitrationCommand Request, CancellationToken cancellationToken)
         {
-            string ResponseMessage = string.Empty;
-
-            Arbitration? ArbitrationEntity = await _ArbitrationRepository
-                .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
-
-            if (ArbitrationEntity is null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "Arbitration is not Found"
-                    : "التحكيم غير موجود";
-
-                return new BaseResponse<object>(ResponseMessage, false, 404);
-            }
-
-            var InitialArbitrationMainCommandCriterion = Request.InitialArbitrationMainCommand
-                .Where(y => y.CriterionId != null)
-                .Select(y => y.CriterionId);
-
-            List<Criterion> CriterionEntities = await _CriterionRepository
-                .Where(x => InitialArbitrationMainCommandCriterion.Contains(x.Id))
-                .Include(x => x.Parent!)
-                .ToListAsync();
-
-            var InitialArbitrationMainCommandCriterionItem = Request.InitialArbitrationMainCommand
-                .Where(y => y.CriterionItemId != null)
-                .Select(y => y.CriterionItemId);
-
-            List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
-                .Where(x => InitialArbitrationMainCommandCriterionItem.Contains(x.Id))
-                .ToListAsync();
-
-            IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand
-                .Where(x => x.ArbitrationScore != null);
-
-            List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
-                .Where(x => x.ArbitrationId == ArbitrationEntity.Id)
-                .ToListAsync();
-
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,
@@ -83,6 +48,85 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
             {
                 try
                 {
+                    string ResponseMessage = string.Empty;
+
+                    int ArbitrationEntityId = 0;
+
+                    Arbitration? ArbitrationEntity = await _ArbitrationRepository
+                        .FirstOrDefaultAsync(x => x.Id == Request.ArbitrationId);
+
+                    if (ArbitrationEntity is null)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Arbitration is not Found"
+                            : "التحكيم غير موجود";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 404);
+                    }
+
+                    if (DateTime.UtcNow < ArbitrationEntity.ProvidedForm!.Category!.InitialArbitrationStartDate)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Initial arbitration didn't start yet for the category of this form"
+                            : "عملية التحكيم الأولي للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 400);
+                    }
+                    else if (DateTime.UtcNow > ArbitrationEntity.ProvidedForm!.Category!.InitialArbitrationEndDate)
+                    {
+                        ResponseMessage = Request.lang == "en"
+                            ? "Initial arbitration has already ended for the category of this form"
+                            : "عملية التحكيم الأولي للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                        return new BaseResponse<object>(ResponseMessage, false, 400);
+                    }
+
+                    Arbitration? NewArbitrationEntity = null;
+
+                    if (ArbitrationEntity.DateOfArbitration == DateTime.UtcNow &&
+                        ArbitrationEntity.Type == ArbitrationType.DoneArbitratod &&
+                        ArbitrationEntity.isAcceptedFromChairman == FormStatus.Rejected)
+                    {
+                        NewArbitrationEntity = ArbitrationEntity;
+                        NewArbitrationEntity.Id = 0;
+
+                        await _ArbitrationRepository.AddAsync(NewArbitrationEntity);
+
+                        ArbitrationEntityId = NewArbitrationEntity.Id;
+
+                        ArbitrationEntity.RollbackArbitrationId = NewArbitrationEntity.Id;
+
+                        await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
+                    }
+                    else
+                    {
+                        ArbitrationEntityId = ArbitrationEntity.Id;
+                    }
+
+                    var InitialArbitrationMainCommandCriterion = Request.InitialArbitrationMainCommand
+                        .Where(y => y.CriterionId != null)
+                        .Select(y => y.CriterionId);
+
+                    List<Criterion> CriterionEntities = await _CriterionRepository
+                        .Where(x => InitialArbitrationMainCommandCriterion.Contains(x.Id))
+                        .Include(x => x.Parent!)
+                        .ToListAsync();
+
+                    var InitialArbitrationMainCommandCriterionItem = Request.InitialArbitrationMainCommand
+                        .Where(y => y.CriterionItemId != null)
+                        .Select(y => y.CriterionItemId);
+
+                    List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
+                        .Where(x => InitialArbitrationMainCommandCriterionItem.Contains(x.Id))
+                        .ToListAsync();
+
+                    IEnumerable<InitialArbitrationMainCommand> InitialArbitrationMainCommands = Request.InitialArbitrationMainCommand
+                        .Where(x => x.ArbitrationScore != null);
+
+                    List<InitialArbitration> InitialArbitrationEntities = await _InitialArbitrationRepository
+                        .Where(x => x.ArbitrationId == ArbitrationEntityId)
+                        .ToListAsync();
+
                     foreach (InitialArbitrationMainCommand InitialArbitrationMainCommand in InitialArbitrationMainCommands)
                     {
                         if (InitialArbitrationMainCommand.CriterionId is not null &&
@@ -153,18 +197,163 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands
 
                     if (Request.isDoneArbitration)
                     {
-                        ArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
-                        ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
-
-                        // ArbitrationEntity.isAcceptedFromChairman = FormStatus.NotArbitratedYet;
+                        if (NewArbitrationEntity is null)
+                        {
+                            ArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
+                            ArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                            ArbitrationEntity.isAcceptedFromChairman = FormStatus.Accepted;
+                        }
+                        else
+                        {
+                            NewArbitrationEntity.DateOfArbitration = DateTime.UtcNow;
+                            NewArbitrationEntity.Type = ArbitrationType.DoneArbitratod;
+                            NewArbitrationEntity.isAcceptedFromChairman = FormStatus.Accepted;
+                        }
                     }
 
                     else
-                        ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                    {
+                        if (NewArbitrationEntity is null)
+                        {
+                            ArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        }
+                        else
+                        {
+                            NewArbitrationEntity.Type = ArbitrationType.BeingReviewed;
+                        }
+                    }
+                        
+                    if (NewArbitrationEntity is null)
+                    {
+                        ArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore!.Value);
 
-                    ArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore!.Value);
+                        await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
 
-                    await _ArbitrationRepository.UpdateAsync(ArbitrationEntity);
+                        List<Arbitration> CheckIfAllArbitratorsAreDone = await _ArbitrationRepository
+                            .Where(x => x.ProvidedFormId == ArbitrationEntity.ProvidedFormId &&
+                                x.RollbackArbitrationId == null)
+                            .ToListAsync();
+
+                        if (CheckIfAllArbitratorsAreDone.All(x => x.Type == ArbitrationType.DoneArbitratod &&
+                                x.isAcceptedFromChairman == FormStatus.Accepted &&
+                                x.DateOfArbitration != null))
+                        {
+                            bool ItExceededTheMarginOfDifferenceInArbitrationScores = false;
+
+                            int MarginOfDifferenceBetweenArbitrators = CheckIfAllArbitratorsAreDone
+                                .Select(x => x.ProvidedForm!.Category!.MarginOfDifferenceBetweenArbitrators)
+                                .FirstOrDefault();
+
+                            foreach (Arbitration ArbitrationEntity1 in CheckIfAllArbitratorsAreDone)
+                            {
+                                foreach (Arbitration ArbitrationEntity2 in CheckIfAllArbitratorsAreDone)
+                                {
+                                    if (Math.Abs(ArbitrationEntity1.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                    {
+                                        ItExceededTheMarginOfDifferenceInArbitrationScores = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!ItExceededTheMarginOfDifferenceInArbitrationScores)
+                            {
+                                await _ArbitrationRepository
+                                    .Where(x => x.ProvidedFormId == ArbitrationEntity.ProvidedFormId)
+                                    .ExecuteUpdateAsync(x => x
+                                        .SetProperty(y => y.DateOfArbitrationAuditing, DateTime.UtcNow)
+                                        .SetProperty(y => y.ArbitrationAuditType, ArbitrationType.DoneArbitratod)
+                                        .SetProperty(y => y.isAcceptedFromChairmanFromArbitrationAudit, FormStatus.Accepted));
+
+                                int ArbitratorId = CheckIfAllArbitratorsAreDone.FirstOrDefault()!.ArbitratorId;
+
+                                FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                                    .FirstOrDefaultAsync(x => x.ProvidedFormId == ArbitrationEntity.ProvidedFormId);
+
+                                if (FinalArbitrationEntity is null)
+                                {
+                                    FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
+                                    {
+                                        ReasonForRejecting = null,
+                                        isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                                        ArbitratorId = ArbitratorId,
+                                        ProvidedFormId = ArbitrationEntity.ProvidedFormId,
+                                        Type = ArbitrationType.NotBeenArbitrated,
+                                        DateOfArbitration = null,
+                                        FullScore = 0,
+                                        FinalScore = 0
+                                    };
+
+                                    await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NewArbitrationEntity.FullScore = Request.InitialArbitrationMainCommand.Sum(x => x.ArbitrationScore!.Value);
+
+                        await _ArbitrationRepository.UpdateAsync(NewArbitrationEntity);
+
+                        List<Arbitration> CheckIfAllArbitratorsAreDone = await _ArbitrationRepository
+                            .Where(x => x.ProvidedFormId == NewArbitrationEntity.ProvidedFormId &&
+                                x.RollbackArbitrationId == null)
+                            .ToListAsync();
+
+                        if (CheckIfAllArbitratorsAreDone.All(x => x.Type == ArbitrationType.DoneArbitratod &&
+                                x.isAcceptedFromChairman == FormStatus.Accepted &&
+                                x.DateOfArbitration != null))
+                        {
+                            bool ItExceededTheMarginOfDifferenceInArbitrationScores = false;
+
+                            int MarginOfDifferenceBetweenArbitrators = CheckIfAllArbitratorsAreDone
+                                .Select(x => x.ProvidedForm!.Category!.MarginOfDifferenceBetweenArbitrators)
+                                .FirstOrDefault();
+
+                            foreach (Arbitration ArbitrationEntity1 in CheckIfAllArbitratorsAreDone)
+                            {
+                                foreach (Arbitration ArbitrationEntity2 in CheckIfAllArbitratorsAreDone)
+                                {
+                                    if (Math.Abs(ArbitrationEntity1.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                    {
+                                        ItExceededTheMarginOfDifferenceInArbitrationScores = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!ItExceededTheMarginOfDifferenceInArbitrationScores)
+                            {
+                                await _ArbitrationRepository
+                                    .Where(x => x.ProvidedFormId == NewArbitrationEntity.ProvidedFormId)
+                                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.DateOfArbitrationAuditing, DateTime.UtcNow)
+                                        .SetProperty(y => y.ArbitrationAuditType, ArbitrationType.DoneArbitratod)
+                                        .SetProperty(y => y.isAcceptedFromChairmanFromArbitrationAudit, FormStatus.Accepted));
+
+                                int ArbitratorId = CheckIfAllArbitratorsAreDone.FirstOrDefault()!.ArbitratorId;
+
+                                FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                                    .FirstOrDefaultAsync(x => x.ProvidedFormId == NewArbitrationEntity.ProvidedFormId);
+
+                                if (FinalArbitrationEntity is null)
+                                {
+                                    FinalArbitration NewFinalArbitrationEntity = new FinalArbitration()
+                                    {
+                                        ReasonForRejecting = null,
+                                        isAcceptedFromChairman = FormStatus.NotArbitratedYet,
+                                        ArbitratorId = ArbitratorId,
+                                        ProvidedFormId = NewArbitrationEntity.ProvidedFormId,
+                                        Type = ArbitrationType.NotBeenArbitrated,
+                                        DateOfArbitration = null,
+                                        FullScore = 0,
+                                        FinalScore = 0
+                                    };
+
+                                    await _FinalArbitrationRepository.AddAsync(NewFinalArbitrationEntity);
+                                }
+                            }
+                        }
+                    }
 
                     Transaction.Complete();
 

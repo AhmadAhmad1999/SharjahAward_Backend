@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -13,12 +14,15 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
     {
         private readonly IAsyncRepository<PageStructure> _PageStructureRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetMainPagesWithSubPagesQueryHandler(IAsyncRepository<PageStructure> _PageStructureRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._PageStructureRepository = _PageStructureRepository;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<GetMainPagesWithSubPagesResponse>> Handle(GetMainPagesWithSubPagesQuery Request, CancellationToken cancellationToken)
@@ -26,13 +30,25 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
             string ResponseMessage = string.Empty;
 
             List<PageStructure> AllMainPages = await _PageStructureRepository
-                .Where(p => p.ParentId == null)
+                .Where(x => x.ParentId == null &&
+                    (Request.intoWebsite!.Value
+                        ? !x.IsHide
+                        : true))
                 .ToListAsync();
 
             IEnumerable<PageStructure> SubPages = await _PageStructureRepository
-                .Where(x => x.ParentId != null)
+                .Where(x => x.ParentId != null &&
+                    (Request.intoWebsite!.Value
+                        ? !x.IsHide
+                        : true))
                 .OrderBy(x => x.orderId)
                 .ToListAsync();
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
             GetMainPagesWithSubPagesResponse Response = new GetMainPagesWithSubPagesResponse()
             {
@@ -41,7 +57,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
                     .Select(x => new MainPageWithSubPageListVM()
                     {
                         Id = x.Id,
-                        IconUrl = x.IconUrl,
+                        IconUrl = (!string.IsNullOrEmpty(x.IconUrl)
+                            ? (x.IconUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.IconUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.IconUrl.Replace("\\", "/"))
+                            : null),
                         Title = Request.lang == "en"
                             ? x.EnglishTitle
                             : x.ArabicTitle,
@@ -63,7 +83,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
                     .Select(x => new MainPageWithSubPageListVM()
                     {
                         Id = x.Id,
-                        IconUrl = x.IconUrl,
+                        IconUrl = (!string.IsNullOrEmpty(x.IconUrl)
+                            ? (x.IconUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.IconUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.IconUrl.Replace("\\", "/"))
+                            : null),
                         Title = Request.lang == "en"
                             ? x.EnglishTitle
                             : x.ArabicTitle,

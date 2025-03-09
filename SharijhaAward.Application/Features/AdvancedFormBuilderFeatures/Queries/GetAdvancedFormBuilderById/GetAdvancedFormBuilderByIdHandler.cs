@@ -57,7 +57,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                 .FirstOrDefaultAsync(x => x.AdvancedFormBuilderId == Request.Id));
 
             IQueryable<IGrouping<int, AdvancedFormBuilderDependency>> Dependencies = _AdvancedFormBuilderDependencyRepository
-                .WhereThenInclude(x => x.MainAdvancedFormBuilderId == Request.Id, x => x.AttributeOperation!,
+                .WhereThenInclude(x => x.MainAdvancedFormBuilderId == Request.Id &&
+                    x.AdvancedFormBuilderId != null, x => x.AttributeOperation!,
                     x => x.AdvancedFormBuilder!, x => x.StaticAttribute!)
                 .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId);
 
@@ -91,7 +92,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries
                                     : x.AdvancedFormBuilder!.ArabicLabel),
                             DynamicAttributeId = x.AdvancedFormBuilderId != null ? x.AdvancedFormBuilderId.Value : 0,
                             AttributeOperationId = x.AttributeOperationId
-                        }).ToList()
+                        }).ToList(),
+                        AttributeOperationId = AdvancedFormBuilderDependencyValidation.AttributeOperation!.Id
                     };
 
                     AdvancedFormBuilder.DependencyValidations.Add(AdvancedFormBuilderDependencyValidationDto);

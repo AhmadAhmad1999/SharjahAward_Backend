@@ -19,18 +19,21 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IFileService _FileService;
         private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository;
 
         public CreateTrainingWorkshopsCommandHandler(IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository,
             IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository,
             IAsyncRepository<Category> _CategoryRepository,
             IFileService _FileService,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository)
         {
             this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
             this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
             this._CategoryRepository = _CategoryRepository;
             this._FileService = _FileService;
             this._Mapper = _Mapper;
+            this._TrainingWorkshopAttachmentTypeRepository = _TrainingWorkshopAttachmentTypeRepository;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateTrainingWorkshopsCommand Request, CancellationToken cancellationToken)
@@ -68,18 +71,29 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTra
 
                     TrainingWorkshop Response = await _TrainingWorkshopRepository.AddAsync(NewTrainingWorkshopEntity);
 
-                    IEnumerable<TrainingWorkshopAttachment> NewTrainingWorkshopAttachmentEntities = Request.TrainingWorkshopAttachments
-                        .Select(x => new TrainingWorkshopAttachment()
+                    foreach (CreateTrainingWorkshopAttachmentsDto TrainingWorkshopAttachments in Request.TrainingWorkshopAttachments)
+                    {
+                        TrainingWorkshopAttachment NewTrainingWorkshopAttachmentEntity = new TrainingWorkshopAttachment()
                         {
-                            EnglishName = x.EnglishName,
-                            ArabicName = x.ArabicName,
-                            AttachementPath = _FileService.SaveFileAsync(x.attachment, SystemFileType.Pdf).Result,
+                            EnglishName = TrainingWorkshopAttachments.EnglishName,
+                            ArabicName = TrainingWorkshopAttachments.ArabicName,
+                            AttachementPath = _FileService.SaveFileAsync(TrainingWorkshopAttachments.attachment, SystemFileType.Pdf).Result,
                             SizeOfAttachmentInKB = 0,
-                            AttachmentType = x.AttachmentType,
                             TrainingWorkshopId = Response.Id
-                        });
+                        };
 
-                    await _TrainingWorkshopAttachmentRepository.AddRangeAsync(NewTrainingWorkshopAttachmentEntities);
+                        await _TrainingWorkshopAttachmentRepository.AddAsync(NewTrainingWorkshopAttachmentEntity);
+
+                        List<TrainingWorkshopAttachmentType> NewTrainingWorkshopAttachmentTypeEntities = TrainingWorkshopAttachments
+                            .AttachmentType
+                            .Select(x => new TrainingWorkshopAttachmentType()
+                            {
+                                AttachmentType = x,
+                                TrainingWorkshopAttachmentId = NewTrainingWorkshopAttachmentEntity.Id
+                            }).ToList();
+
+                        await _TrainingWorkshopAttachmentTypeRepository.AddRangeAsync(NewTrainingWorkshopAttachmentTypeEntities);
+                    }
 
                     ResponseMessage = Request.lang == "en"
                         ? "Created successfully"

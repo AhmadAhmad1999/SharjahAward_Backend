@@ -10,5 +10,7 @@ namespace SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.
         public string? ReasonForRejecting { get; set; }
         public FormStatus isAcceptedFromChairman { get; set; }
         public bool isDoneArbitration { get; set; }
+        public string SubscriberName { get; set; } = null!;
+        public List<ChairmanNotesOnInitialArbitrationDto> NotesOnInitialArbitrationDtos { get; set; } = new List<ChairmanNotesOnInitialArbitrationDto>();
     }
 }

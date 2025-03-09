@@ -33,7 +33,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
 
             var NewsList = await _newsRepository.GetWhereThenPagedReponseAsync(n=>!n.IsHidden, request.page, request.perPage);
             
-            if (!request.query.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(request.query))
             {
                 NewsList = await _newsRepository
                     .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()) && !n.IsHidden)
@@ -72,7 +72,7 @@ namespace SharijhaAward.Application.Features.News.Queries.GetNewsByCycleId
             
             Pagination pagination = new Pagination(request.page, request.perPage, count);
 
-            if (!request.query.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(request.query))
                 return new BaseResponse<List<NewsListVM>>("", true, 200, data);
 
             return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);

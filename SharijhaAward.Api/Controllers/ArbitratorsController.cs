@@ -50,7 +50,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            CreateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
+            CreateArbitratorCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
 
             BaseResponse<int>? Response = await _Mediator.Send(CreateArbitratorCommand);
 
@@ -282,11 +282,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAllArbitratorsByFormId(int formId, int page = 1, int perPage = 10)
         {
             string token = HttpContext.Request.Headers.Authorization!;
-
-            if(token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

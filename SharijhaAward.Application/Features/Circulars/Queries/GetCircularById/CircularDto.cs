@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
+﻿namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
 {
     public class CircularDto
     {
@@ -18,5 +12,9 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
         public List<int>? Coordinators { get; set; }
         public List<int>? Arbitrators { get; set; }
         public List<int>? Chairmans { get; set; }
+        public List<int>? Experts { get; set; }
+        public List<int>? Qualities { get; set; }
+        public List<int>? ChairmanOfCommittes { get; set; }
+        public List<int>? SubcommitteeOfficers { get; set; }
     }
 }

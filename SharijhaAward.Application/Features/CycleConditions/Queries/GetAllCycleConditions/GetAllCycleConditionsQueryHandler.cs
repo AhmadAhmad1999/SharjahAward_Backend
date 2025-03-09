@@ -5,69 +5,87 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
-using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetAllCycleConditions
 {
     public class GetAllCycleConditionsQueryHandler
         : IRequestHandler<GetAllCycleConditionsQuery, BaseResponse<List<CycleConditionListVM>>>
     {
-        private readonly IAsyncRepository<CycleCondition> _cycleConditionRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<CycleCondition> _CycleConditionRepository;
+        private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository;
 
-        public GetAllCycleConditionsQueryHandler(IAsyncRepository<CycleCondition> cycleConditionRepository, IMapper mapper)
+        public GetAllCycleConditionsQueryHandler(IAsyncRepository<CycleCondition> _CycleConditionRepository,
+            IMapper _Mapper,
+            IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository)
         {
-            _cycleConditionRepository = cycleConditionRepository;
-            _mapper = mapper;
+            this._CycleConditionRepository = _CycleConditionRepository;
+            this._Mapper = _Mapper;
+            this._CycleConditionAttachmentTypeRepository = _CycleConditionAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CycleConditionListVM>>> Handle(GetAllCycleConditionsQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var allCycleCondition = await _cycleConditionRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
-                .ToListAsync();
+            List<CycleCondition> CycleConditionEntities = new List<CycleCondition>();
 
-            if (request.CycleId != null)
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-                if (request.page != 0 && request.perPage != -1)
-                    allCycleCondition = await _cycleConditionRepository
-                        .WhereThenFilter(c => c.CycleId == request.CycleId, filterObject)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((request.page - 1) * request.perPage)
-                        .Take(request.perPage)
-                        .ToListAsync();
-
-                else
-                    allCycleCondition = await _cycleConditionRepository
-                        .WhereThenFilter(c => c.CycleId == request.CycleId, filterObject)
-                        .OrderByDescending(x => x.CreatedAt)
-                        .ToListAsync();
+                CycleConditionEntities = await _CycleConditionRepository
+                    .WhereThenFilter(x => Request.CycleId != null
+                        ? x.CycleId == Request.CycleId
+                        : true, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .ToListAsync();
             }
-           
-            var data = _mapper.Map<List<CycleConditionListVM>>(allCycleCondition).OrderBy(a => a.CreatedAt).ToList();
-
-            for (int i = 0; i < data.Count; i++)
+            else
             {
-                data[i].Title = request.lang == "en"
-                    ? data[i].EnglishTitle : data[i].ArabicTitle;
-
-                data[i].Description = request.lang == "en"
-                    ? data[i].EnglishDescription : data[i].ArabicDescription;
+                CycleConditionEntities = await _CycleConditionRepository
+                    .WhereThenFilter(x => Request.CycleId != null
+                        ? x.CycleId == Request.CycleId
+                        : true, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .ToListAsync();
             }
-            int count = request.CycleId == null
-                ? _cycleConditionRepository.WhereThenFilter(c => true, filterObject).Count()
-                : _cycleConditionRepository.WhereThenFilter(c => c.CycleId == request.CycleId, filterObject).Count();
 
-            Pagination pagination = new Pagination(request.page,request.perPage,count);
+            List<CycleConditionAttachmentType> CycleConditionAttachmentTypeEntities = _CycleConditionAttachmentTypeRepository
+                .Where(x => CycleConditionEntities.Select(y => y.Id).Contains(x.CycleConditionId) &&
+                    x.AttachmentType != null)
+                .ToList();
+
+            List<CycleConditionListVM> Response = CycleConditionEntities
+                .Select(x => new CycleConditionListVM()
+                {
+                    Id = x.Id,
+                    ArabicDescription = x.ArabicDescription,
+                    AttachmentType = CycleConditionAttachmentTypeEntities
+                        .Where(y => y.CycleConditionId == x.Id)
+                        .Select(y => y.AttachmentType!.Value)
+                        .ToList(),
+                    CreatedAt = x.CreatedAt,
+                    CycleId = x.CycleId,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    NeedAttachment = x.NeedAttachment,
+                    RequiredAttachmentNumber = x.RequiredAttachmentNumber,
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                }).ToList();
+
+            int TotalCount = await _CycleConditionRepository
+                .WhereThenFilter(x => Request.CycleId != null
+                    ? x.CycleId == Request.CycleId
+                    : true, FilterObject)
+                .CountAsync();
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
             
-            return new BaseResponse<List<CycleConditionListVM>>("", true, 200, data, pagination);
+            return new BaseResponse<List<CycleConditionListVM>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

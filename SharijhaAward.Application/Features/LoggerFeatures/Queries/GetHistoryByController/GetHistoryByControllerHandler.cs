@@ -8,6 +8,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.LoggerModel;
+using System.Web;
 
 namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryByController
 {
@@ -44,7 +45,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
 
             if (UserRoles is not null)
             {
-                if (!Request.UserName.IsNullOrEmpty() && Request.lang == "en")
+                if (!string.IsNullOrEmpty(Request.UserName) && Request.lang == "en")
                 {
                     Response = await _LogUserActionRepository
                         .WhereThenFilter(x => x.User!.EnglishName.ToLower().Contains(Request.UserName!.ToLower()), FilterObject)
@@ -75,7 +76,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                         .WhereThenFilter(x => x.User!.EnglishName.ToLower().Contains(Request.UserName!.ToLower()), FilterObject)
                         .CountAsync();
                 }
-                else if (!Request.UserName.IsNullOrEmpty() && Request.lang == "ar")
+                else if (!string.IsNullOrEmpty(Request.UserName) && Request.lang == "ar")
                 {
                     Response = await _LogUserActionRepository
                         .WhereThenFilter(x => x.User!.ArabicName.ToLower().Contains(Request.UserName!.ToLower()), FilterObject)
@@ -140,7 +141,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
             }
             else
             {
-                if (!Request.UserName.IsNullOrEmpty() && Request.lang == "en")
+                if (!string.IsNullOrEmpty(Request.UserName) && Request.lang == "en")
                 {
                     Response = _LogUserActionRepository
                         .WhereThenFilter(x => x.UserId == UserId &&
@@ -173,7 +174,7 @@ namespace SharijhaAward.Application.Features.LoggerFeatures.Queries.GetHistoryBy
                             x.User!.EnglishName.ToLower().Contains(Request.UserName!.ToLower()), FilterObject)
                         .CountAsync();
                 }
-                else if (!Request.UserName.IsNullOrEmpty() && Request.lang == "ar")
+                else if (!string.IsNullOrEmpty(Request.UserName) && Request.lang == "ar")
                 {
                     Response = _LogUserActionRepository
                         .WhereThenFilter(x => x.UserId == UserId &&

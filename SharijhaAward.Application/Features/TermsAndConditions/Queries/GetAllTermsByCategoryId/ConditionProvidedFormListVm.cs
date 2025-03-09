@@ -1,13 +1,4 @@
-﻿using SharijhaAward.Domain.Entities.AttachmentModel;
-using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
+﻿namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId
 {
     public class ConditionProvidedFormListVm
     {

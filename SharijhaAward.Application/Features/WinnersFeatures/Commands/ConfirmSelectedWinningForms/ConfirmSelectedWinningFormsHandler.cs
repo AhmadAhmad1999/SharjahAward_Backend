@@ -165,7 +165,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 ArabicTitle = StaticNotificationEntity!.ArabicTitle,
                                 ArabicBody = StaticNotificationEntity!.ArabicBody,
                                 EnglishTitle = StaticNotificationEntity!.EnglishTitle,
-                                EnglishBody = StaticNotificationEntity!.EnglishBody
+                                EnglishBody = StaticNotificationEntity!.EnglishBody,
+                                isStaticNotification = true
                             };
 
                             await _NotificationRepository.AddAsync(NewNotificationEntity);
@@ -199,7 +200,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 {
                                     UserId = x.Key,
                                     NotificationId = NewNotificationEntity.Id,
-                                    isReaded = false
+                                    isReaded = false,
+                                    Action = "winners"
                                 }).ToListAsync();
 
                             if (UserNotificationEntities is not null)
@@ -343,7 +345,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 ArabicTitle = StaticNotificationEntity!.ArabicTitle,
                                 ArabicBody = StaticNotificationEntity!.ArabicBody,
                                 EnglishTitle = StaticNotificationEntity!.EnglishTitle,
-                                EnglishBody = StaticNotificationEntity!.EnglishBody
+                                EnglishBody = StaticNotificationEntity!.EnglishBody,
+                                isStaticNotification = true
                             };
 
                             await _NotificationRepository.AddAsync(NewNotificationEntity);
@@ -377,7 +380,8 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Commands.ConfirmSel
                                 {
                                     UserId = x.Key,
                                     NotificationId = NewNotificationEntity.Id,
-                                    isReaded = false
+                                    isReaded = false,
+                                    Action = "winners"
                                 }).ToListAsync();
 
                             if (UserNotificationEntities is not null)

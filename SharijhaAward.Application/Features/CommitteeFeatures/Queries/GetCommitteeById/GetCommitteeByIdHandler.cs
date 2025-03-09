@@ -17,15 +17,18 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
         private readonly IAsyncRepository<Committee> _CommitteeRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
         private readonly IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository;
-        public GetCommitteeByIdHandler(IMapper Mapper,
-            IAsyncRepository<Committee> CommitteeRepository,
-            IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
-            IAsyncRepository<CategoryCommittee> CategoryCommitteeRepository)
+        private readonly IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository;
+        public GetCommitteeByIdHandler(IMapper _Mapper,
+            IAsyncRepository<Committee> _CommitteeRepository,
+            IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository,
+            IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository,
+            IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository)
         {
-            _Mapper = Mapper;
-            _CommitteeRepository = CommitteeRepository;
-            _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
-            _CategoryCommitteeRepository = CategoryCommitteeRepository;
+            this._Mapper = _Mapper;
+            this._CommitteeRepository = _CommitteeRepository;
+            this._ComitteeArbitratorRepository = _ComitteeArbitratorRepository;
+            this._CategoryCommitteeRepository = _CategoryCommitteeRepository;
+            this._ComitteeOfficerRepository = _ComitteeOfficerRepository;
         }
 
         public async Task<BaseResponse<GetCommitteeByIdDto>> Handle(GetCommitteeByIdQuery Request, CancellationToken cancellationToken)
@@ -54,9 +57,15 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Queries.GetCommit
                 .Select(x => x.Category!)
                 .ToListAsync());
 
+            List<ArbitratorDto> Officers = _Mapper.Map<List<ArbitratorDto>>(await _ComitteeOfficerRepository
+                .Where(x => x.CommitteeId == Request.Id)
+                .Select(x => x.Arbitrator!)
+                .ToListAsync());
+
             GetCommitteeByIdDto CommitteeDto = _Mapper.Map<GetCommitteeByIdDto>(CommitteeEntity);
 
             CommitteeDto.Arbitrators = Arbitrators;
+            CommitteeDto.Officers = Officers;
             CommitteeDto.Categories = Categories;
             CommitteeDto.ChairmanName = Request.lang == "en"
                 ? CommitteeEntity.EnglishName

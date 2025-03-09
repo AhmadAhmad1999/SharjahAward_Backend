@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Helpers.AddDynamicAttributeValue;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
-using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Transactions;
 
@@ -26,6 +25,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
         private readonly IAsyncRepository<EducationalClass> _EducationalClassRepository;
         private readonly IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
+        private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
 
         public AddDynamicAttributeValueForSaveHandler(IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
             IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
@@ -35,7 +35,8 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             IAsyncRepository<ProvidedForm> ProvidedFormRepository,
             IAsyncRepository<EducationalClass> EducationalClassRepository,
             IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository)
+            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
+            IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository)
         {
             _DynamicAttributeRepository = DynamicAttributeRepository;
             _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
@@ -46,6 +47,7 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
             _EducationalClassRepository = EducationalClassRepository;
             _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
             _EducationalEntityRepository = EducationalEntityRepository;
+            this._EducationalInstitutionRepository = _EducationalInstitutionRepository;
         }
 
         public async Task<BaseResponse<AddDynamicAttributeValueForSaveResponse>> Handle(AddDynamicAttributeValueForSaveCommand Request,
@@ -257,25 +259,19 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
+                        if (!Directory.Exists(FolderPathToCreate))
+                            Directory.CreateDirectory(FolderPathToCreate);
 
-                        using (MemoryStream MemoryStream = new MemoryStream())
-                        {
-                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
-                            byte[] FileBytes = MemoryStream.ToArray();
-                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
-                        }
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                            await DynamicAttributeAsFile.ValueAsBinaryFile.CopyToAsync(FileStream);
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
 
                     List<DynamicAttributeValue> DynamicAttributeValuesEntities = Request.DynamicAttributesWithValues
-                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString))
+                        .Where(x => !string.IsNullOrEmpty(x.ValueAsString) &&
+                            x.DynamicAttributeId > 0)
                         .Select(x => new DynamicAttributeValue()
                         {
                             CreatedAt = DateTime.UtcNow,
@@ -315,18 +311,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
+                        if (!Directory.Exists(FolderPathToCreate))
+                            Directory.CreateDirectory(FolderPathToCreate);
 
-                        using (MemoryStream MemoryStream = new MemoryStream())
-                        {
-                            DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
-                            byte[] FileBytes = MemoryStream.ToArray();
-                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
-                        }
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                            await DynamicAttributeAsFile.ValueAsBinaryFile.CopyToAsync(FileStream);
 
                         DynamicAttributeAsFile.ValueAsBinaryFile = null;
                         DynamicAttributeAsFile.ValueAsString = FilePathToSaveIntoDataBase;
@@ -416,23 +405,23 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValueForSave
                                     }
                                 }
 
-                                DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
-                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
-                                        .Contains(x.Id) && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+                                DynamicAttributeListValue? EducationalInstitutionDynamicAttribute = await _DynamicAttributeListValueRepository
+                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues
+                                        .Select(y => y.DynamicAttributeId)
+                                        .Contains(x.DynamicAttributeId) &&
+                                            x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Institution".ToLower());
 
-                                if (EducationalEntityDynamicAttribute is not null)
+                                if (EducationalInstitutionDynamicAttribute is not null)
                                 {
-                                    string? StringValueForEducatiolaEntity = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == EducationalEntityDynamicAttribute.Id)!
-                                        .ValueAsString;
-
-                                    EducationalEntity? EducationalEntity = await _EducationalEntityRepository
+                                    EducationalInstitution? EducationalInstitutionEntity = await _EducationalInstitutionRepository
                                         .FirstOrDefaultAsync(x => Request.lang == "en"
-                                            ? x.EnglishName.ToLower() == StringValueForEducatiolaEntity!.ToLower()
-                                            : x.ArabicName.ToLower() == StringValueForEducatiolaEntity!.ToLower());
+                                            ? x.EnglishName.ToLower() == EducationalInstitutionDynamicAttribute.EnglishValue.ToLower()
+                                            : x.ArabicName.ToLower() == EducationalInstitutionDynamicAttribute.ArabicValue.ToLower());
 
-                                    if (EducationalEntity is not null)
+                                    if (EducationalInstitutionEntity is not null)
                                     {
-                                        ProvidedFormEntity.EducationalEntityId = EducationalEntity.Id;
+                                        ProvidedFormEntity.EducationalInstitutionId = EducationalInstitutionEntity.Id;
+                                        ProvidedFormEntity.EducationalEntityId = EducationalInstitutionEntity.EducationalEntityId;
                                     }
                                 }
 

@@ -6,38 +6,82 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.CreateWorkshpoeAttachment
 {
     public class CreateWorkshopeAttachmentCommandHandler
         : IRequestHandler<CreateWorkshopeAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TrainingWorkshop> _workshopRepository;
-        private readonly IAsyncRepository<TrainingWorkshopAttachment> _attachmentRepository;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository;
+        private readonly IFileService _FileService;
+        private readonly IMapper _Mapper;
 
-        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWorkshopAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
+        public CreateWorkshopeAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository, 
+            IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository,
+            IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository,
+            IFileService _FileService, 
+            IMapper _Mapper)
         {
-            _workshopRepository = workshopRepository;
-            _attachmentRepository = attachmentRepository;
-            _fileService = fileService;
-            _mapper = mapper;
+            this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
+            this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
+            this._TrainingWorkshopAttachmentTypeRepository = _TrainingWorkshopAttachmentTypeRepository;
+            this._FileService = _FileService;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<object>> Handle(CreateWorkshopeAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(CreateWorkshopeAttachmentCommand Request, CancellationToken cancellationToken)
         {
-            var workShop = await _workshopRepository.GetByIdAsync(request.WorkshopeId);
-            if (workShop == null)
+            string ResponseMessage = string.Empty;
+
+            TrainingWorkshop? TrainingWorkshopEntity = await _TrainingWorkshopRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.WorkshopeId);
+
+            if (TrainingWorkshopEntity is null)
             {
-                return new BaseResponse<object>("", false, 404);
+                ResponseMessage = Request.lang == "en"
+                    ? "Training workshop is not found"
+                    : "الورشة التدريبية غير موجودة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-            var data = _mapper.Map<TrainingWorkshopAttachment>(request);
-            data.AttachementPath = await _fileService.SaveFileAsync(request.attachment, SystemFileType.Pdf);
-            await _attachmentRepository.AddAsync(data);
 
-            return new BaseResponse<object>("", true, 200);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
 
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    TrainingWorkshopAttachment NewTrainingWorkshopAttachmentEntity = _Mapper.Map<TrainingWorkshopAttachment>(Request);
+                    NewTrainingWorkshopAttachmentEntity.AttachementPath = await _FileService.SaveFileAsync(Request.attachment, SystemFileType.Pdf);
+                    await _TrainingWorkshopAttachmentRepository.AddAsync(NewTrainingWorkshopAttachmentEntity);
+
+                    List<TrainingWorkshopAttachmentType> NewTrainingWorkshopAttachmentTypeEntities = Request.AttachmentType
+                        .Select(x => new TrainingWorkshopAttachmentType()
+                        {
+                            AttachmentType = x,
+                            TrainingWorkshopAttachmentId = NewTrainingWorkshopAttachmentEntity.Id
+                        }).ToList();
+
+                    await _TrainingWorkshopAttachmentTypeRepository.AddRangeAsync(NewTrainingWorkshopAttachmentTypeEntities);
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

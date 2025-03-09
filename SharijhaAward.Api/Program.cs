@@ -2,6 +2,7 @@ using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using NLog;
@@ -155,8 +156,11 @@ try
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-
     }
+
+    //using IServiceScope scope = app.Services.CreateScope();
+    //ApplyMigration<SharijhaAwardDbContext>(scope);
+
     app.UseStaticFiles(new StaticFileOptions
     {
         ServeUnknownFileTypes = true,
@@ -258,3 +262,12 @@ catch (Exception ex)
 
     app.Run();
 }   
+
+static void ApplyMigration<TDbContext>(IServiceScope scope)
+    where TDbContext : DbContext
+{
+    using TDbContext context = scope.ServiceProvider
+        .GetRequiredService<TDbContext>();
+
+    context.Database.Migrate();
+}

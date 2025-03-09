@@ -14,5 +14,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
         public bool? RelatedToEducationalEntities { get; set; }
         public List<GetAllCategoryEducationalEntitiesByCategoryIdDto> SubCategoryEducationalEntities { get; set; } = new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>();
         public List<RewardListVm> Rewards { get; set; } = null!;
+
+        public DateTime? SortingFormsStartDate { get; set; }
+        public DateTime? SortingFormsEndDate { get; set; }
+        public DateTime? InitialArbitrationStartDate { get; set; }
+        public DateTime? InitialArbitrationEndDate { get; set; }
+        public DateTime? ArbitrationAuditStartDate { get; set; }
+        public DateTime? ArbitrationAuditEndDate { get; set; }
+        public DateTime? FinalArbitrationStartDate { get; set; }
+        public DateTime? FinalArbitrationEndDate { get; set; }
+        public int MarginOfDifferenceBetweenArbitrators { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCriterionItem
 {
@@ -12,14 +13,17 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
     {
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
         private readonly IMapper _Mapper;
-        public CreateCriterionItemHandler(IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IAsyncRepository<Criterion> CriterionRepository,
-            IMapper Mapper)
+        public CreateCriterionItemHandler(IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository,
+            IMapper _Mapper)
         {
-            _CriterionItemRepository = CriterionItemRepository;
-            _CriterionRepository = CriterionRepository;
-            _Mapper = Mapper;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
+            this._Mapper = _Mapper;
         }
 
         public async Task<BaseResponse<object>> Handle(CreateCriterionItemCommand Request, CancellationToken cancellationToken)
@@ -60,13 +64,42 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             CriterionItem NewCriterionItemEntity = _Mapper.Map<CriterionItem>(Request);
             NewCriterionItemEntity.OrderId = LastOrderIdInSection++;
 
-            await _CriterionItemRepository.AddAsync(NewCriterionItemEntity);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromSeconds(30)
+            };
 
-            ResponseMessage = Request.lang == "en"
-                ? "Created successfully"
-                : "تم إنشاء عنصر المعيار الفرعي بنجاح";
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _CriterionItemRepository.AddAsync(NewCriterionItemEntity);
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+                    List<CriterionItemAttachmentType> NewCriterionItemAttachmentTypeEntities = Request.AttachmentType
+                        .Select(x => new CriterionItemAttachmentType()
+                        {
+                            CriterionItemId = NewCriterionItemEntity.Id,
+                            AttachmentType = x
+                        }).ToList();
+
+                    await _CriterionItemAttachmentTypeRepository.AddRangeAsync(NewCriterionItemAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء عنصر المعيار الفرعي بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

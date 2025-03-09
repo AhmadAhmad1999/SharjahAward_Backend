@@ -16,15 +16,18 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCo
         private readonly IAsyncRepository<Committee> _CommitteeRepository;
         private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
         private readonly IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository;
-        public UpdateCommitteeHandler(IMapper Mapper,
-            IAsyncRepository<Committee> CommitteeRepository,
-            IAsyncRepository<ComitteeArbitrator> ComitteeArbitratorRepository,
-            IAsyncRepository<CategoryCommittee> CategoryCommitteeRepository)
+        private readonly IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository;
+        public UpdateCommitteeHandler(IMapper _Mapper,
+            IAsyncRepository<Committee> _CommitteeRepository,
+            IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository,
+            IAsyncRepository<CategoryCommittee> _CategoryCommitteeRepository,
+            IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository)
         {
-            _Mapper = Mapper;
-            _CommitteeRepository = CommitteeRepository;
-            _ComitteeArbitratorRepository = ComitteeArbitratorRepository;
-            _CategoryCommitteeRepository = CategoryCommitteeRepository;
+            this._Mapper = _Mapper;
+            this._CommitteeRepository = _CommitteeRepository;
+            this._ComitteeArbitratorRepository = _ComitteeArbitratorRepository;
+            this._CategoryCommitteeRepository = _CategoryCommitteeRepository;
+            this._ComitteeOfficerRepository = _ComitteeOfficerRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateCommitteeCommand Request, CancellationToken cancellationToken)
@@ -74,6 +77,17 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCo
             List<int> DeleteCategoryCommitteeIds = AlreadyExistCategoryCommitteeIds
                 .Where(x => !IntersectCategoryCommitteeIds.Contains(x))
                 .ToList();
+
+            List<ComitteeOfficer> ComitteeOfficerEntititesToDelete = await _ComitteeOfficerRepository
+                .Where(x => x.CommitteeId == Request.Id)
+                .ToListAsync();
+
+            List<ComitteeOfficer> NewComitteeOfficerEntities = Request.OfficersIds
+                .Select(x => new ComitteeOfficer()
+                {
+                    ArbitratorId = x,
+                    CommitteeId = Request.Id
+                }).ToList();
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -135,6 +149,12 @@ namespace SharijhaAward.Application.Features.CommitteeFeatures.Commands.UpdateCo
 
                     if (NewCategoryCommitteeEntites.Count() > 0)
                         await _CategoryCommitteeRepository.AddRangeAsync(NewCategoryCommitteeEntites);
+
+                    if (ComitteeOfficerEntititesToDelete.Any())
+                        await _ComitteeOfficerRepository.DeleteListAsync(ComitteeOfficerEntititesToDelete);
+
+                    if (NewComitteeOfficerEntities.Any())
+                        await _ComitteeOfficerRepository.AddRangeAsync(NewComitteeOfficerEntities);
 
                     Transaction.Complete();
 

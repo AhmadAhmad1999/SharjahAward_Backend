@@ -25,19 +25,39 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Queries.GetAllRoles
             
             string ResponseMessage = string.Empty;
 
-            List<GetAllRolesListVM> Roles = await _RoleRepository
-                .WhereThenFilter(x => true, filterObject)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((Request.page - 1) * Request.perPage)
-                .Take(Request.perPage)
-                .Select(x => new GetAllRolesListVM()
-                {
-                    Id = x.Id,
-                    ArabicName = x.ArabicName,
-                    EnglishName = x.EnglishName,
-                    isMainRole = (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
-                        (x.EnglishName != "Coordinator" && x.ArabicName != "منسق") ? true : false
-                }).ToListAsync();
+            List<GetAllRolesListVM> Roles = new List<GetAllRolesListVM>();
+            
+            if (Request.page != 0 &&
+                Request.perPage != -1)
+            {
+                Roles = await _RoleRepository
+                    .WhereThenFilter(x => true, filterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .Select(x => new GetAllRolesListVM()
+                    {
+                        Id = x.Id,
+                        ArabicName = x.ArabicName,
+                        EnglishName = x.EnglishName,
+                        isMainRole = (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
+                            (x.EnglishName != "Coordinator" && x.ArabicName != "منسق") ? true : false
+                    }).ToListAsync();
+            }
+            else
+            {
+                Roles = await _RoleRepository
+                    .WhereThenFilter(x => true, filterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllRolesListVM()
+                    {
+                        Id = x.Id,
+                        ArabicName = x.ArabicName,
+                        EnglishName = x.EnglishName,
+                        isMainRole = (x.EnglishName != "Arbitrator" && x.ArabicName != "محكم") ||
+                            (x.EnglishName != "Coordinator" && x.ArabicName != "منسق") ? true : false
+                    }).ToListAsync();
+            }
 
             int TotalCount = await _RoleRepository.WhereThenFilter(a => true, filterObject).CountAsync();
 

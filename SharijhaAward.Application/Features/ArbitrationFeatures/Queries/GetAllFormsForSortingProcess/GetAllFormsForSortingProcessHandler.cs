@@ -86,8 +86,8 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
                 List<DynamicAttributeValue> SubscribersNames = new List<DynamicAttributeValue>();
 
                 if (Request.filter != null
-                        ? !string.IsNullOrEmpty(Request.filter.SubscriberName)
-                        : false)
+                    ? !string.IsNullOrEmpty(Request.filter.SubscriberName)
+                    : false)
                 {
                     SubscribersNames = await _DynamicAttributeValueRepository
                         .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&

@@ -2,7 +2,6 @@
 using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrators
 {
@@ -19,5 +18,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
         public string Email { get; set; } = null!;
         public bool isChairman { get; set; } = false;
         public List<ArbitratorCategoryListVM> AtbitratorCategories { get; set; } = new List<ArbitratorCategoryListVM>();
+        public bool isSubcommitteeOfficer { get; set; } = false;
+        public List<ArbitratorCategoryListVM> SubcommitteeOfficerCategories { get; set; } = new List<ArbitratorCategoryListVM>();
     }
 }

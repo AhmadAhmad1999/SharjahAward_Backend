@@ -1,49 +1,68 @@
-﻿using AutoMapper;
-using MediatR;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
-using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAllAwardPublications
 {
     public class GetAllAwardPublicationsQueryHandler
         : IRequestHandler<GetAllAwardPublicationsQuery, BaseResponse<List<AwardPublicationListVM>>>
     {
-        private readonly IAsyncRepository<AwardPublication> _awardPublicationRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<AwardPublication> _AwardPublicationRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAllAwardPublicationsQueryHandler(IAsyncRepository<AwardPublication> awardPublicationRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper)
+        public GetAllAwardPublicationsQueryHandler(IAsyncRepository<AwardPublication> _AwardPublicationRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _awardPublicationRepository = awardPublicationRepository;
-            _cycleRepository = cycleRepository;
-            _mapper = mapper;
+            this._AwardPublicationRepository = _AwardPublicationRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<AwardPublicationListVM>>> Handle(GetAllAwardPublicationsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<AwardPublicationListVM>>> Handle(GetAllAwardPublicationsQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var AwardPublications = await _awardPublicationRepository.OrderByDescending(filterObject, r => r.CreatedAt, request.page, request.perPage).ToListAsync();
+            List<AwardPublication> AwardPublications = await _AwardPublicationRepository
+                .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                .ToListAsync();
 
-            var data = _mapper.Map<List<AwardPublicationListVM>>(AwardPublications);
+            List<AwardPublicationListVM> Response = AwardPublications
+                .Select(x =>
+                {
+                    bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-            var Count = _awardPublicationRepository.WhereThenFilter(a => true, filterObject).Count();
+                    string WWWRootFilePath = isHttps
+                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                    string ImageUrl = x.ImageUrl.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.ImageUrl.Replace("\\", "/");
+
+                    string PublicationUrl = x.PublicationUrl.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.PublicationUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.PublicationUrl.Replace("\\", "/");
+
+                    return new AwardPublicationListVM()
+                    {
+                        Id = x.Id,
+                        AutherName = x.AutherName,
+                        Title = x.Title,
+                        ImageUrl = ImageUrl,
+                        PublicationUrl = PublicationUrl
+                    };
+                }).ToList();
+
+            int TotalCount = await _AwardPublicationRepository
+                .WhereThenFilter(x => true, FilterObject)
+                .CountAsync();
             
-            Pagination pagination = new Pagination(request.page, request.perPage, Count);
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
-            return new BaseResponse<List<AwardPublicationListVM>>("", true, 200, data, pagination);
-
-
+            return new BaseResponse<List<AwardPublicationListVM>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

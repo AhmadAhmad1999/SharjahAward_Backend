@@ -171,16 +171,6 @@ namespace SharijhaAward.Application.Features.Event.Queries.ExportAllInviteesByTy
 
                     ColumnsDictionary = ColumnsDictionary.Reverse().ToDictionary();
 
-                    var MainInformationDynamicSection = ColumnsDictionary
-                        .FirstOrDefault(x => x.Key.ToLower() == "Email (Student Supervisor)".ToLower());
-
-                    int IndexOfMainInformationSection = ColumnsDictionary.ToList().IndexOf(MainInformationDynamicSection);
-
-                    var FirstDynamicSection = ColumnsDictionary.FirstOrDefault();
-
-                    ColumnsDictionary.ToList()[1] = MainInformationDynamicSection;
-                    ColumnsDictionary.ToList()[IndexOfMainInformationSection] = FirstDynamicSection;
-
                     ExportAllInviteesByTypeAndEventIdResponse Response = new ExportAllInviteesByTypeAndEventIdResponse()
                     {
                         ColumnsNames = ColumnsDictionary.Select(kvp => new { kvp.Key, Label = kvp.Value.Item1, Type = kvp.Value.Item2 }).Cast<object>().ToList(),

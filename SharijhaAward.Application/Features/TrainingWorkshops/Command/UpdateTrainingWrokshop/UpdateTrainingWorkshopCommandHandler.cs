@@ -3,6 +3,7 @@ using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment;
+using SharijhaAward.Application.Features.TrainingWorkshops.Command.CreateTrainingWorkshop;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
@@ -18,16 +19,19 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
         private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
         private readonly IFileService _FileService;
         private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository;
 
         public UpdateTrainingWorkshopCommandHandler(IFileService _FileService,
             IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository,
             IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository)
         {
             this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
             this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
             this._FileService = _FileService;
             this._Mapper = _Mapper;
+            this._TrainingWorkshopAttachmentTypeRepository = _TrainingWorkshopAttachmentTypeRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateTrainingWorkshopCommand Request, CancellationToken cancellationToken)
@@ -102,20 +106,28 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Command.UpdateTra
                         }
                     }
 
-                    if (Request.TrainingWorkshopAttachmentsToAdd.Any())
+                    foreach (CreateTrainingWorkshopAttachmentsDto TrainingWorkshopAttachmentsToAdd in Request.TrainingWorkshopAttachmentsToAdd)
                     {
-                        IEnumerable<TrainingWorkshopAttachment> NewTrainingWorkshopAttachmentEntities = Request.TrainingWorkshopAttachmentsToAdd
-                            .Select(x => new TrainingWorkshopAttachment()
-                            {
-                                EnglishName = x.EnglishName,
-                                ArabicName = x.ArabicName,
-                                AttachementPath = _FileService.SaveFileAsync(x.attachment, SystemFileType.Pdf).Result,
-                                SizeOfAttachmentInKB = 0,
-                                AttachmentType = x.AttachmentType,
-                                TrainingWorkshopId = TrainingWorkshopEntity.Id
-                            });
+                        TrainingWorkshopAttachment NewTrainingWorkshopAttachmentEntity = new TrainingWorkshopAttachment()
+                        {
+                            EnglishName = TrainingWorkshopAttachmentsToAdd.EnglishName,
+                            ArabicName = TrainingWorkshopAttachmentsToAdd.ArabicName,
+                            AttachementPath = _FileService.SaveFileAsync(TrainingWorkshopAttachmentsToAdd.attachment, SystemFileType.Pdf).Result,
+                            SizeOfAttachmentInKB = 0,
+                            TrainingWorkshopId = TrainingWorkshopEntity.Id
+                        };
 
-                        await _TrainingWorkshopAttachmentRepository.AddRangeAsync(NewTrainingWorkshopAttachmentEntities);
+                        await _TrainingWorkshopAttachmentRepository.AddAsync(NewTrainingWorkshopAttachmentEntity);
+
+                        List<TrainingWorkshopAttachmentType> NewTrainingWorkshopAttachmentTypeEntities = TrainingWorkshopAttachmentsToAdd
+                            .AttachmentType
+                            .Select(x => new TrainingWorkshopAttachmentType()
+                            {
+                                AttachmentType = x,
+                                TrainingWorkshopAttachmentId = NewTrainingWorkshopAttachmentEntity.Id
+                            }).ToList();
+
+                        await _TrainingWorkshopAttachmentTypeRepository.AddRangeAsync(NewTrainingWorkshopAttachmentTypeEntities);
                     }
 
                     ResponseMessage = Request.lang == "en"

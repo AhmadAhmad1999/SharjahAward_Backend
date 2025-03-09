@@ -3,7 +3,6 @@ using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Domain.Constants;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinatorById
 {

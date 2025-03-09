@@ -1,99 +1,121 @@
-﻿using Aspose.Pdf;
-using AutoMapper;
-using MediatR;
-using SharijhaAward.Application.Contract.Infrastructure;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
-using SharijhaAward.Application.Features.News.Queries.ExportToExcel;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AgendaModel;
 using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardTeam
 {
     public class GetAgendasForAwardTeamQueryHandler
         : IRequestHandler<GetAgendasForAwardTeamQuery, BaseResponse<List<AgendaListVm>>>
     {
-        private readonly IAsyncRepository<Agenda> _agendaRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Agenda> _AgendaRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAgendasForAwardTeamQueryHandler(IAsyncRepository<Agenda> agendaRepository, IAsyncRepository<Cycle> cycleRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAgendasForAwardTeamQueryHandler(IAsyncRepository<Agenda> _AgendaRepository,
+            IAsyncRepository<Cycle> _CycleRepository, 
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _agendaRepository = agendaRepository;
-            _cycleRepository = cycleRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._AgendaRepository = _AgendaRepository;
+            this._CycleRepository = _CycleRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAgendasForAwardTeamQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<AgendaListVm>>> Handle(GetAgendasForAwardTeamQuery Request, CancellationToken cancellationToken)
         {
-            var AdminId = _jwtProvider.GetUserIdFromToken(request.token!);
+            string ResponseMessage = string.Empty;
 
-            var Admin = AdminId != null
-                ? await _userRepository.GetByIdAsync(int.Parse(AdminId))
-                : null;
+            Cycle? CycleEntity = Request.CycleId == null
+               ? await _CycleRepository.FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active)
+               : await _CycleRepository.FirstOrDefaultAsync(x => x.Id == Request.CycleId);
 
-            if(Admin == null)
+            if (CycleEntity is null)
             {
-                return new BaseResponse<List<AgendaListVm>>("UnAuth", false, 401);
+                ResponseMessage = Request.lang == "en"
+                     ? "There is no active cycle yet"
+                     : "لا يوجد دورات فعالة ";
+
+                return new BaseResponse<List<AgendaListVm>>(ResponseMessage, false, 400);
             }
 
-            var Cycle = request.CycleId == null
-               ? await _cycleRepository.FirstOrDefaultAsync( a => a.Status == Domain.Constants.Common.Status.Active)
-               : await _cycleRepository.FirstOrDefaultAsync(a => a.Id == request.CycleId);
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
+            IReadOnlyList<Agenda> AgendaEntities = new List<Agenda>();
 
-            if (Cycle == null)
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-                string msg = request.lang == "en"
-                 ? "There is no Active Cycle yet"
-                 : "لا يوجد دورات فعالة ";
-
-                return new BaseResponse<List<AgendaListVm>>(msg, false, 400);
+                AgendaEntities = _AgendaRepository
+                    .WhereThenFilter(x => x.CycleId == CycleEntity.Id, FilterObject)
+                    .AsEnumerable()
+                    .OrderByDescending(x => x.StartDate)
+                    .AsEnumerable()
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .ToList();
             }
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
-
-            var Agendas = await _agendaRepository.GetWhereThenPagedReponseAsync(a => a.CycleId == Cycle.Id , filterObject, request.page, request.perPage);
-            
-            foreach (var agenda in Agendas)
+            else
             {
-                if (DateTime.Now >= agenda.StartDate && DateTime.Now <= agenda.EndDate)
+                AgendaEntities = _AgendaRepository
+                    .WhereThenFilter(x => x.CycleId == CycleEntity.Id, FilterObject)
+                    .AsEnumerable()
+                    .OrderByDescending(x => x.StartDate)
+                    .AsEnumerable()
+                    .ToList();
+            }
+
+            foreach (Agenda Agenda in AgendaEntities)
+            {
+                if (DateTime.Now >= Agenda.StartDate && DateTime.Now <= Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
+
+                else if (DateTime.Now > Agenda.StartDate && DateTime.Now > Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
+
+                else if (DateTime.Now < Agenda.StartDate && DateTime.Now < Agenda.EndDate)
+                    Agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
+
+                await _AgendaRepository.UpdateAsync(Agenda);
+            }
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<AgendaListVm> Response = AgendaEntities
+                .Select(x => new AgendaListVm()
                 {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Active;
-                }
-                else if (DateTime.Now > agenda.StartDate && DateTime.Now > agenda.EndDate)
-                {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Previous;
-                }
-                else if (DateTime.Now < agenda.StartDate && DateTime.Now < agenda.EndDate)
-                {
-                    agenda.Status = Domain.Constants.AgendaConstants.AgendaStatus.Later;
-                }
-                await _agendaRepository.UpdateAsync(agenda);
-            }
+                    Id = x.Id,
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishTitle = x.EnglishTitle,
+                    Icon = x.Icon.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.Icon.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.Icon.Replace("\\", "/"),
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
+                    CurrentDate = x.CurrentDate,
+                    Status = x.Status,
+                    DateType = x.DateType,
+                    IsPrivate = x.IsPrivate,
+                    CycleId = x.CycleId
+                }).ToList();
 
-            var data = _mapper.Map<List<AgendaListVm>>(Agendas).OrderBy(a => a.StartDate).ToList();
+            int TotalCount = _AgendaRepository
+                .WhereThenFilter(x => x.CycleId == CycleEntity.Id, FilterObject)
+                .Count();
 
-            for (int i = 0; i < data.Count(); i++)
-            {
-                data[i].Title = request.lang == "en"
-                    ? data[i].EnglishTitle
-                    : data[i].ArabicTitle;
-            }
-            var count = await _agendaRepository.GetCountAsync(a => !a.isDeleted && a.CycleId == Cycle.Id);
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
-            return new BaseResponse<List<AgendaListVm>>("", true, 200, data, pagination);
+            return new BaseResponse<List<AgendaListVm>>(ResponseMessage, true, 200, Response, Pagination);
         }
     }
 }

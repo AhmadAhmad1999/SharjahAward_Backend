@@ -1,11 +1,4 @@
-﻿using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
+﻿namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
 {
     public class CycleConditionProvidedFormListVm
     {

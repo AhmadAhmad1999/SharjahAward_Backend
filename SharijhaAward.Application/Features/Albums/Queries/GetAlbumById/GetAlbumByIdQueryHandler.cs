@@ -1,47 +1,59 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AlbumModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Albums.Queries.GetAlbumById
 {
     public class GetAlbumByIdQueryHandler
         : IRequestHandler<GetAlbumByIdQuery, BaseResponse<AlbumDto>>
     {
-        private readonly IAsyncRepository<Album> _albumRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Album> _AlbumRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAlbumByIdQueryHandler(IAsyncRepository<Album> albumRepository, IMapper mapper)
+        public GetAlbumByIdQueryHandler(IAsyncRepository<Album> _AlbumRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _albumRepository = albumRepository;
-            _mapper = mapper;
+            this._AlbumRepository = _AlbumRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<AlbumDto>> Handle(GetAlbumByIdQuery request, CancellationToken cancellationToken)
         {
-            var album = await _albumRepository.GetByIdAsync(request.Id);
-            if (album == null)
+            string ResponseMessage = string.Empty;
+
+            Album? AlbumEntity = await _AlbumRepository.GetByIdAsync(request.Id);
+
+            if (AlbumEntity is null)
             {
-                string msg = request.lang == "en"
-                    ? "Album Not Found"
+                ResponseMessage = request.lang == "en"
+                    ? "Album is not found"
                     : "الألبوم غير موجود";
 
-                return new BaseResponse<AlbumDto>(msg, false, 404);
+                return new BaseResponse<AlbumDto>(ResponseMessage, false, 404);
             }
 
-            var data = _mapper.Map<AlbumDto>(album);
+            AlbumDto Response = _Mapper.Map<AlbumDto>(AlbumEntity);
 
-            data.Title = request.lang == "en"
-                ? data.EnglishTitle
-                : data.ArabicTitle;
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-            return new BaseResponse<AlbumDto>("", true, 200, data);
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            Response.Title = request.lang == "en"
+                ? Response.EnglishTitle
+                : Response.ArabicTitle;
+
+            if (Response.ThumbnailUrl.Contains("wwwroot"))
+                Response.ThumbnailUrl = (WWWRootFilePath + Response.ThumbnailUrl.Split("wwwroot")[1]).Replace("\\", "/");
+
+            return new BaseResponse<AlbumDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

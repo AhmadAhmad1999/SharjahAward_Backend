@@ -11,6 +11,7 @@
         public bool isReaded { get; set; }
         public string Title { get; set; } = null!;
         public string Body { get; set; } = null!;
+        public string? Action { get; set; }
         
         public DateTime CreatedAt { get; set; }
 

@@ -23,8 +23,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System.Data.Entity;
 using SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeArbitrationResultsStatus;
+using System.Web.Http.Results;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -126,7 +126,7 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
-            EditProfileCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/ProfilePics/";
+            EditProfileCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
             EditProfileCommand.Token = Token;
 
             BaseResponse<object>? Response = await _Mediator.Send(EditProfileCommand);
@@ -469,16 +469,37 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
+        //[HttpPost("UpdateDatabaseToLastMigration", Name = "UpdateDatabaseToLastMigration")]
+        //public async Task<IActionResult> UpdateDatabaseToLastMigration()
+        //{
+        //    SharijhaAwardDbContext? _DbContext = _ServiceProvider.GetService<SharijhaAwardDbContext>();
+
+        //    MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationDataLossAllowed = true;
+        //    MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationsEnabled = true;
+        //    MigrateDatabaseToLatestVersion.DbMigrationsOptions.ResetDatabaseSchema = false;
+        //    await MigrateDatabaseToLatestVersion.ExecuteAsync(_DbContext);
+        //    return Ok();
+        //}
         [HttpPost("UpdateDatabaseToLastMigration", Name = "UpdateDatabaseToLastMigration")]
         public async Task<IActionResult> UpdateDatabaseToLastMigration()
         {
-            SharijhaAwardDbContext? _DbContext = _ServiceProvider.GetService<SharijhaAwardDbContext>();
-
-            MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationDataLossAllowed = true;
-            MigrateDatabaseToLatestVersion.DbMigrationsOptions.AutomaticMigrationsEnabled = true;
-            MigrateDatabaseToLatestVersion.DbMigrationsOptions.ResetDatabaseSchema = false;
-            await MigrateDatabaseToLatestVersion.ExecuteAsync(_DbContext);
-            return Ok();
+            try
+            {
+                // Ensure that automatic migrations are configured correctly
+                using (var scope = _ServiceProvider.CreateScope())
+                {
+                    using (var _DbContext = scope.ServiceProvider.GetRequiredService<SharijhaAwardDbContext>())
+                    {
+                        await _DbContext.Database.MigrateAsync();
+                        return Ok("Database updated to the latest migration.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
         }
     }
 }

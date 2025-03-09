@@ -15,6 +15,6 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetCriter
         public int ActualScore { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int MaxAttachmentNumber { get; set; }
-        public AttachmentType AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
     }
 }

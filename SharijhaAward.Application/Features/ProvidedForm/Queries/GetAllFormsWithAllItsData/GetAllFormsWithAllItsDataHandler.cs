@@ -50,7 +50,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
             Handle(GetAllFormsWithAllItsDataQuery Request, CancellationToken cancellationToken)
         {
             FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
-
+            
             string ResponseMessage = string.Empty;
 
             List<Arbitration> AllArbitrationEntities = await _ArbitrationRepository
@@ -62,6 +62,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                 .AsEnumerable();
             
             List<DynamicAttributeValue> SubscribersNames = new List<DynamicAttributeValue>();
+
+            int? CategoryIdToFilter = null;
 
             if (FilterObject.Filters != null)
             {
@@ -83,6 +85,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                             x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
                             x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
                         .ToListAsync();
+                }
+
+                Filter? CheckCategoryIdFilteration = FilterObject.Filters.FirstOrDefault(x => x.Key!.ToLower() == "CategoryId".ToLower());
+
+                if (CheckCategoryIdFilteration != null)
+                {
+                    FilterObject.Filters.Remove(CheckCategoryIdFilteration);
+
+                    CategoryIdToFilter = int.Parse(CheckCategoryIdFilteration.Value!);
                 }
             }
             else
@@ -124,7 +135,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                 List<GetAllFormsWithAllItsDataListVM> Response = _ProvidedFormRepository
                     .WhereThenFilter(x => x.PercentCompletion == 100 &&
                         x.IsAccepted != null &&
-                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id), FilterObject)
+                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id) &&
+                        (CategoryIdToFilter != null
+                            ? x.categoryId == CategoryIdToFilter
+                            : true), FilterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
@@ -193,7 +207,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                 TotalCount = await _ProvidedFormRepository
                     .WhereThenFilter(x => x.PercentCompletion == 100 &&
                         x.IsAccepted != null &&
-                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id), FilterObject)
+                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id) &&
+                        (CategoryIdToFilter != null
+                            ? x.categoryId == CategoryIdToFilter
+                            : true), FilterObject)
                     .CountAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,
@@ -206,7 +223,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                 List<GetAllFormsWithAllItsDataListVM> Response = _ProvidedFormRepository
                     .WhereThenFilter(x => x.PercentCompletion == 100 &&
                         x.IsAccepted != null &&
-                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id), FilterObject)
+                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id) &&
+                        (CategoryIdToFilter != null
+                            ? x.categoryId == CategoryIdToFilter
+                            : true), FilterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .AsEnumerable()
                     .Select(x => Request.lang == "en"
@@ -276,7 +296,10 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFormsWit
                 TotalCount = await _ProvidedFormRepository
                     .WhereThenFilter(x => x.PercentCompletion == 100 &&
                         x.IsAccepted != null &&
-                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id), FilterObject)
+                        SubscribersNames.Select(y => y.RecordId).Contains(x.Id) &&
+                        (CategoryIdToFilter != null
+                            ? x.categoryId == CategoryIdToFilter
+                            : true), FilterObject)
                     .CountAsync();
 
                 Pagination PaginationParameter = new Pagination(Request.page,

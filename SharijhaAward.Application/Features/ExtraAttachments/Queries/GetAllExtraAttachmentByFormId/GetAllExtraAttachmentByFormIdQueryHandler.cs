@@ -1,71 +1,100 @@
-﻿using Aspose.Pdf.LogicalStructure;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachmentByFormId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ExtraAttachmentModel;
 using SharijhaAward.Domain.Entities.ExtraAttachmentProvidedFormModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.ExtraAttachments.Queries.GetAllExtraAttachment
 {
     public class GetAllExtraAttachmentByFormIdQueryHandler
         : IRequestHandler<GetAllExtraAttachmentByFormIdQuery, BaseResponse<List<ExtraAttachmentListVM>>>
     {
-        private readonly IAsyncRepository<ExtraAttachment> _extraAttachmentRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _formModelRepository;
-        private readonly IAsyncRepository<ExtraAttachmentFile> _AttachmentRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<ExtraAttachment> _ExtraAttachmentRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<ExtraAttachmentAttachmentType> _ExtraAttachmentAttachmentTypeRepository;
 
-        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentFile> AttachmentRepository,IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> formModelRepository,IAsyncRepository<ExtraAttachment> extraAttachmentRepository, IMapper mapper)
+        public GetAllExtraAttachmentByFormIdQueryHandler(IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
+            IAsyncRepository<ExtraAttachment> _ExtraAttachmentRepository, 
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor,
+            IAsyncRepository<ExtraAttachmentAttachmentType> _ExtraAttachmentAttachmentTypeRepository)
         {
-            _extraAttachmentRepository = extraAttachmentRepository;
-            _AttachmentRepository = AttachmentRepository;
-            _formModelRepository = formModelRepository;
-            _mapper = mapper;
+            this._ExtraAttachmentRepository = _ExtraAttachmentRepository;
+            this._ExtraAttachmentFileRepository = _ExtraAttachmentFileRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._ExtraAttachmentAttachmentTypeRepository = _ExtraAttachmentAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<ExtraAttachmentListVM>>> Handle(GetAllExtraAttachmentByFormIdQuery Request, CancellationToken cancellationToken)
         {
-            var ExtraAttachments = await _extraAttachmentRepository
-                .Where(e => e.ProvidedFormId == request.formId)
+            List<ExtraAttachment> ExtraAttachmentEntities = await _ExtraAttachmentRepository
+                .Where(x => x.ProvidedFormId == Request.formId &&
+                    x.isAccepted != Request.GetOnlyTheRequests)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
-            List<ExtraAttachmentFile> AllAttachmentEntities = await _AttachmentRepository
-                .Where(x => ExtraAttachments.Select(y => y.Id).Contains(x.ExtraAttachmentId))
+            List<ExtraAttachmentFile> ExtraAttachmentFileEntitites = await _ExtraAttachmentFileRepository
+                .Where(x => ExtraAttachmentEntities.Select(y => y.Id).Contains(x.ExtraAttachmentId))
                 .ToListAsync();
 
-            var data = _mapper.Map<List<ExtraAttachmentListVM>>(ExtraAttachments);
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-            for(int i = 0; i<ExtraAttachments.Count(); i++)
-            {
-                data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
-                data[i].Description = request.lang == "en" ? data[i].EnglishDescription : data[i].ArabicDescription;
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
-                data[i].AttachmentList = _mapper.Map<List<AttachmentDto>>(AllAttachmentEntities
-                    .Where(x => x.ExtraAttachmentId == data[i].Id)
-                    .Select(x => new AttachmentDto()
-                    {
-                        Id = x.Id,
-                        FileDescription = x.FileDescription,
-                        FileName = x.FileName,
-                        FileUrl = x.FileUrl,
-                        IsAccept = x.IsAccept,
-                        ReasonOfReject = x.ReasonOfReject
-                    }).ToList());
+            List<ExtraAttachmentAttachmentType> ExtraAttachmentAttachmentTypeEntities = _ExtraAttachmentAttachmentTypeRepository
+                .Where(x => x.ExtraAttachment!.ProvidedFormId == Request.formId)
+                .ToList();
 
-                if (data[i].AttachmentList!.Any(a => a.IsAccept == false))
-                    data[i].Rejected = true;
-            }
+            List<ExtraAttachmentListVM> Response = ExtraAttachmentEntities
+                .Select(x => new ExtraAttachmentListVM()
+                {
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                    ArabicDescription = x.ArabicDescription,
+                    ArabicTitle = x.ArabicTitle,
+                    AttachmentList = ExtraAttachmentFileEntitites
+                        .Where(y => y.ExtraAttachmentId == x.Id)
+                        .Select(y => new AttachmentDto()
+                        {
+                            Id = y.Id,
+                            FileDescription = y.FileDescription,
+                            FileName = y.FileName,
+                            FileUrl = y.FileUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + y.FileUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : y.FileUrl.Replace("\\", "/"),
+                            IsAccept = y.IsAccept,
+                            ReasonOfReject = y.ReasonOfReject
+                        }).ToList(),
+                    AttachmentType = ExtraAttachmentAttachmentTypeEntities
+                        .Where(y => y.ExtraAttachmentId == x.Id)
+                        .Select(y => y.AttachmentType)
+                        .ToList(),
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    EnglishTitle = x.EnglishTitle,
+                    Id = x.Id,
+                    RequiredAttachmentNumber = x.RequiredAttachmentNumber,
+                    Title = Request.lang == "en" 
+                        ? x.EnglishTitle 
+                        : x.ArabicTitle,
+                    Rejected = ExtraAttachmentFileEntitites.Any(y => y.IsAccept == false)
+                        ? true : false
+                }).ToList();
 
-            return new BaseResponse<List<ExtraAttachmentListVM>>("", true, 200, data);
+            return new BaseResponse<List<ExtraAttachmentListVM>>(string.Empty, true, 200, Response);
         }
     }
 }

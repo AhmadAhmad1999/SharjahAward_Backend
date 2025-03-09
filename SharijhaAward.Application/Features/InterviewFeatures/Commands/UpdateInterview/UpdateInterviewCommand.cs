@@ -30,5 +30,9 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
         public List<UpdateInterviewInviteeDto> Invitees { get; set; } = new List<UpdateInterviewInviteeDto>();
 
         public string? lang { get; set; }
+
+        public string? TenantId { get; set; }
+        public string? ClientId { get; set; }
+        public string? ClientSecret { get; set; }
     }
 }

@@ -98,7 +98,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
                             : x.ArabicName,
                         Description = request.lang == "en"
                             ? x.EnglishDescription
-                            : x.ArabicDescription
+                            : x.ArabicDescription,
+                        ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                        ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                        FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                        FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                        InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                        InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                        SortingFormsEndDate = x.SortingFormsEndDate,
+                        SortingFormsStartDate = x.SortingFormsStartDate
                     }).ToListAsync();
             }
 

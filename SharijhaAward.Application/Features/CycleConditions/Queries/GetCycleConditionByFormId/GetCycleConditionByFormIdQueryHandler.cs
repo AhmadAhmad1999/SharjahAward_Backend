@@ -1,121 +1,142 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionById;
-using SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTermsByCategoryId;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.AttachmentModel;
-using SharijhaAward.Domain.Entities.CategoryModel;
-using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.SystemAttachmentModel;
-using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.GetCycleConditionByCycleId
 {
     public class GetCycleConditionByFormIdQueryHandler
         : IRequestHandler<GetCycleConditionByFormIdQuery, BaseResponse<List<CyclePublicConditionListVm>>>
     {
-        private readonly IAsyncRepository<CycleCondition> _cycleConditionRepository;
-        private readonly IAsyncRepository<Cycle> _cycleRepository;
-        private readonly IMapper _mapper;
-        private readonly IAsyncRepository<CycleConditionAttachment> _conditionAttachmentRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
-        private readonly IAsyncRepository<CycleConditionsProvidedForm> _conditionsProvidedFormsRepository;
-        private readonly IUserRepository _userRepository;
-       
-     
-        public GetCycleConditionByFormIdQueryHandler(IAsyncRepository<CycleCondition> cycleConditionRepository, IAsyncRepository<Cycle> cycleRepository, IMapper mapper, IAsyncRepository<CycleConditionAttachment> conditionAttachmentRepository, IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository, IAsyncRepository<CycleConditionsProvidedForm> conditionsProvidedFormsRepository, IUserRepository userRepository)
+        private readonly IAsyncRepository<CycleCondition> _CycleConditionRepository;
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
+        private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<CycleConditionsProvidedForm> _CycleConditionsProvidedFormRepository;
+        private readonly IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+
+
+        public GetCycleConditionByFormIdQueryHandler(IAsyncRepository<CycleCondition> _CycleConditionRepository,
+            IAsyncRepository<Cycle> _CycleRepository, 
+            IMapper _Mapper, 
+            IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository, 
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository, 
+            IAsyncRepository<CycleConditionsProvidedForm> _CycleConditionsProvidedFormRepository,
+            IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository,
+            IUserRepository _UserRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _cycleConditionRepository = cycleConditionRepository;
-            _cycleRepository = cycleRepository;
-            _mapper = mapper;
-            _conditionAttachmentRepository = conditionAttachmentRepository;
-            _providedFormRepository = providedFormRepository;
-            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
-            _userRepository = userRepository;
+            this._CycleConditionRepository = _CycleConditionRepository;
+            this._CycleRepository = _CycleRepository;
+            this._Mapper = _Mapper;
+            this._CycleConditionAttachmentRepository = _CycleConditionAttachmentRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._CycleConditionsProvidedFormRepository = _CycleConditionsProvidedFormRepository;
+            this._CycleConditionAttachmentTypeRepository = _CycleConditionAttachmentTypeRepository;
+            this._UserRepository = _UserRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<CyclePublicConditionListVm>>> Handle(GetCycleConditionByFormIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<CyclePublicConditionListVm>>> 
+            Handle(GetCycleConditionByFormIdQuery Request, CancellationToken cancellationToken)
         {
-            var Cycle = await _cycleRepository.FirstOrDefaultAsync(c=>c.Status == Domain.Constants.Common.Status.Active);
-            if(Cycle == null)
+            string ResponseMessage = string.Empty;
+
+            Cycle? CycleEntity = await _CycleRepository
+                .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
+
+            if (CycleEntity is null)
             {
-                return new BaseResponse<List<CyclePublicConditionListVm>>("", false, 404);
-            }
-            var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
+                ResponseMessage = Request.lang == "en"
+                    ? "There is no active cycle in the current time"
+                    : "لا يوجد دورة فعالة في الوقت الحالي";
 
-            var Terms = await _cycleConditionRepository.Where(t => t.CycleId == Cycle.Id).ToListAsync();
-
-            List<CycleConditionsProvidedForm> conditionsProvideds = await _conditionsProvidedFormsRepository
-                .Where(x => Terms.Select(y => y.Id).Contains(x.CycleConditionId) &&
-                    x.ProvidedFormId == form!.Id)
-                .ToListAsync(); ;
-
-            for (int i = 0; i < Terms.Count(); i++)
-            {
-                var conditionsProvidedsobject =
-                     conditionsProvideds.FirstOrDefault(c => c.CycleConditionId == Terms[i].Id);
-
-                if (conditionsProvidedsobject != null)
-                    conditionsProvideds.Add(conditionsProvidedsobject!);
-
-                else
-                {
-                    var CycleConditionsProvidedForm = new CycleConditionsProvidedForm()
-                    {
-                        ProvidedFormId = form!.Id,
-                        CycleConditionId = Terms[i].Id,
-                        IsAgree = false,
-                    };
-
-                    var conditionProvided = await _conditionsProvidedFormsRepository.AddAsync(CycleConditionsProvidedForm);
-                    conditionsProvideds.Add(conditionProvided);
-                }
+                return new BaseResponse<List<CyclePublicConditionListVm>>(ResponseMessage, false, 404);
             }
 
-            var data = _mapper.Map<List<CyclePublicConditionListVm>>(Terms);
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.formId);
 
-            List<CycleConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
-                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.CycleConditionsProvidedFormId))
+            List<CycleCondition> CycleConditionEntities = await _CycleConditionRepository
+                .Where(x => x.CycleId == CycleEntity.Id)
                 .ToListAsync();
 
-            for (int i = 0; i < data.Count(); i++)
-            {
-                data[i].ConditionsAttachments = _mapper.Map<CycleConditionProvidedFormListVm>(conditionsProvideds
-                    .FirstOrDefault(x => x.CycleConditionId == data[i].Id));
-               
-                if (data[i].NeedAttachment)
+            List<CycleConditionAttachmentType> CycleConditionAttachmentTypeEntities = _CycleConditionAttachmentTypeRepository
+                .Where(x => CycleConditionEntities.Select(y => y.Id).Contains(x.CycleConditionId))
+                .ToList();
+
+            List<CycleConditionsProvidedForm> CycleConditionsProvidedFormEntities = await _CycleConditionsProvidedFormRepository
+                .Where(x => CycleConditionEntities.Select(y => y.Id).Contains(x.CycleConditionId) &&
+                    x.ProvidedFormId == ProvidedFormEntity!.Id)
+                .ToListAsync(); ;
+
+            List<CycleConditionAttachment> AllConditionAttachmentEntities = await _CycleConditionAttachmentRepository
+                .Where(x => CycleConditionsProvidedFormEntities.Select(y => y.Id).Any(y => y == x.CycleConditionsProvidedFormId))
+                .ToListAsync();
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<CyclePublicConditionListVm> Response = CycleConditionEntities
+                .Select(x => new CyclePublicConditionListVm()
                 {
-                    List<CycleConditionAttachment> AllConditionAttachmentEntitiesForThisTerm = AllConditionAttachmentEntities
-                        .Where(x => conditionsProvideds[i].Id == x.CycleConditionsProvidedFormId)
-                        .ToList();
-
-                    data[i].ConditionsAttachments!.Attachments = 
-                        _mapper.Map<List<CycleConditionAttachmentListVm>>(AllConditionAttachmentEntitiesForThisTerm);
-                   
-                    if (data[i].ConditionsAttachments!.Attachments.Any(a => a.IsAccept == false))
-                        data[i].Rejected = true;
-                }
-
-                data[i].Title = request.lang == "en"
-                    ? data[i].EnglishTitle
-                    : data[i].ArabicTitle;
-
-                data[i].Description = request.lang == "en"
-                    ? data[i].EnglishDescription
-                    : data[i].ArabicDescription;
-            }
-
-            return new BaseResponse<List<CyclePublicConditionListVm>>("", true, 200, data);
+                    ConditionsAttachments = CycleConditionsProvidedFormEntities
+                        .Where(y => y.CycleConditionId == x.Id)
+                        .Select(y => new CycleConditionProvidedFormListVm()
+                        {
+                            CycleConditionId = y.CycleConditionId,
+                            IsAgree = y.IsAgree,
+                            ProvidedFormId = y.ProvidedFormId,
+                            Attachments = (x.NeedAttachment
+                                ? (AllConditionAttachmentEntities
+                                    .Where(z => y.CycleConditionId == z.CycleConditionsProvidedForm!.CycleConditionId)
+                                    .Select(z => new CycleConditionAttachmentListVm()
+                                    {
+                                        AttachementPath = z.AttachementPath.Contains("wwwroot")
+                                            ? (WWWRootFilePath + z.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                            : z.AttachementPath.Replace("\\", "/"),
+                                        Description = z.Description,
+                                        Id = z.Id,
+                                        IsAccept = z.IsAccept,
+                                        Name = z.Name,
+                                        ReasonOfReject = z.ReasonOfReject,
+                                        SizeOfAttachmentInKB = z.SizeOfAttachmentInKB
+                                    }).ToList())
+                                : new List<CycleConditionAttachmentListVm>())
+                        }).FirstOrDefault(),
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                    Id = x.Id,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    ArabicDescription = x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    AttachmentType = CycleConditionAttachmentTypeEntities
+                        .Where(y => y.CycleConditionId == x.Id &&
+                            y.AttachmentType != null)
+                        .Select(y => y.AttachmentType!.Value)
+                        .ToList(),
+                    CycleId = x.CycleId,
+                    NeedAttachment = x.NeedAttachment,
+                    Rejected = AllConditionAttachmentEntities
+                        .Any(z => z.IsAccept == false &&
+                            z.CycleConditionsProvidedForm!.CycleConditionId == x.Id),
+                    RequiredAttachmentNumber = x.RequiredAttachmentNumber
+                }).ToList();
+            
+            return new BaseResponse<List<CyclePublicConditionListVm>>("", true, 200, Response);
         }
     }
 }

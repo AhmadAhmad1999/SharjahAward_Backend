@@ -1,43 +1,70 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.StrategicPartnerModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.StrategicPartners.Queries.GetAllStrategicPartners
 {
     public class GetAllStrategicPartnersQueryHandler
         : IRequestHandler<GetAllStrategicPartnersQuery, BaseResponse<List<StrategicPartnerListVM>>>
     {
-        private readonly IAsyncRepository<StrategicPartner> _strategicPartnerRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<StrategicPartner> _StrategicPartnerRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAllStrategicPartnersQueryHandler(IAsyncRepository<StrategicPartner> strategicPartnerRepository, IMapper mapper)
+        public GetAllStrategicPartnersQueryHandler(IAsyncRepository<StrategicPartner> _StrategicPartnerRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _strategicPartnerRepository = strategicPartnerRepository;
-            _mapper = mapper;
+            this._StrategicPartnerRepository = _StrategicPartnerRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<StrategicPartnerListVM>>> Handle(GetAllStrategicPartnersQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<StrategicPartnerListVM>>> 
+            Handle(GetAllStrategicPartnersQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var AllStrategicPartners = await _strategicPartnerRepository.OrderByDescending(filterObject, s=>s.CreatedAt, request.page, request.perPage).ToListAsync();
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-            var data = _mapper.Map<List<StrategicPartnerListVM>>(AllStrategicPartners);
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
-            int Count = _strategicPartnerRepository.WhereThenFilter(p => true, filterObject).Count();
+            List<StrategicPartner> StrategicPartnerEntities = await _StrategicPartnerRepository
+                .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                .ToListAsync();
 
-            Pagination pagination = new Pagination(request.page, request.perPage, Count);
+            List<StrategicPartnerListVM> Response = StrategicPartnerEntities
+                .Select(x => new StrategicPartnerListVM()
+                {
+                    Id = x.Id,
+                    IsHide = x.IsHide,
+                    LogoUrl = x.LogoUrl.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.LogoUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.LogoUrl.Replace("\\", "/"),
+                    Name = x.Name,
+                    orderId = x.orderId,
+                    PageId = x.PageId,
+                    Url = (!string.IsNullOrEmpty(x.Url)
+                        ? (x.Url.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.Url.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.Url.Replace("\\", "/"))
+                        : null)
+                }).ToList();
 
-            return new BaseResponse<List<StrategicPartnerListVM>>("", true, 200, data, pagination);
+            int Count = await _StrategicPartnerRepository
+                .WhereThenFilter(x => true, FilterObject)
+                .CountAsync();
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, Count);
+
+            return new BaseResponse<List<StrategicPartnerListVM>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

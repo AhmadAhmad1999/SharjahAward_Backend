@@ -91,7 +91,8 @@ namespace SharijhaAward.Api.Controllers
                             NeedVerification = response.NeedVerification,
                             Id = response.OutUserId,
                             response.isChairman,
-                            response.DoesContainsRequiredFields
+                            response.DoesContainsRequiredFields,
+                            response.DoesContainsRequiredFieldsForRoles
                         }
                     });
             }
@@ -103,7 +104,8 @@ namespace SharijhaAward.Api.Controllers
                         key = response.token,
                         permission = response.UserPermissions,
                         message = response.message,
-                        response.DoesContainsRequiredFields
+                        response.DoesContainsRequiredFields,
+                        response.DoesContainsRequiredFieldsForRoles
                     }
                 );
         }
@@ -266,7 +268,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ForgetPassword(string Email)
+        public async Task<IActionResult> ForgetPassword(string Email, bool intoAdminDashboard)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -277,7 +279,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 Email = Email,
-                WWWRootFilePath = _WebHostEnvironment.WebRootPath
+                WWWRootFilePath = _WebHostEnvironment.WebRootPath,
+                intoAdminDashboard = intoAdminDashboard
             });
 
             return Response.statusCode switch
@@ -294,11 +297,6 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
-
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             var response = await _Mediator.Send(new ShowAsSubscriberQuery()
             {

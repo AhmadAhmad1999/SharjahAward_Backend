@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -47,6 +46,23 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            if (DateTime.UtcNow < FinalArbitrationEntity.ProvidedForm!.Category!.FinalArbitrationStartDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Final arbitration didn't start yet for the category of this form"
+                    : "عملية التحكيم النهائي للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+            else if (DateTime.UtcNow > FinalArbitrationEntity.ProvidedForm!.Category!.FinalArbitrationEndDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Final arbitration has already ended for the category of this form"
+                    : "عملية التحكيم النهائي للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             Arbitrator? ArbitratorEntity = await _ArbitratorRepository
@@ -86,10 +102,10 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             EligibleForCertification = true;
 
                         bool EligibleForAStatement = false;
-                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement != null &&
-                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement != null)
-                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement <= FinalArbitrationEntity.FinalScore &&
-                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement >= FinalArbitrationEntity.FinalScore)
+                        if ((FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 != null &&
+                            FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 != null)
+                                ? (FinalArbitrationEntity.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 <= FinalArbitrationEntity.FinalScore &&
+                                   FinalArbitrationEntity.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 >= FinalArbitrationEntity.FinalScore)
                                 : false)
                             EligibleForAStatement = true;
 
@@ -107,6 +123,7 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
                             ArbitrationResultEntity.EligibleForCertification = EligibleForCertification;
                             ArbitrationResultEntity.EligibleForAStatement = EligibleForAStatement;
                             ArbitrationResultEntity.EligibleToWin = EligibleToWin;
+                            ArbitrationResultEntity.FinalArbitrationId = FinalArbitrationEntity.Id;
 
                             await _ArbitrationResultRepository.UpdateAsync(ArbitrationResultEntity);
                         }

@@ -58,13 +58,10 @@ namespace SharijhaAward.Infrastructure.FileServices
             {
                 await file.CopyToAsync(stream);
             }
-            bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
 
-            return isHttps
-                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/{formId}/{filePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/ProvidedForm/{formId}/{filePath.Split('\\').LastOrDefault()}";
+            return filePath;
         }
-
+        // Done
         public async Task<string> SaveFileAsync(IFormFile file, SystemFileType fileType)
         {
             
@@ -81,11 +78,8 @@ namespace SharijhaAward.Infrastructure.FileServices
             {
                 await file.CopyToAsync(stream);
             }
-            bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
-
-            return isHttps
-                  ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{fileType.GetName()}/{filePath.Split('\\').LastOrDefault()}"
-                  : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}/UploadedFiles/{fileType.GetName()}/{filePath.Split('\\').LastOrDefault()}";
+            
+            return filePath;
         }
         public async Task<string> SaveFileAndGetPath(IFormFile file)
         {
@@ -102,13 +96,22 @@ namespace SharijhaAward.Infrastructure.FileServices
 
         public async Task<byte[]> ReadFileAsync(string filePath, SystemFileType fileType)
         {
-            var path = _SavePath + '/' + fileType.GetName() + '/' + filePath.Split('/').LastOrDefault();
+            /* _SavePath + '/' + fileType.GetName() + '/' + filePath.Split('/').LastOrDefault();*/
+
+            bool isHttps = _httpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_httpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_httpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            string path = (WWWRootFilePath + (filePath.Contains("wwwroot")
+                ? filePath.Split("wwwroot")[1]
+                : filePath)).Replace("\\", "/");
 
             var response2 = await _HttpClient.GetAsync(path);
             response2.EnsureSuccessStatusCode();
 
             return await response2.Content.ReadAsByteArrayAsync();
         }
-
     }
 }

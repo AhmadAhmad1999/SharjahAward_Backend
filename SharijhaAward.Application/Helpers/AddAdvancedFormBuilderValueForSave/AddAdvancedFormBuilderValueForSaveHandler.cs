@@ -601,7 +601,8 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave
                 if (AdvancedFormBuilderEntity.LinkedToAnotherAttribute)
                 {
                     List<IGrouping<int, AdvancedFormBuilderDependency>> DependenciesEntitiesGroupByGroupId = _AdvancedFormBuilderDependencyRepository
-                        .WhereThenInclude(x => x.MainAdvancedFormBuilderId == InputAdvancedFormBuilderWithValues.AdvancedFormBuilderId,
+                        .WhereThenInclude(x => x.MainAdvancedFormBuilderId == InputAdvancedFormBuilderWithValues.AdvancedFormBuilderId &&
+                            x.AdvancedFormBuilderId != null,
                             x => x.AttributeOperation!, x => x.AdvancedFormBuilder!, x => x.AdvancedFormBuilder!.AttributeDataType!)
                         .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId).ToList();
 
@@ -2031,7 +2032,8 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave
                     if (AdvancedFormBuilderEntity.LinkedToAnotherAttribute)
                     {
                         List<IGrouping<int, AdvancedFormBuilderDependency>> DependenciesEntitiesGroupByGroupId = _AdvancedFormBuilderDependencyRepository
-                            .WhereThenInclude(x => x.MainAdvancedFormBuilderId == InputAdvancedFormBuilderWithValues.AdvancedFormBuilderId,
+                            .WhereThenInclude(x => x.MainAdvancedFormBuilderId == InputAdvancedFormBuilderWithValues.AdvancedFormBuilderId &&
+                                x.AdvancedFormBuilderId != null,
                                 x => x.AttributeOperation!, x => x.AdvancedFormBuilder!, x => x.AdvancedFormBuilder!.AttributeDataType!)
                             .GroupBy(x => x.AdvancedFormBuilderDependencyGroupId).ToList();
 
@@ -2924,18 +2926,12 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
+                        if (!Directory.Exists(FolderPathToCreate))
+                            Directory.CreateDirectory(FolderPathToCreate);
 
-                        using (MemoryStream MemoryStream = new MemoryStream())
-                        {
-                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
-                            byte[] FileBytes = MemoryStream.ToArray();
-                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
-                        }
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                            await AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyToAsync(FileStream);
+
                         AdvancedFormBuilderAsFile.ValueAsBinaryFile = null;
                         AdvancedFormBuilderAsFile.ValueAsString = FilePathToSaveIntoDataBase;
                     }
@@ -2979,18 +2975,11 @@ namespace SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
+                        if (!Directory.Exists(FolderPathToCreate))
+                            Directory.CreateDirectory(FolderPathToCreate);
 
-                        using (MemoryStream MemoryStream = new MemoryStream())
-                        {
-                            AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyTo(MemoryStream);
-                            byte[] FileBytes = MemoryStream.ToArray();
-                            await File.WriteAllBytesAsync(FilePathToSaveToCreate, FileBytes);
-                        }
+                        using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                            await AdvancedFormBuilderAsFile.ValueAsBinaryFile.CopyToAsync(FileStream);
 
                         AdvancedFormBuilderAsFile.ValueAsBinaryFile = null;
                         AdvancedFormBuilderAsFile.ValueAsString = FilePathToSaveIntoDataBase;

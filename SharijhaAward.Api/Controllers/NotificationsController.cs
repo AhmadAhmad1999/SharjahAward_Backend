@@ -8,6 +8,7 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token;
 using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAllNotificationsByFCM_Token_Mobile;
+using SharijhaAward.Application.Features.NotificationFeatures.Queries.GetCountForNotifications;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -164,6 +165,41 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 page = Page,
                 perPage = PerPage,
+                DeviceToken = DeviceToken,
+                Token = Token?.ToString().Replace("Bearer ", string.Empty)
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetCountForNotifications")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetCountForNotifications()
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            StringValues? DeviceToken = HttpContext.Request.Headers["fcm_token"];
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token) && string.IsNullOrEmpty(DeviceToken))
+                return Unauthorized("You must send either the token or the device token");
+
+            BaseResponse<GetCountForNotificationsDto> Response = await _Mediator.Send(new GetCountForNotificationsQuery()
+            {
+                lang = HeaderValue!,
                 DeviceToken = DeviceToken,
                 Token = Token?.ToString().Replace("Bearer ", string.Empty)
             });

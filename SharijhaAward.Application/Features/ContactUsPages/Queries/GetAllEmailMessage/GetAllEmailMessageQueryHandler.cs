@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -16,21 +16,21 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         private readonly IAsyncRepository<EmailAttachment> _EmailAttachmentRepository;
         private readonly IJwtProvider _JWTProvider;
         private readonly IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository;
-        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAllEmailMessageQueryHandler(IAsyncRepository<EmailMessage> _EmailMessageRepository, 
             IAsyncRepository<MessageType> _MessageTypeRepository, 
             IAsyncRepository<EmailAttachment> _EmailAttachmentRepository,
             IJwtProvider _JWTProvider, 
             IAsyncRepository<Domain.Entities.IdentityModels.User> _UserRepository, 
-            IMapper _Mapper)
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._EmailMessageRepository = _EmailMessageRepository;
             this._MessageTypeRepository = _MessageTypeRepository;
             this._EmailAttachmentRepository = _EmailAttachmentRepository;
             this._JWTProvider = _JWTProvider;
             this._UserRepository = _UserRepository;
-            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<List<EmailMessageListVM>>> Handle(GetAllEmailMessageQuery Request, CancellationToken cancellationToken)
@@ -93,6 +93,12 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                 .Where(x => EmailMessages.Select(y => y.Id).Contains(x.MessageId))
                 .ToListAsync();
 
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
             List<EmailMessageListVM> Response = EmailMessages
                 .Select(x => new EmailMessageListVM()
                 {
@@ -122,9 +128,16 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
                     Gender = x.UserId != null 
                         ? x.User!.Gender
                         : null,
-                    Attachments = _Mapper.Map<List<EmailAttachmentListVm>>(AllEmailAttachmentEntities
-                        .Where(x => x.MessageId == x.Id)
-                        .ToList())
+                    Attachments = AllEmailAttachmentEntities
+                        .Where(y => y.MessageId == x.Id)
+                        .Select(y => new EmailAttachmentListVm()
+                        {
+                            Id = y.Id,
+                            MessageId = y.MessageId,
+                            AttachmentUrl = y.AttachmentUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + y.AttachmentUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : y.AttachmentUrl.Replace("\\", "/")
+                        }).ToList()
                 }).ToList();
             
             int UnReadingMessages = await _EmailMessageRepository

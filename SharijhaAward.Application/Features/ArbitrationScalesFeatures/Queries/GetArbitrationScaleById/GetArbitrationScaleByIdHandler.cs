@@ -37,13 +37,20 @@ namespace SharijhaAward.Application.Features.ArbitrationScalesFeatures.Queries.G
             List<ArbitrationScaleDto> ListOfArbitrationScaleDto = ArbitrationScalesCriterionEntities
                 .DistinctBy(x => x.ArbitrationScaleId)
                 .OrderBy(x => x.Id)
-                .Select(x => x.ArbitrationScale!)
                 .Select(x => new ArbitrationScaleDto()
                 {
                     Id = x.Id,
-                    ArabicTitle = x.ArabicTitle,
-                    DegreeScale = x.DegreeScale,
-                    EnglishTitle = x.EnglishTitle
+                    ArabicTitle = x.ArbitrationScale!.ArabicTitle,
+                    DegreeScale = x.ArbitrationScale!.DegreeScale,
+                    EnglishTitle = x.ArbitrationScale!.EnglishTitle,
+                    Title = Request.lang == "en"
+                        ? x.ArbitrationScale!.EnglishTitle
+                        : x.ArbitrationScale!.ArabicTitle,
+                    ArabicDescription = x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription
                 }).ToList();
 
             GetArbitrationScaleByIdListVM Response = new GetArbitrationScaleByIdListVM()

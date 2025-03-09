@@ -8,7 +8,6 @@ using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.NotificationModel;
 using SharijhaAward.Domain.Entities.StaticNotificationModel;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Transactions;
 
@@ -179,7 +178,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                 ArabicTitle = StaticNotificationEntity!.ArabicTitle,
                                 ArabicBody = StaticNotificationEntity!.ArabicBody,
                                 EnglishTitle = StaticNotificationEntity!.EnglishTitle,
-                                EnglishBody = StaticNotificationEntity!.EnglishBody
+                                EnglishBody = StaticNotificationEntity!.EnglishBody,
+                                isStaticNotification = true
                             };
 
                             await _NotificationRepository.AddAsync(NewNotificationEntity);
@@ -213,7 +213,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.SigningTheForm
                                 {
                                     UserId = x.Key,
                                     NotificationId = NewNotificationEntity.Id,
-                                    isReaded = false
+                                    isReaded = false,
+                                    Action = "forms"
                                 }).ToListAsync();
 
                             if (UserNotificationEntities is not null)

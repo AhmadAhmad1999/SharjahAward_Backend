@@ -3020,6 +3020,53 @@ namespace SharijhaAward.Persistence.Seeders
                     DeletedAt = null,
                     LastModifiedAt = null,
                     LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 218,
+                    Name = "إضافة طلب لتعديل حالة التأهل للمقابلة",
+                    Action = "AddNewRequestForUpdatingStatus",
+                    PermissionHeaderId = 43,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 219,
+                    Name = "عرض طلبات تعديل حالة التأهل للمقابلة",
+                    Action = "GetAllRequestsForUpdatingStatus",
+                    PermissionHeaderId = 43,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    // Id = 220,
+                    Name = "الموافقة على طلب تعديل حالة التأهل للمقابلة",
+                    Action = "AcceptRequestsForUpdatingStatus",
+                    PermissionHeaderId = 43,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
+                }, new Permission()
+                {
+                    Name = "تعديل الادمن لاستمارة مشترك",
+                    Action = "AdminUpdateOnForm",
+                    PermissionHeaderId = 28,
+                    isDeleted = false,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = null,
+                    DeletedAt = null,
+                    LastModifiedAt = null,
+                    LastModifiedBy = null
                 });
                await _context.SaveChangesAsync();
             }

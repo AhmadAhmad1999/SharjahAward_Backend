@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleModel;
-using SharijhaAward.Domain.Entities.EducationalClassModel;
 using System.Text.RegularExpressions;
 using System.Transactions;
 
@@ -28,6 +26,18 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.CreateCycle
             string ResponseMessage = Request.lang == "en"
                 ? "Cycle has been Created"
                 : "تم إنشاء الدورة بنجاح";
+
+            Cycle? CheckCycleNumberValidation = await _cycleRepository
+                .FirstOrDefaultAsync(x => x.CycleNumber == Request.CycleNumber);
+
+            if (CheckCycleNumberValidation is not null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Cycle number is already used"
+                    : "رقم الدورة مستخدم مسبقاً, الرجاء إدخال قيمة مختلفة";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
 
             if (Request.Year is not null
                 ? Request.Year.Contains('-')

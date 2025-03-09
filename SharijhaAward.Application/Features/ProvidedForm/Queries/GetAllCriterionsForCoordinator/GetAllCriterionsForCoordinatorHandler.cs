@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -17,13 +18,15 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAllCriterionsForCoordinatorHandler(IMapper Mapper,
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
             IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
             IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
-            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository)
+            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _Mapper = Mapper;
             _ProvidedFormRepository = ProvidedFormRepository;
@@ -31,11 +34,18 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
             _CriterionItemRepository = CriterionItemRepository;
             _CriterionAttachmentRepository = CriterionAttachmentRepository;
             _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<GetAllCriterionsForCoordinatorListVM>>> 
             Handle(GetAllCriterionsForCoordinatorQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
             string Language = !string.IsNullOrEmpty(Request.lang)
                 ? Request.lang.ToLower() : "ar";
@@ -89,8 +99,20 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
 
                 foreach (GetAllCriterionsForCoordinatorSubCriterion SubCriterionObject in MainCriterionObject.SubCriterions)
                 {
-                    SubCriterionObject.SubCriterionAttachments = _Mapper.Map<List<GetAllCriterionsForCoordinatorAttachment>>(_CriterionAttachmentRepository
-                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.FormId));
+                    SubCriterionObject.SubCriterionAttachments = _CriterionAttachmentRepository
+                        .Where(x => x.CriterionId == SubCriterionObject.Id && x.ProvidedFormId == Request.FormId)
+                        .ToList()
+                        .Select(x => new GetAllCriterionsForCoordinatorAttachment()
+                        {
+                            AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.AttachementPath,
+                            Description = x.Description,
+                            Id = x.Id,
+                            IsAccepted = x.IsAccepted,
+                            ReasonForRejecting = x.ReasonForRejecting,
+                            Name = x.Name
+                        }).ToList();
 
                     SubCriterionObject.SubCriterionItems = _CriterionItemRepository
                         .Where(x => x.CriterionId == SubCriterionObject.Id)
@@ -106,9 +128,20 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllCriterio
 
                     foreach (GetAllCriterionsForCoordinatorCriterionItem CriterionItemObject in SubCriterionObject.SubCriterionItems)
                     {
-                        CriterionItemObject.SubCriterionItemAttachments = 
-                            _Mapper.Map<List<GetAllCriterionsForCoordinatorAttachment>>(_CriterionItemAttachmentRepository
-                                .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.FormId));
+                        CriterionItemObject.SubCriterionItemAttachments = _CriterionItemAttachmentRepository
+                            .Where(x => x.CriterionItemId == CriterionItemObject.Id && x.ProvidedFormId == Request.FormId)
+                            .ToList()
+                            .Select(x => new GetAllCriterionsForCoordinatorAttachment()
+                            {
+                                AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                    ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : x.AttachementPath,
+                                Description = x.Description,
+                                Id = x.Id,
+                                IsAccepted = x.IsAccepted,
+                                ReasonForRejecting = x.ReasonForRejecting,
+                                Name = x.Name
+                            }).ToList();
                     }
                 }
 

@@ -14,5 +14,6 @@ namespace SharijhaAward.Domain.Entities.CircularModel
         public Coordinator Coordinator { get; set; } = null!;
         [ForeignKey(nameof(Coordinator))]
         public int CoordinatorId { get; set; }
+        public bool IsRead { get; set; } = false;
     }
 }

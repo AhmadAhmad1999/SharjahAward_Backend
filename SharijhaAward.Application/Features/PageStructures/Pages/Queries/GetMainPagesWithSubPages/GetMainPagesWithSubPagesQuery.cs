@@ -10,5 +10,6 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetMai
         public int perPage { get; set; } = 10;
         public string? lang { get; set; }
         public List<Filter>? filters { get; set; }
+        public bool? intoWebsite { get; set; }
     }
 }

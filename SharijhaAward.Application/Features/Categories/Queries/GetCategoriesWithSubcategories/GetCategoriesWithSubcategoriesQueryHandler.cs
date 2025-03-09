@@ -60,7 +60,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                     Name = Request.lang == "en"
                         ? x.EnglishName
                         : x.ArabicName,
-                    Icon = x.Icon
+                    Icon = x.Icon,
+                    ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                    ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                    FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                    FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                    InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                    InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                    SortingFormsEndDate = x.SortingFormsEndDate,
+                    SortingFormsStartDate = x.SortingFormsStartDate,
+                    MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                 }).ToListAsync();
 
             List<Category> AllSubCategories = await _CategoryRepository
@@ -113,7 +122,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWit
                         RelatedToEducationalEntities = x.RelatedToEducationalEntities,
                         SubCategoryEducationalEntities = x.RelatedToEducationalEntities 
                             ? AllCategoryEducationalEntities
-                            : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>()
+                            : new List<GetAllCategoryEducationalEntitiesByCategoryIdDto>(),
+                        ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                        ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                        FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                        FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                        InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                        InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                        SortingFormsEndDate = x.SortingFormsEndDate,
+                        SortingFormsStartDate = x.SortingFormsStartDate,
+                        MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                     }).ToList();
             }
 

@@ -14,14 +14,20 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
 
         public GetAllCriterionsForDashBoardByCategoryIdHandler(IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository)
+            IAsyncRepository<CriterionItem> CriterionItemRepository,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository)
         {
             _CriterionRepository = CriterionRepository;
             _CategoryRepository = CategoryRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
         }
         public async Task<BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>> Handle(GetAllCriterionsForDashBoardCategoryIdQuery Request, 
             CancellationToken cancellationToken)
@@ -40,11 +46,30 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                 return new BaseResponse<List<GetAllCriterionsForDashBoardCategoryIdDto>>(ResponseMessage, false, 404);
             }
 
+            List<Criterion> AllCriterionEntities = await _CriterionRepository
+                .Where(x => x.CategoryId == Request.CategoryId)
+                .ToListAsync();
+
+            List<CriterionAttachmentType> CriterionAttachmentTypeEntities = _CriterionAttachmentTypeRepository
+                .Where(x => AllCriterionEntities
+                    .Select(y => y.Id).Contains(x.CriterionId) && x.AttachmentType != null)
+                .ToList();
+
+            List<CriterionItem> AllCriterionItemEntities = await _CriterionItemRepository
+                .Where(x => AllCriterionEntities
+                    .Select(y => y.Id).Contains(x.CriterionId))
+                .ToListAsync();
+
+            List<CriterionItemAttachmentType> CriterionItemAttachmentTypeEntities = _CriterionItemAttachmentTypeRepository
+                .Where(x => AllCriterionItemEntities
+                    .Select(y => y.Id).Contains(x.CriterionItemId))
+                .ToList();
+
             List<GetAllCriterionsForDashBoardCategoryIdDto> MainCriterions = new List<GetAllCriterionsForDashBoardCategoryIdDto>();
 
             if (Request.page != 0 && Request.perPage != -1)
-                MainCriterions = await _CriterionRepository
-                    .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
+                MainCriterions = AllCriterionEntities
+                    .Where(x => x.ParentId == null)
                     .OrderBy(x => x.OrderId)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
@@ -54,11 +79,11 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         Score = x.Score,
                         ArabicTitle = x.ArabicTitle,
                         EnglishTitle = x.EnglishTitle
-                    }).ToListAsync();
+                    }).ToList();
 
             else
-                MainCriterions = await _CriterionRepository
-                    .Where(x => x.CategoryId == Request.CategoryId && x.ParentId == null)
+                MainCriterions = AllCriterionEntities
+                    .Where(x => x.ParentId == null)
                     .OrderBy(x => x.OrderId)
                     .Select(x => new GetAllCriterionsForDashBoardCategoryIdDto()
                     {
@@ -66,11 +91,11 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         Score = x.Score,
                         ArabicTitle = x.ArabicTitle,
                         EnglishTitle = x.EnglishTitle
-                    }).ToListAsync();
+                    }).ToList();
 
             foreach (GetAllCriterionsForDashBoardCategoryIdDto MainCriterion in MainCriterions)
             {
-                List<GetAllSubCriterion> SubCriterions = await _CriterionRepository
+                List<GetAllSubCriterion> SubCriterions = AllCriterionEntities
                     .Where(x => x.ParentId != null 
                         ? x.ParentId == MainCriterion.Id
                         : false)
@@ -85,17 +110,20 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                         MaxAttachmentNumber = x.MaxAttachmentNumber != null
                             ? x.MaxAttachmentNumber.Value
                             : null,
-                        AttachmentType = x.AttachmentType,
+                        AttachmentType = CriterionAttachmentTypeEntities
+                            .Where(y => y.CriterionId == x.Id)
+                            .Select(y => y.AttachmentType!.Value)
+                            .ToList(),
                         AttachFilesOnSubCriterion = (x.AttachFilesOnSubCriterion != null
                             ? x.AttachFilesOnSubCriterion.Value
                             : false)
-                    }).ToListAsync();
+                    }).ToList();
 
                 MainCriterion.SubCriterions = SubCriterions;
 
                 foreach (GetAllSubCriterion SubCriterion in MainCriterion.SubCriterions)
                 {
-                    List<GetAllSubCriterionItems> CriterionItems = await _CriterionItemRepository
+                    List<GetAllSubCriterionItems> CriterionItems = AllCriterionItemEntities
                         .Where(x => x.CriterionId == SubCriterion.Id)
                         .OrderBy(x => x.OrderId)
                         .Select(x => new GetAllSubCriterionItems()
@@ -108,8 +136,11 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
                                 ? x.SizeOfAttachmentInKB.Value
                                 : 0,
                             MaxAttachmentNumber = x.MaxAttachmentNumber,
-                            AttachmentType = x.AttachmentType
-                        }).ToListAsync();
+                            AttachmentType = CriterionItemAttachmentTypeEntities
+                                .Where(y => y.CriterionItemId == x.Id)
+                                .Select(y => y.AttachmentType)
+                                .ToList(),
+                        }).ToList();
 
                     SubCriterion.CriterionItems = CriterionItems;
                 }

@@ -1,4 +1,5 @@
 ﻿using SharijhaAward.Domain.Entities.ArbitrationModel;
+using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
 
 namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetArbitrationAuditByArbitrationId
 {
@@ -12,5 +13,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
         public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
         public int? DoneArbitrationUserId { get; set; }
         public string? DoneArbitrationUserName { get; set; }
+        public string SubscriberName { get; set; } = null!;
+        public List<ChairmanNotesOnInitialArbitrationDto> ChairmanNotesOnArbitrationAuditDtos { get; set; } = new List<ChairmanNotesOnInitialArbitrationDto>();
     }
 }

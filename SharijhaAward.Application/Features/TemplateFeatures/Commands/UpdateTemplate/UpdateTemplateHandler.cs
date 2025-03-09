@@ -69,18 +69,12 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Commands.UpdateTem
 
                     if (Request.BackgroundImageFile is not null)
                     {
-                        string? FileName = $"{Request.Id}-{Request.TemplateType}-{Request.TemplateVersion}";
+                        string? FileName = $"{Request.Id}-{Request.TemplateType}-{Request.BackgroundImageFile.FileName}";
 
-                        FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/CertificateTemplates/{FileName}";
+                        FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
-                        string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
-
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
+                        string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                         using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {

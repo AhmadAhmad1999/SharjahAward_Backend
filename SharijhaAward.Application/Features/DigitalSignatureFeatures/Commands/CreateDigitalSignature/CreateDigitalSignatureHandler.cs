@@ -48,24 +48,32 @@ namespace SharijhaAward.Application.Features.DigitalSignatureFeatures.Commands.C
                 {
                     NewDigitalSignatureEntity.UserId = UserId;
 
-                    string? FileName = $"{NewDigitalSignatureEntity.Id}-{NewDigitalSignatureEntity.UserName}";
+                    string? FileName = $"{NewDigitalSignatureEntity.Id}-{Request.Image.FileName}";
 
-                    string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/DigitalSignatures/{FileName}";
+                    string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"{FileName}";
 
                     string? FolderPathToCreate = Request.WWWRootFilePath!;
-                    string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
-
-                    while (File.Exists(FilePathToSaveIntoDataBase))
-                    {
-                        FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                        FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                    }
+                    string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
                     using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                     {
                         Request.Image.CopyTo(FileStream);
                     }
 
+                    //if (FilePathToSaveIntoDataBase.Contains("wwwroot"))
+                    //{
+                    //    FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase
+                    //        .Split("wwwroot")[1];
+
+                    //    bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+
+                    //    string DownloadBarCodeImageAPI = isHttps
+                    //        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}{FilePathToSaveIntoDataBase}"
+                    //        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}{FilePathToSaveIntoDataBase}";
+
+                    //    NewDigitalSignatureEntity.ImageUrl = DownloadBarCodeImageAPI;
+                    //}
+                    //else 
                     NewDigitalSignatureEntity.ImageUrl = FilePathToSaveIntoDataBase;
 
                     byte[] salt = new byte[16] { 52, 123, 55, 148, 64, 30, 175, 37, 25, 240, 115, 57, 13, 255, 41, 74 };

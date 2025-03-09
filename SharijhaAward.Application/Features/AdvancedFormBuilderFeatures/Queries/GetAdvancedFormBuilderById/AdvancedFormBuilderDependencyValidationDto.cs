@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Value { get; set; } = null!;
+        public int AttributeOperationId { get; set; }
         public string Operation { get; set; } = null!;
         public List<AdvancedFormBuilderDependencyDto> Dependencies { get; set; } = null!;
     }

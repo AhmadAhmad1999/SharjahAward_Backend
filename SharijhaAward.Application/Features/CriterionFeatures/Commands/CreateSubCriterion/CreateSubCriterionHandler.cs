@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSubCriterion
 {
@@ -11,12 +12,15 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
         BaseResponse<int>>
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
         private readonly IMapper _Mapper;
-        public CreateSubCriterionHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IMapper Mapper)
+        public CreateSubCriterionHandler(IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IMapper _Mapper)
         {
-            _CriterionRepository = CriterionRepository;
-            _Mapper = Mapper;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._Mapper = _Mapper;
         }
         public async Task<BaseResponse<int>> Handle(CreateSubCriterionCommand Request, CancellationToken cancellationToken)
         {
@@ -61,13 +65,43 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateSu
 
             NewSubCriterionEntity.OrderId = LastOrderIdForSubCriterion++;
 
-            await _CriterionRepository.AddAsync(NewSubCriterionEntity);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromSeconds(30)
+            };
 
-            ResponseMessage = Request.lang == "en"
-                ? "Created successfully"
-                : "تم إنشاء المعيار الفرعي بنجاح";
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _CriterionRepository.AddAsync(NewSubCriterionEntity);
 
-            return new BaseResponse<int>(ResponseMessage, true, 200, NewSubCriterionEntity.Id);
+                    List<CriterionAttachmentType> NewCriterionAttachmentTypeEntities = Request
+                        .AttachmentType
+                        .Select(x => new CriterionAttachmentType()
+                        {
+                            AttachmentType = x,
+                            CriterionId = NewSubCriterionEntity.Id
+                        }).ToList();
+
+                    await _CriterionAttachmentTypeRepository.AddRangeAsync(NewCriterionAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Created successfully"
+                        : "تم إنشاء المعيار الفرعي بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<int>(ResponseMessage, true, 200, NewSubCriterionEntity.Id);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

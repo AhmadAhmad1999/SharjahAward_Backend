@@ -153,7 +153,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllFormsForFinalArbitration(ArbitrationType? ArbitrationType, bool? AsChairman,
-            bool AsFullAccess, int Page = 1, int PerPage = 10)
+            string? SubscriberName, bool asSubcommitteeOfficer, bool asNormalArbitrator, bool asChairmanOfCommittees, 
+            bool AsFullAccess, bool asExpert, bool asQuality, int Page = 1, int PerPage = 10)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -173,7 +174,13 @@ namespace SharijhaAward.Api.Controllers
                 Token = Token,
                 ArbitrationType = ArbitrationType,
                 AsChairman = AsChairman,
-                AsFullAccess = AsFullAccess
+                AsFullAccess = AsFullAccess,
+                SubscriberName = SubscriberName,
+                asSubcommitteeOfficer = asSubcommitteeOfficer,
+                asNormalArbitrator = asNormalArbitrator,
+                asChairmanOfCommittees = asChairmanOfCommittees,
+                asExpert = asExpert,
+                asQuality = asQuality
             });
 
             return Response.statusCode switch
@@ -228,9 +235,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> ChangeArbitrationStatus([FromBody] ChangeFinalArbitrationStatusCommand ChangeFinalArbitrationStatusCommand)
         {
             string Token = HttpContext.Request.Headers.Authorization!;
-
-            if (Token.IsNullOrEmpty())
-                return Unauthorized();
 
             ChangeFinalArbitrationStatusCommand.Token = Token;
 

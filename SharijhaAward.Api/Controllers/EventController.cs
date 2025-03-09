@@ -80,8 +80,6 @@ namespace SharijhaAward.Api.Controllers
         {
             //get Language from header
             var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
 
             query.lang = headerValue!;
 
@@ -120,8 +118,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<ActionResult> GetEventById(int id)
         { 
             var headerValue = HttpContext.Request.Headers["lang"];
-            if (headerValue.IsNullOrEmpty())
-                headerValue = "";
             var Event = await _Mediator.Send(new GetEventByIdQuery() 
             {
                 Id = id,

@@ -12,14 +12,17 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
         private IUserRepository _UserRepository;
         private readonly IHttpContextAccessor _HttpContextAccessor;
         private readonly IJwtProvider _JWTProvider;
+        private readonly IFileService _FileService;
 
-        public EditProfileHandler(IUserRepository UserRepository,
-            IHttpContextAccessor HttpContextAccessor,
-            IJwtProvider JWTProvider)
+        public EditProfileHandler(IUserRepository _UserRepository,
+            IHttpContextAccessor _HttpContextAccessor,
+            IJwtProvider _JWTProvider,
+            IFileService _FileService)
         {
-            _UserRepository = UserRepository;
-            _HttpContextAccessor = HttpContextAccessor;
-            _JWTProvider = JWTProvider;
+            this._UserRepository = _UserRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._JWTProvider = _JWTProvider;
+            this._FileService = _FileService;
         }
 
         public async Task<BaseResponse<object>> Handle(EditProfileCommand Request, CancellationToken cancellationToken)
@@ -31,7 +34,7 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == UserID);
 
-            if (UserEntity == null)
+            if (UserEntity is null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Subscriber profile is not found"
@@ -40,21 +43,12 @@ namespace SharijhaAward.Application.Features.Settings.Commands.EditProfile
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            if (Request.ProfileImage != null)
+            if (Request.ProfileImage is not null)
             {
                 string? FileName = $"{Request.ProfileImage!.FileName}";
                 string? FilePathToSaveIntoDataBase = Request.WWWRootFilePath + $"/ProfilePics/{FileName}";
 
-                string? FolderPathToCreate = Request.WWWRootFilePath!;
-                string? FilePathToSaveToCreate = FolderPathToCreate + $"/{FileName}";
-
-                while (File.Exists(FilePathToSaveIntoDataBase))
-                {
-                    FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                    FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                }
-
-                using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
+                using (FileStream FileStream = new FileStream(FilePathToSaveIntoDataBase, FileMode.Create))
                 {
                     Request.ProfileImage!.CopyTo(FileStream);
                 }

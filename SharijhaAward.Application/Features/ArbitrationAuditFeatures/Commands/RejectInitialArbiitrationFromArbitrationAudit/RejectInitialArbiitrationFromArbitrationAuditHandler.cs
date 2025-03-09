@@ -16,22 +16,51 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<FinalArbitration> _FinalArbitrationRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
+        private readonly IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository;
         private readonly IJwtProvider _JwtProvider;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
 
         public RejectInitialArbiitrationFromArbitrationAuditHandler(IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
             IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IJwtProvider JwtProvider)
+            IAsyncRepository<ArbitrationAudit> _ArbitrationAuditRepository,
+            IJwtProvider JwtProvider,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository)
         {
             _ArbitrationRepository = ArbitrationRepository;
             _FinalArbitrationRepository = FinalArbitrationRepository;
             _ArbitratorRepository = ArbitratorRepository;
+            this._ArbitrationAuditRepository = _ArbitrationAuditRepository;
             _JwtProvider = JwtProvider;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(RejectInitialArbiitrationFromArbitrationAuditCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.FormId);
+
+            if (ProvidedFormEntity is not null)
+            {
+                if (DateTime.UtcNow < ProvidedFormEntity.Category!.ArbitrationAuditStartDate)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Arbitration audit didn't start yet for the category of this form"
+                        : "عملية تدقيق التحكيم للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+                else if (DateTime.UtcNow > ProvidedFormEntity.Category!.ArbitrationAuditEndDate)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Arbitration audit has already ended for the category of this form"
+                        : "عملية تدقيق التحكيم للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+            }
 
             List<Arbitration> ArbitrationEntities = await _ArbitrationRepository
                 .Where(x => x.ProvidedFormId == Request.FormId)
@@ -80,12 +109,51 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
 
                         await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
 
+                        if (ProvidedFormEntity!.EligibileForInterview)
+                        {
+                            ProvidedFormEntity.EligibileForInterview = false;
+
+                            await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                        }    
+
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been rejected successfully"
                             : "تم رفض التحكيم الأولي على الاستمارة بنجاح";
                     }
                     else if (Request.IsAccepted == FormStatus.Accepted)
                     {
+                        bool ItExceededTheMarginOfDifferenceInArbitrationScores = false;
+
+                        var CopyOfArbitrationEntities = ArbitrationEntities
+                            .Where(x => x.RollbackArbitrationId == null);
+
+                        int MarginOfDifferenceBetweenArbitrators = CopyOfArbitrationEntities
+                            .Select(x => x.ProvidedForm!.Category!.MarginOfDifferenceBetweenArbitrators)
+                            .FirstOrDefault();
+
+                        foreach (Arbitration ArbitrationEntity1 in CopyOfArbitrationEntities)
+                        {
+                            foreach (Arbitration ArbitrationEntity2 in CopyOfArbitrationEntities)
+                            {
+                                if (Math.Abs(ArbitrationEntity1.FullScore - ArbitrationEntity2.FullScore) > MarginOfDifferenceBetweenArbitrators)
+                                {
+                                    ItExceededTheMarginOfDifferenceInArbitrationScores = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (ItExceededTheMarginOfDifferenceInArbitrationScores)
+                        {
+                            ResponseMessage = Request.lang == "en"
+                                ? "You can accept the arbitration on this form unless the margin of difference in arbitration scores is correct"
+                                : "لا يمكنك الموافقة على التحكيم على هذه الاستمارة حتى يكون هامش الفرق بين المحكمين صحيح";
+
+                            Transaction.Dispose();
+
+                            return new BaseResponse<object>(ResponseMessage, false, 400);
+                        }
+
                         int ArbitratorId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
                         FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
@@ -119,6 +187,27 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.R
 
                         await _ArbitrationRepository.UpdateListAsync(ArbitrationEntities);
 
+                        if (ProvidedFormEntity is not null)
+                        {
+                            var ArbitrationAuditScore = await _ArbitrationAuditRepository
+                                .Where(x => ProvidedFormEntity!.Id == x.ProvidedFormId)
+                                .SumAsync(x => x.ArbitrationScore);
+
+                            if (ArbitrationAuditScore >= ProvidedFormEntity!.Category!.MinimumEligibilityForInterview)
+                            {
+                                ProvidedFormEntity.EligibileForInterview = true;
+
+                                await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                            }
+                            else if (ProvidedFormEntity.EligibileForInterview &&
+                                ArbitrationAuditScore < ProvidedFormEntity.Category!.MinimumEligibilityForInterview)
+                            {
+                                ProvidedFormEntity.EligibileForInterview = false;
+
+                                await _ProvidedFormRepository.UpdateAsync(ProvidedFormEntity);
+                            }
+                        }
+                        
                         ResponseMessage = Request.lang == "en"
                             ? "Initial arbitration has been accepted successfully"
                             : "تم قبول التحكيم الأولي على الاستمارة بنجاح";

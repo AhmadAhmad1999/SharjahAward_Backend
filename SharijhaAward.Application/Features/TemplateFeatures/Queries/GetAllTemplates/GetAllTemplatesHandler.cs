@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -12,11 +13,14 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemp
     {
         private readonly IAsyncRepository<Template> _TemplateRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAllTemplatesHandler(IAsyncRepository<Template> _TemplateRepository,
-            IMapper Mapper)
+            IMapper Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._TemplateRepository = _TemplateRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
             _Mapper = Mapper;
         }
 
@@ -30,13 +34,35 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemp
             {
                 if (Request.page != 0 && Request.perPage != -1)
                 {
-                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _TemplateRepository
                         .WhereThenFilter(x => x.isActive == Request.isActive &&
                             (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .Skip((Request.page - 1) * Request.perPage)
                         .Take(Request.perPage)
-                        .ToListAsync());
+                        .ToList()
+                        .Select(x =>
+                        {
+                            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                            string WWWRootFilePath = isHttps
+                                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                            return new GetAllTemplatesListVM()
+                            {
+                                Id = x.Id,
+                                BackgroundImageUrl = !string.IsNullOrEmpty(x.BackgroundImageUrl)
+                                    ? (x.BackgroundImageUrl.Contains("wwwroot")
+                                        ? (WWWRootFilePath + x.BackgroundImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                        : x.BackgroundImageUrl.Replace("\\", "/"))
+                                    : string.Empty,
+                                TemplateVersion = x.TemplateVersion,
+                                FontColor = x.FontColor,
+                                TemplateType = x.TemplateType,
+                                isActive = x.isActive
+                            };
+                        }).ToList();
 
                     int TotalCount = await _TemplateRepository
                         .WhereThenFilter(x => x.isActive == Request.isActive &&
@@ -50,11 +76,33 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemp
                 }
                 else
                 {
-                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                    List<GetAllTemplatesListVM> GetAllTemplatesListVM = _TemplateRepository
                         .WhereThenFilter(x => x.isActive == Request.isActive &&
                             (Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true), FilterObject)
                         .OrderByDescending(x => x.CreatedAt)
-                        .ToListAsync());
+                        .ToList()
+                        .Select(x =>
+                        {
+                            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                            string WWWRootFilePath = isHttps
+                                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                            return new GetAllTemplatesListVM()
+                            {
+                                Id = x.Id,
+                                BackgroundImageUrl = !string.IsNullOrEmpty(x.BackgroundImageUrl)
+                                    ? (x.BackgroundImageUrl.Contains("wwwroot")
+                                        ? (WWWRootFilePath + x.BackgroundImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                        : x.BackgroundImageUrl.Replace("\\", "/"))
+                                    : string.Empty,
+                                TemplateVersion = x.TemplateVersion,
+                                FontColor = x.FontColor,
+                                TemplateType = x.TemplateType,
+                                isActive = x.isActive
+                            };
+                        }).ToList();
 
                     int TotalCount = await _TemplateRepository
                         .WhereThenFilter(x => x.isActive == Request.isActive &&
@@ -69,12 +117,34 @@ namespace SharijhaAward.Application.Features.TemplateFeatures.Queries.GetAllTemp
             }
             else
             {
-                List<GetAllTemplatesListVM> GetAllTemplatesListVM = _Mapper.Map<List<GetAllTemplatesListVM>>(await _TemplateRepository
+                List<GetAllTemplatesListVM> GetAllTemplatesListVM = _TemplateRepository
                     .WhereThenFilter(x => Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true, FilterObject)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.page)
                     .Take(Request.perPage)
-                    .ToListAsync());
+                    .ToList()
+                    .Select(x =>
+                    {
+                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                        string WWWRootFilePath = isHttps
+                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                        return new GetAllTemplatesListVM()
+                        {
+                            Id = x.Id,
+                            BackgroundImageUrl = !string.IsNullOrEmpty(x.BackgroundImageUrl)
+                                ? (x.BackgroundImageUrl.Contains("wwwroot")
+                                    ? (WWWRootFilePath + x.BackgroundImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : x.BackgroundImageUrl.Replace("\\", "/"))
+                                : string.Empty,
+                            TemplateVersion = x.TemplateVersion,
+                            FontColor = x.FontColor,
+                            TemplateType = x.TemplateType,
+                            isActive = x.isActive
+                        };
+                    }).ToList();
 
                 int TotalCount = await _TemplateRepository
                     .WhereThenFilter(x => Request.TemplateType != null ? x.TemplateType == Request.TemplateType : true, FilterObject)

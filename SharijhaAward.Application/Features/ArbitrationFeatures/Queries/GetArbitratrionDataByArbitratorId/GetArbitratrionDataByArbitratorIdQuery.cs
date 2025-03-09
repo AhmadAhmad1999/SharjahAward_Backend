@@ -11,5 +11,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         public int perPage { get; set; }
         public string token { get; set; } = string.Empty;
         public string? lang { get; set; }
+        public int? ProvidedFormId { get; set; }
+        public int? CategoryId { get; set; }
+        public string? SubscriberName { get; set; }
+        public bool? isAccepted { get; set; }
+        public string? ProvidedFormLanguage { get; set; }
     }
 }

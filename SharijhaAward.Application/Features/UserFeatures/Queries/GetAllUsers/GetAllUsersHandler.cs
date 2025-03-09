@@ -30,22 +30,41 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
 
             string ResponseMessage = string.Empty;
 
-            List<UserRole> UserRoleEntities = await _UserRoleRepository
-                .Where(x => x.User!.isValidAccount)
-                .ToListAsync();
+            IReadOnlyList<UserRole> UserRoleEntities = await _UserRoleRepository
+                .ListAllAsync();
 
-            List<GetAllUsersListVM> Users = await _UserRepository
-                .WhereThenFilter(x => x.isValidAccount && x.SubscriberId == null, filterObject)
-                .OrderByDescending(x => x.CreatedAt)
-                .Skip((Request.page - 1) * Request.perPage)
-                .Take(Request.perPage)
-                .Select(x => new GetAllUsersListVM()
-                {
-                    Id = x.Id,
-                    Email = x.Email,
-                    PhoneNumber = x.PhoneNumber,
-                    CreatedAt = x.CreatedAt
-                }).ToListAsync();
+            List<GetAllUsersListVM> Users = new List<GetAllUsersListVM>();
+
+            if (Request.page != 0 && Request.perPage != -1)
+            {
+                Users = await _UserRepository
+                    .WhereThenFilter(x => UserRoleEntities.Select(y => y.UserId).Contains(x.Id), filterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .Select(x => new GetAllUsersListVM()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber,
+                        CreatedAt = x.CreatedAt,
+                        Gender = x.Gender
+                    }).ToListAsync();
+            }
+            else
+            {
+                Users = await _UserRepository
+                    .WhereThenFilter(x => UserRoleEntities.Select(y => y.UserId).Contains(x.Id), filterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllUsersListVM()
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        PhoneNumber = x.PhoneNumber,
+                        CreatedAt = x.CreatedAt,
+                        Gender = x.Gender
+                    }).ToListAsync();
+            }
 
             foreach (GetAllUsersListVM User in Users)
             {
@@ -60,7 +79,9 @@ namespace SharijhaAward.Application.Features.UserFeatures.Queries.GetAllUsers
                     }).ToList();
             }
 
-            int TotalCount = await _UserRepository.GetCountAsync(x => x.isValidAccount);
+            int TotalCount = await _UserRepository
+                .WhereThenFilter(x => UserRoleEntities.Select(y => y.UserId).Contains(x.Id), filterObject)
+                .CountAsync();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

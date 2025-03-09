@@ -22,5 +22,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         public bool isChairman { get; set; } = false;
         public string? lang { get; set; }
         public List<ArbitratorCategoryDto> ArbitratorCateogryClasses { get; set; } = new List<ArbitratorCategoryDto>();
+        public bool isSubcommitteeOfficer { get; set; } = false;
+        public List<ArbitratorCategoryDto> SubcommitteeOfficerCategories { get; set; } = new List<ArbitratorCategoryDto>();
     }
 }

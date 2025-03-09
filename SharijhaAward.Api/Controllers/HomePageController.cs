@@ -32,9 +32,6 @@ namespace SharijhaAward.Api.Controllers
         {
             string Token = HttpContext.Request.Headers.Authorization!;
 
-            if (Token.IsNullOrEmpty())
-                return Unauthorized();
-
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
             if (string.IsNullOrEmpty(HeaderValue))

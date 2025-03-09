@@ -16,16 +16,22 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
         private readonly IMapper _Mapper;
-        public CreateCriterionHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IAsyncRepository<Category> CategoryRepository,
-            IMapper Mapper)
+        public CreateCriterionHandler(IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<Category> _CategoryRepository,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository,
+            IMapper _Mapper)
         {
-            _CriterionRepository = CriterionRepository;
-            _CriterionItemRepository = CriterionItemRepository;
-            _CategoryRepository = CategoryRepository;
-            _Mapper = Mapper;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
+            this._Mapper = _Mapper;
         }
         public async Task<BaseResponse<int>> Handle(CreateCriterionCommand Request, CancellationToken cancellationToken)
         {
@@ -34,7 +40,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
             Category? CheckIfCategoryIdDoesExist = await _CategoryRepository
                 .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
 
-            if (CheckIfCategoryIdDoesExist == null)
+            if (CheckIfCategoryIdDoesExist is null)
             {
                 ResponseMessage = Request.lang == "en"
                   ? "Category is not Found"
@@ -88,16 +94,36 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.CreateCr
 
                         await _CriterionRepository.AddAsync(NewSubCriterionEntity);
 
+                        List<CriterionAttachmentType> NewCriterionAttachmentTypeEntities = SubCriterionDto
+                            .AttachmentType
+                            .Select(x => new CriterionAttachmentType()
+                            {
+                                AttachmentType = x,
+                                CriterionId = NewSubCriterionEntity.Id
+                            }).ToList();
+
+                        await _CriterionAttachmentTypeRepository.AddRangeAsync(NewCriterionAttachmentTypeEntities);
+
                         if (SubCriterionDto.CreateCriterionItemDto is not null)
                         {
-                            List<CriterionItem> NewCriterionItemEntities = _Mapper.Map<List<CriterionItem>>(SubCriterionDto.CreateCriterionItemDto);
-                            
-                            NewCriterionItemEntities.ForEach(NewCriterionItemEntity =>
+                            foreach (CreateCriterionItemDto SubCriterionItemDto in SubCriterionDto.CreateCriterionItemDto)
                             {
-                                NewCriterionItemEntity.CriterionId = NewSubCriterionEntity.Id;
-                            });
+                                CriterionItem NewCriterionItemEntity = _Mapper.Map<CriterionItem>(SubCriterionItemDto);
 
-                            await _CriterionItemRepository.AddRangeAsync(NewCriterionItemEntities);
+                                NewCriterionItemEntity.CriterionId = NewSubCriterionEntity.Id;
+
+                                await _CriterionItemRepository.AddAsync(NewCriterionItemEntity);
+
+                                List<CriterionItemAttachmentType> NewCriterionItemAttachmentTypeEntities = SubCriterionItemDto
+                                    .AttachmentType
+                                    .Select(x => new CriterionItemAttachmentType()
+                                    {
+                                        AttachmentType = x,
+                                        CriterionItemId = NewCriterionItemEntity.Id
+                                    }).ToList();
+
+                                await _CriterionItemAttachmentTypeRepository.AddRangeAsync(NewCriterionItemAttachmentTypeEntities);
+                            }
                         }
                     }
                     

@@ -81,7 +81,7 @@ namespace SharijhaAward.Application.Features.RoleFeatures.Commands.CreateRole
 
                     Transaction.Complete();
 
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                    return new BaseResponse<object>(ResponseMessage, true, 200, NewRoleEntity.Id);
                 }
                 catch (Exception)
                 {

@@ -9,5 +9,6 @@
         public List<DynamicAttributeListWithListValuesVM> BaseDynamicAttributes { get; set; } = new List<DynamicAttributeListWithListValuesVM>();
         public List<DynamicAttributeListWithListValuesVM> DynamicAttributes { get; set; } = new List<DynamicAttributeListWithListValuesVM>();
         public List<ViewWhenForAddDto> ViewWhenForAddDtos { get; set; } = new List<ViewWhenForAddDto>();
+        public int? RecordIdOnRelation { get; set; }
     }
 }

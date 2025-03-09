@@ -26,5 +26,9 @@ namespace SharijhaAward.Application.Features.Authentication.Login
         public bool AcceptOnResponsibilities { get; set; }
         public bool? isChairman { get; set; }
         public bool HasFullAccess { get; set; }
+        public bool? isSubcommitteeOfficer { get; set; }
+        public bool? isChairmanOfCommittees { get; set; }
+        public bool? isExpert { get; set; }
+        public bool? isQuality { get; set; }
     }
 }

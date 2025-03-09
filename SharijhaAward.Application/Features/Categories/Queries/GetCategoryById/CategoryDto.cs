@@ -29,12 +29,15 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public DateTime? FinalArbitrationStartDate { get; set; }
         public DateTime? FinalArbitrationEndDate { get; set; }
         public float? FinalArbitrationQualificationMark { get; set; }
+        public int MinimumEligibilityForInterview { get; set; }
 
-        public int? MinimumAmountToObtainAStatement { get; set; }
-        public int? MaximumAmountToObtainAStatement { get; set; }
+        public int? MinimumAmountToObtainAStatement2 { get; set; }
+        public int? MaximumAmountToObtainAStatement2 { get; set; }
         public int? MinimumRequirementToObtainACertificate { get; set; }
         public int? MaximumRequirementToObtainACertificate { get; set; }
         public int? MinimumWinningScore { get; set; }
+
+        public bool ContainStatment1 { get; set; }
 
         public Status Status { get; set; } = Status.InActive;
         public bool? RelatedToClasses { get; set; }
@@ -45,5 +48,11 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetCategoryById
         public string MainCategoryName { get; set; } = string.Empty;
         public bool isHasFile { get; set; }
         public List<SubCategoriesDto> SubCategories { get; set; } = new List<SubCategoriesDto>();
+
+        public DateTime? SortingFormsStartDate { get; set; }
+        public DateTime? SortingFormsEndDate { get; set; }
+        public DateTime? ArbitrationAuditStartDate { get; set; }
+        public DateTime? ArbitrationAuditEndDate { get; set; }
+        public int MarginOfDifferenceBetweenArbitrators { get; set; }
     }
 }

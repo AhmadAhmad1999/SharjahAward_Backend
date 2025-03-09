@@ -11,6 +11,8 @@ using SharijhaAward.Domain.Constants;
 using QRCoder.Extensions;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
+using SharijhaAward.Domain.Entities.CycleModel;
+using System.Reflection;
 
 
 namespace SharijhaAward.Application.Helpers.ExcelHelper
@@ -163,7 +165,30 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                         {
                             property.SetValue(item, cellValue);
                         }
-                        else if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                        else if (property.Name == "CycleId")
+                        {
+                            continue;
+                        }
+                        else if (property.Name == "CycleNumber")
+                        {
+                            IAsyncRepository<Cycle>? _CycleRepository = _ServiceProvider.GetService<IAsyncRepository<Cycle>>();
+                            
+                            if (_CycleRepository is null)
+                                continue;
+
+                            int CycleId = _CycleRepository
+                                .FirstOrDefault(x => x.CycleNumber.ToString() == cellValue) ? .Id ?? 0;
+                            
+                            PropertyInfo? CycleIdProperty = properties
+                                .FirstOrDefault(x => x.Name == "CycleId");
+
+                            if (CycleIdProperty is null)
+                                continue;
+
+                            CycleIdProperty.SetValue(item, CycleId);
+                        }
+                        else if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int) &&
+                            property.Name != "CycleId")
                         {
                             IAsyncRepository<EducationalEntity> _educationalEntityRepository = _ServiceProvider.GetService<IAsyncRepository<EducationalEntity>>();
                             int EducationalEntityId = _educationalEntityRepository.FirstOrDefault(e => e.ArabicName == cellValue).Id;
@@ -231,8 +256,22 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             var colIndex = 0;
             foreach (var property in properties)
             {
+                if (property.Name == "CycleId")
+                    continue;
+
+                string PropertyName = property.Name switch
+                {
+                    "EnglishName" => "الإسم باللغة الإنكليزية",
+                    "ArabicName" => "الإسم باللغة العربية",
+                    "EducationType" => "نوع التعليم",
+                    "Emirates" => "الإمارة",
+                    "EducationalEntityId" => "الجهة التعليمية",
+                    "CycleNumber" => "رقم الدورة",
+                    _ => "BadRequest"
+                };
+
                 var cell = rowHeader.CreateCell(colIndex);
-                cell.SetCellValue(property.Name);
+                cell.SetCellValue(PropertyName);
                 cell.CellStyle = style;
                 colIndex++;
             }
@@ -241,59 +280,11 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
             colIndex = 0;
             foreach (var property in properties)
             {
-                if (property.Name == "EducationType")
-                {
-                    var fkValues = GetForeignKeyValues(property.Name);
-                    if (fkValues != null && fkValues.Any())
-                    {
-                        // Create a sheet to hold the list of foreign key values
-                        var listSheet = workbook.CreateSheet(property.Name + "_List");
-                        for (int i = 0; i < fkValues.Count; i++)
-                        {
-                            var listRow = listSheet.CreateRow(i);
-                            listRow.CreateCell(0).SetCellValue(fkValues[i]);
-                        }
-
-                        // Create a named range for the list
-                        var rangeName = property.Name + "_List";
-                        var name = workbook.CreateName();
-                        name.NameName = rangeName;
-                        name.RefersToFormula = $"{property.Name}_List!$A$1:$A${fkValues.Count}";
-
-                        // Create a dropdown list for the foreign key column
-                        var constraint = sheet.GetDataValidationHelper().CreateExplicitListConstraint(fkValues.ToArray());
-                        var addressList = new CellRangeAddressList(1, 65535, colIndex, colIndex);
-                        var validation = sheet.GetDataValidationHelper().CreateValidation(constraint, addressList);
-                        sheet.AddValidationData(validation);
-                    }
-                }
-                if (property.Name == "Emirates")
-                {
-                    var fkValues = GetForeignKeyValues(property.Name);
-                    if (fkValues != null && fkValues.Any())
-                    {
-                        // Create a sheet to hold the list of foreign key values
-                        var listSheet = workbook.CreateSheet(property.Name + "_List");
-                        for (int i = 0; i < fkValues.Count; i++)
-                        {
-                            var listRow = listSheet.CreateRow(i);
-                            listRow.CreateCell(0).SetCellValue(fkValues[i]);
-                        }
-
-                        // Create a named range for the list
-                        var rangeName = property.Name + "_List";
-                        var name = workbook.CreateName();
-                        name.NameName = rangeName;
-                        name.RefersToFormula = $"{property.Name}_List!$A$1:$A${fkValues.Count}";
-
-                        // Create a dropdown list for the foreign key column
-                        var constraint = sheet.GetDataValidationHelper().CreateExplicitListConstraint(fkValues.ToArray());
-                        var addressList = new CellRangeAddressList(1, 65535, colIndex, colIndex);
-                        var validation = sheet.GetDataValidationHelper().CreateValidation(constraint, addressList);
-                        sheet.AddValidationData(validation);
-                    }
-                }
-                if (property.Name.EndsWith("Id") && property.PropertyType == typeof(int))
+                if (property.Name == "EducationType" ||
+                    property.Name == "EducationalEntityId" ||
+                    property.Name == "Emirates" ||
+                    property.Name == "CycleNumber" ||
+                    (property.Name.EndsWith("Id") && property.PropertyType == typeof(int)))
                 {
                     var fkValues = GetForeignKeyValues(property.Name);
                     if (fkValues != null && fkValues.Any())
@@ -320,7 +311,6 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                     }
                 }
 
-                
                 colIndex++;
             }
 
@@ -360,6 +350,19 @@ namespace SharijhaAward.Application.Helpers.ExcelHelper
                 }
 
                 return EducationTypesListItem;
+            }
+            else if (foreignKeyName == "CycleNumber")
+            {
+                IAsyncRepository<Cycle>? _CycleRepository = _ServiceProvider.GetService<IAsyncRepository<Cycle>>();
+
+                if (_CycleRepository is null)
+                    return new List<string>();
+
+                List<string> CyclesNumbers = _CycleRepository
+                    .Select(x => x.CycleNumber.ToString())
+                    .ToList();
+
+                return CyclesNumbers;
             }
             else
             {

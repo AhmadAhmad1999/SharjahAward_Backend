@@ -1,101 +1,195 @@
-﻿using Aspose.Pdf.Drawing;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CircularModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.Circulars.Queries.GetCircularById
 {
     public class GetCircularByIdQueryHandler
         : IRequestHandler<GetCircularByIdQuery, BaseResponse<CircularDto>>
     {
-        private readonly IAsyncRepository<Circular> _circularRepository;
-        private readonly IAsyncRepository<CircularCoordinator> _circularCoordinatorRepository;
-        private readonly IAsyncRepository<CircularArbitrator> _circularArbitratorRepository;
-        private readonly IAsyncRepository<CircularChairman> _circularChairman;
+        private readonly IAsyncRepository<Circular> _CircularRepository;
+        private readonly IAsyncRepository<CircularCoordinator> _CircularCoordinatorRepository;
+        private readonly IAsyncRepository<CircularArbitrator> _CircularArbitratorRepository;
+        private readonly IAsyncRepository<CircularChairman> _CircularChairmanChairman;
         private readonly IAsyncRepository<CircularAttachment> _CircularAttachmentRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<CircularUser> _CircularUserRepository;
+        private readonly IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository;
+        private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IJwtProvider _JwtProvider;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetCircularByIdQueryHandler(IJwtProvider jwtProvider, 
-            IAsyncRepository<Circular> circularRepository, 
-            IMapper mapper, 
-            IAsyncRepository<CircularCoordinator> circularCoordinatorRepository, 
-            IAsyncRepository<CircularArbitrator> circularArbitratorRepository, 
-            IAsyncRepository<CircularChairman> circularChairman,
-            IAsyncRepository<CircularAttachment> CircularAttachmentRepository)
+        public GetCircularByIdQueryHandler(IJwtProvider _JwtProvider, 
+            IAsyncRepository<Circular> _CircularRepository, 
+            IMapper _Mapper, 
+            IAsyncRepository<CircularCoordinator> _CircularCoordinatorRepository, 
+            IAsyncRepository<CircularArbitrator> _CircularArbitratorRepository, 
+            IAsyncRepository<CircularChairman> _CircularChairmanChairman,
+            IAsyncRepository<CircularAttachment> _CircularAttachmentRepository,
+            IHttpContextAccessor _HttpContextAccessor,
+            IAsyncRepository<CircularUser> _CircularUserRepository,
+            IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository,
+            IAsyncRepository<UserRole> _UserRoleRepository)
         {
-            _circularRepository = circularRepository;
-            _mapper = mapper;
-            _circularCoordinatorRepository = circularCoordinatorRepository;
-            _circularArbitratorRepository = circularArbitratorRepository;
-            _circularChairman = circularChairman;
-            _jwtProvider = jwtProvider;
-            _CircularAttachmentRepository = CircularAttachmentRepository;
+            this._CircularRepository = _CircularRepository;
+            this._Mapper = _Mapper;
+            this._CircularCoordinatorRepository = _CircularCoordinatorRepository;
+            this._CircularArbitratorRepository = _CircularArbitratorRepository;
+            this._CircularChairmanChairman = _CircularChairmanChairman;
+            this._JwtProvider = _JwtProvider;
+            this._CircularAttachmentRepository = _CircularAttachmentRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._CircularUserRepository = _CircularUserRepository;
+            this._CiruclarSubcommitteeOfficerRepository = _CiruclarSubcommitteeOfficerRepository;
+            this._UserRoleRepository = _UserRoleRepository;
         }
 
-        public async Task<BaseResponse<CircularDto>> Handle(GetCircularByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<CircularDto>> Handle(GetCircularByIdQuery Request, CancellationToken cancellationToken)
         {
-            var UserId = _jwtProvider.GetUserIdFromToken(request.token!);
+            string ResponseMessage = string.Empty;
 
-            if (UserId == null)
+            int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.token!));
+
+            Circular? CircularEntity = await _CircularRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (CircularEntity is null)
             {
-                return new BaseResponse<CircularDto>("UnAuth", false, 401);
+                ResponseMessage = Request.lang == "en"
+                    ? "Circular is not found"
+                    : "التعميم غير موجود";
+
+                return new BaseResponse<CircularDto>(ResponseMessage, false, 404);
             }
 
-            var Circular = await _circularRepository
-                .Where(c => c.Id == request.Id)
-                .FirstOrDefaultAsync();
+            CircularDto Response = _Mapper.Map<CircularDto>(CircularEntity);
 
-            if(Circular == null)
+            if (!Request.View)
             {
-                return new BaseResponse<CircularDto>("", false, 404);
+                Response.Coordinators = await _CircularCoordinatorRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .Select(x => x.CoordinatorId)
+                    .ToListAsync();
+
+                Response.Arbitrators = await _CircularArbitratorRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .Include(x => x.Arbitrator)
+                    .Select(x => x.ArbitratorId)
+                    .ToListAsync();
+
+                Response.Chairmans = await _CircularChairmanChairman
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .Select(x => x.ChairmanId)
+                    .ToListAsync();
+
+                Response.SubcommitteeOfficers = await _CiruclarSubcommitteeOfficerRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .Select(x => x.SubcommitteeOfficerId)
+                    .ToListAsync();
+
+                List<CircularUser> CircularUserEntities = await _CircularUserRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .ToListAsync();
+
+                Response.ChairmanOfCommittes = CircularUserEntities
+                    .Where(x => x.UserRole!.Role!.EnglishName.ToLower() == "Chairman of Committees".ToLower() &&
+                        x.UserRole!.Role!.ArabicName == "رئيس اللجان")
+                    .Select(x => x.UserRole!.UserId)
+                    .ToList();
+
+                Response.Experts = CircularUserEntities
+                    .Where(x => x.UserRole!.Role!.EnglishName.ToLower() == "Expert".ToLower() &&
+                        x.UserRole!.Role!.ArabicName == "خبير")
+                    .Select(x => x.UserRole!.UserId)
+                    .ToList();
+
+                Response.Qualities = CircularUserEntities
+                    .Where(x => x.UserRole!.Role!.EnglishName.ToLower() == "Quality".ToLower() &&
+                        x.UserRole!.Role!.ArabicName == "الجودة")
+                    .Select(x => x.UserRole!.UserId)
+                    .ToList();
+
+                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                string WWWRootFilePath = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                Response.CircularAttachments = _Mapper.Map<List<CircularAttachmentDto>>(_CircularAttachmentRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .ToList()
+                    .Select(x =>
+                    {
+                        return new CircularAttachmentDto()
+                        {
+                            AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.AttachementPath.Replace("\\", "/"),
+                            CircularId = x.CircularId,
+                            Id = x.Id,
+                            FileName = x.FileName
+                        };
+                    }).ToList());
+
+                return new BaseResponse<CircularDto>(string.Empty, true, 200, Response);
             }
-
-            var data = _mapper.Map<CircularDto>(Circular);
-
-            data.Coordinators = await _circularCoordinatorRepository
-                .Where(c => c.CircularId == Circular.Id)
-                .Include(c=>c.Coordinator)
-                .Select(c => c.CoordinatorId)
-                .ToListAsync();
-
-            data.Arbitrators = await _circularArbitratorRepository
-                .Where(c => c.CircularId == Circular.Id)
-                .Include(c=>c.Arbitrator)
-                .Select(c => c.ArbitratorId)
-                .ToListAsync();
-
-            data.Chairmans = await _circularChairman
-                .Where(c=>c.CircularId == Circular.Id)
-                .Include(c=>c.Chairman)
-                .Select(c=>c.ChairmanId)
-                .ToListAsync();
-
-            if (data.Coordinators.Contains(int.Parse(UserId))
-                || data.Arbitrators.Contains(int.Parse(UserId))
-                || data.Chairmans.Contains(int.Parse(UserId)))
+            else
             {
-                Circular.IsRead = true;
+                await _CircularCoordinatorRepository
+                    .Where(x => x.CircularId == CircularEntity.Id &&
+                        x.CoordinatorId == UserId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRead, true));
 
-                await _circularRepository.UpdateAsync(Circular);
+                await _CircularArbitratorRepository
+                    .Where(x => x.CircularId == CircularEntity.Id &&
+                        x.ArbitratorId == UserId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRead, true));
 
-                data.IsRead = true;
+                await _CircularChairmanChairman
+                    .Where(x => x.CircularId == CircularEntity.Id &&
+                        x.ChairmanId == UserId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRead, true));
+
+                await _CiruclarSubcommitteeOfficerRepository
+                    .Where(x => x.CircularId == CircularEntity.Id &&
+                        x.SubcommitteeOfficerId == UserId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRead, true));
+
+                await _CircularUserRepository
+                    .Where(x => x.CircularId == CircularEntity.Id &&
+                        x.UserRole!.UserId == UserId)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.IsRead, true));
+
+                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                string WWWRootFilePath = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                Response.CircularAttachments = _Mapper.Map<List<CircularAttachmentDto>>(_CircularAttachmentRepository
+                    .Where(x => x.CircularId == CircularEntity.Id)
+                    .ToList()
+                    .Select(x =>
+                    {
+                        return new CircularAttachmentDto()
+                        {
+                            AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.AttachementPath.Replace("\\", "/"),
+                            CircularId = x.CircularId,
+                            Id = x.Id,
+                            FileName = x.FileName
+                        };
+                    }).ToList());
+
+                return new BaseResponse<CircularDto>(string.Empty, true, 200, Response);
             }
-
-            data.CircularAttachments = _mapper.Map<List<CircularAttachmentDto>>(await _CircularAttachmentRepository
-                .Where(x => x.CircularId == Circular.Id)
-                .ToListAsync());
-
-            return new BaseResponse<CircularDto>("", true, 200, data);
         }
     }
 }

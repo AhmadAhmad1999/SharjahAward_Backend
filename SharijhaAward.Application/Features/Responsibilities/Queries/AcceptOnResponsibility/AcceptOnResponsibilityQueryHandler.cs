@@ -37,11 +37,6 @@ namespace SharijhaAward.Application.Features.Responsibilities.Queries.AcceptOnRe
         {
             var UserId = _jwtProvider.GetUserIdFromToken(request.token);
             
-            if (UserId.IsNullOrEmpty())
-            {
-                return new BaseResponse<object>("Un Auth", false, 401);
-            }
-            
             var User = await _userRepository.GetByIdAsync(int.Parse(UserId));
            
             if (User == null)

@@ -24,27 +24,93 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
             string ResponseMessage = string.Empty;
             FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
-                .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                .Select(x => new GetAllInterviewsForInterviewStepListVM()
+            if (FilterObject.Filters != null
+                ? FilterObject.Filters.Any(x => !string.IsNullOrEmpty(x.Key)
+                    ? x.Key.ToLower() == "Type".ToLower()
+                    : false)
+                : false)
+            {
+                FilterObject.Filters.Remove(FilterObject.Filters.FirstOrDefault(x => !string.IsNullOrEmpty(x.Key)
+                    ? x.Key.ToLower() == "Type".ToLower()
+                    : false)!);
+            }
+
+            if (Request.Type is not null)
+            {
+                List<GetAllInterviewsForInterviewStepListVM> Meetings = new List<GetAllInterviewsForInterviewStepListVM>();
+                if (Request.page != 0 &&
+                    Request.perPage != -1)
                 {
-                    StartDate = x.StartDate,
-                    Description = Request.lang == "en"
-                        ? x.EnglishDescription
-                        : x.ArabicDescription,
-                    Id = x.Id,
-                    Name = Request.lang == "en"
-                        ? x.EnglishName
-                        : x.ArabicName,
-                    Type = x.Type
-                }).ToListAsync();
+                    Meetings = await _InterviewRepository
+                        .WhereThenFilter(x => x.Type == Request.Type, FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                        {
+                            StartDate = x.StartDate,
+                            Description = Request.lang == "en"
+                                ? x.EnglishDescription
+                                : x.ArabicDescription,
+                            Id = x.Id,
+                            Name = Request.lang == "en"
+                                ? x.EnglishName
+                                : x.ArabicName,
+                            Type = x.Type
+                        }).ToListAsync();
+                }
+                else
+                {
+                    Meetings = await _InterviewRepository
+                        .WhereThenFilter(x => x.Type == Request.Type, FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                        {
+                            StartDate = x.StartDate,
+                            Description = Request.lang == "en"
+                                ? x.EnglishDescription
+                                : x.ArabicDescription,
+                            Id = x.Id,
+                            Name = Request.lang == "en"
+                                ? x.EnglishName
+                                : x.ArabicName,
+                            Type = x.Type
+                        }).ToListAsync();
+                }
 
-            int TotalCount = await _InterviewRepository.WhereThenFilter(x => true, FilterObject).CountAsync();
+                int TotalCount = await _InterviewRepository
+                    .WhereThenFilter(x => x.Type == Request.Type, FilterObject)
+                    .CountAsync();
 
-            Pagination PaginationParameter = new Pagination(Request.page,
-                Request.perPage, TotalCount);
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
 
-            return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+                return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+            }
+            else
+            {
+                List<GetAllInterviewsForInterviewStepListVM> Meetings = await _InterviewRepository
+                    .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                    .Select(x => new GetAllInterviewsForInterviewStepListVM()
+                    {
+                        StartDate = x.StartDate,
+                        Description = Request.lang == "en"
+                            ? x.EnglishDescription
+                            : x.ArabicDescription,
+                        Id = x.Id,
+                        Name = Request.lang == "en"
+                            ? x.EnglishName
+                            : x.ArabicName,
+                        Type = x.Type
+                    }).ToListAsync();
+
+                int TotalCount = await _InterviewRepository.WhereThenFilter(x => true, FilterObject).CountAsync();
+
+                Pagination PaginationParameter = new Pagination(Request.page,
+                    Request.perPage, TotalCount);
+
+                return new BaseResponse<List<GetAllInterviewsForInterviewStepListVM>>(ResponseMessage, true, 200, Meetings, PaginationParameter);
+            }
         }
     }
 }

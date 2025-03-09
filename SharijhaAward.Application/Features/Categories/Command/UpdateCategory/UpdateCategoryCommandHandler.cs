@@ -159,10 +159,14 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             x.EnglishTitle == "Educational Entity" && x.ArabicTitle == "الجهة التعليمية" &&
                             x.DynamicAttributeSection!.AttributeTableNameId == 1);
 
-                    int? EducationalEntityDynamicAttributeId = null;
+                    DynamicAttribute? EducationalInstitutionDynamicAttribute = await _DynamicAttributeRepository
+                        .FirstOrDefaultAsync(x => x.DynamicAttributeSection!.RecordIdOnRelation == request.Id &&
+                            x.EnglishTitle == "Educational Institution" && x.ArabicTitle == "المؤسسة التعليمية" &&
+                            x.DynamicAttributeSection!.AttributeTableNameId == 1);
 
                     if (request.RelatedToEducationalEntities != null
-                        ? (request.RelatedToEducationalEntities.Value && !categoryToUpdate.RelatedToEducationalEntities)
+                        ? (request.RelatedToEducationalEntities.Value && !categoryToUpdate.RelatedToEducationalEntities &&
+                            EducationalEntityDynamicAttribute is null && EducationalInstitutionDynamicAttribute is null)
                         : false)
                     {
                         var LastOrderId = await _DynamicAttributeRepository
@@ -172,6 +176,30 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             .LastOrDefaultAsync();
 
                         DynamicAttribute DynamicAttribute = new DynamicAttribute()
+                        {
+                            isDeleted = false,
+                            DeletedAt = null,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedBy = null,
+                            LastModifiedAt = null,
+                            LastModifiedBy = null,
+                            DynamicAttributeSectionId = LastOrderId!.DynamicAttributeSectionId,
+                            EnglishLabel = "Educational Institution",
+                            EnglishTitle = "Educational Institution",
+                            ArabicLabel = "المؤسسة التعليمية",
+                            ArabicTitle = "المؤسسة التعليمية",
+                            AttributeDataTypeId = 8,
+                            IsRequired = true,
+                            IsUnique = false,
+                            LinkedToAnotherAttribute = false,
+                            MaxSizeInKB = null,
+                            Status = DynamicAttributeStatus.Active,
+                            ArabicPlaceHolder = "المؤسسة التعليمية مرتبطة بالفئة",
+                            EnglishPlaceHolder = "The educational institution is related to the category",
+                            OrderId = LastOrderId!.OrderId
+                        };
+
+                        DynamicAttribute DynamicAttribute2 = new DynamicAttribute()
                         {
                             isDeleted = false,
                             DeletedAt = null,
@@ -192,12 +220,11 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                             Status = DynamicAttributeStatus.Active,
                             ArabicPlaceHolder = "الجهة التعليمية مرتبطة بالفئة",
                             EnglishPlaceHolder = "The educational entity is related to the category",
-                            OrderId = LastOrderId!.OrderId
+                            OrderId = LastOrderId!.OrderId + 1
                         };
 
                         await _DynamicAttributeRepository.AddAsync(DynamicAttribute);
-
-                        EducationalEntityDynamicAttributeId = DynamicAttribute.Id;
+                        await _DynamicAttributeRepository.AddAsync(DynamicAttribute2);
                     }
                     else if ((request.RelatedToEducationalEntities != null)
                         ? (!request.RelatedToEducationalEntities.Value && categoryToUpdate.RelatedToEducationalEntities)
@@ -206,6 +233,10 @@ namespace SharijhaAward.Application.Features.Categories.Command.UpdateCategory
                         if (EducationalEntityDynamicAttribute is not null)
                         {
                             await _DynamicAttributeRepository.DeleteAsync(EducationalEntityDynamicAttribute);
+                        }
+                        if (EducationalInstitutionDynamicAttribute is not null)
+                        {
+                            await _DynamicAttributeRepository.DeleteAsync(EducationalInstitutionDynamicAttribute);
                         }
                     }
 

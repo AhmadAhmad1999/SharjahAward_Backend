@@ -7,6 +7,7 @@ using SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeArbit
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.ExportArbitrationResultsToExcel;
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllArbitrationResults;
 using SharijhaAward.Application.Features.ArbitrationResults.Queries.GetCertificationByFormId;
+using SharijhaAward.Application.Helpers.AddAdvancedFormBuilderValueForSave;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.TemplateModel;
@@ -44,7 +45,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllArbitrationResults([FromQuery] List<Filter>? filters,
             int? CategoryId, string? SubscriberName,
-            int? CycleNumber, string? CategoryName, bool? EligibleToWin, int Page = 1, int PerPage = 10)
+            int? CycleNumber, string? CategoryName, bool? EligibleToWin, EligableFilter? EligableFilter, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -67,7 +68,8 @@ namespace SharijhaAward.Api.Controllers
                 CategoryName = CategoryName,
                 EligibleToWin = EligibleToWin,
                 Token = Token,
-                filters = filters
+                filters = filters,
+                EligableFilter = EligableFilter
             });
 
             return Response.statusCode switch

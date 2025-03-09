@@ -137,7 +137,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                             ArabicTitle = StaticNotificationEntity!.ArabicTitle,
                             ArabicBody = StaticNotificationEntity!.ArabicBody,
                             EnglishTitle = StaticNotificationEntity!.EnglishTitle,
-                            EnglishBody = StaticNotificationEntity!.EnglishBody
+                            EnglishBody = StaticNotificationEntity!.EnglishBody,
+                            isStaticNotification = true
                         };
 
                         await _NotificationRepository.AddAsync(NewNotificationEntity);
@@ -172,7 +173,8 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Commands.Sen
                         {
                             NotificationId = StaticNotificationEntity.Id,
                             UserId = UserRole.UserId,
-                            isReaded = false
+                            isReaded = false,
+                            Action = "linked_accounts"
                         });
                     }
 

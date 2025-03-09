@@ -86,7 +86,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             query.lang = language!;
-
+            query.intoWebsite = false;
             var response = await _mediator.Send(query);
 
             return response.statusCode switch

@@ -2,15 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AddUserNoteOnForm;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AssignFormsToArbitrator;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.AssignMultipleFormsToMultipleArbitrators;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.ChangeStatusForAssignedForm;
+using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.DeleteUserNoteOnForm;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.SwitchArbitrationFeature;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Commands.UpdateAssignedFormsToArbitrator;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllArbitratorsForArbitration;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbitratrionDataByArbitratorId;
 using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetRemainingFormsWithFilters;
+using SharijhaAward.Application.Features.Classes.Commands.DeleteClass;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetFormStatusById;
 using SharijhaAward.Application.Responses;
 
@@ -158,7 +161,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetArbitratrionDataByArbitratorId(int Id, bool GetRemainigForms,
+        public async Task<IActionResult> GetArbitratrionDataByArbitratorId(int? ProvidedFormId, int? CategoryId,
+            bool? isAccepted, string? ProvidedFormLanguage, string? SubscriberName, int Id, bool GetRemainigForms,
             int page = 1, int perPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
@@ -172,7 +176,12 @@ namespace SharijhaAward.Api.Controllers
                 lang = HeaderValue!,
                 GetRemainigForms = GetRemainigForms,
                 page = page,
-                perPage = perPage
+                perPage = perPage,
+                ProvidedFormId = ProvidedFormId,
+                CategoryId = CategoryId,
+                isAccepted = isAccepted,
+                ProvidedFormLanguage = ProvidedFormLanguage,
+                SubscriberName = SubscriberName
             });
 
             return Response.statusCode switch
@@ -329,6 +338,66 @@ namespace SharijhaAward.Api.Controllers
             {
                 200 => Ok(Response),
                 404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("AddUserNoteOnForm")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> AddUserNoteOnForm([FromBody] AddUserNoteOnFormCommand AddUserNoteOnFormCommand)
+        {
+            StringValues? Token = HttpContext.Request.Headers.Authorization;
+
+            if (string.IsNullOrEmpty(Token))
+                return Unauthorized("You must send the token");
+
+            AddUserNoteOnFormCommand.Token = Token;
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            AddUserNoteOnFormCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(AddUserNoteOnFormCommand);
+
+            return Response.statusCode switch
+            {
+                200 => Ok(Response),
+                404 => NotFound(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpDelete("DeleteUserNoteOnForm/{UserNoteOnFormForArbitrationId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> DeleteUserNoteOnForm(int UserNoteOnFormForArbitrationId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object>? Response = await _Mediator.Send(new DeleteUserNoteOnFormCommand()
+            {
+                UserNoteOnFormForArbitrationId = UserNoteOnFormForArbitrationId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
                 _ => BadRequest(Response)
             };
         }

@@ -6,6 +6,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.Ge
     public class GetAllInitialArbitrationOnFormQuery : IRequest<BaseResponse<List<GetAllInitialArbitrationOnFormListVM>>>
     {
         public int FormId { get; set; }
+        public bool asNormalArbitrator { get; set; }
         public string? lang { get; set; }
     }
 }

@@ -395,6 +395,8 @@ using SharijhaAward.Application.Features.NewsTickerFeatures.Commands.CreateNewsT
 using SharijhaAward.Application.Features.NewsTickerFeatures.Commands.UpdateNewsTicker;
 using SharijhaAward.Application.Features.NewsTickerFeatures.Queries.GetAllNewsTicker;
 using SharijhaAward.Application.Features.NewsTickerFeatures.Queries.GetNewsTickerById;
+using SharijhaAward.Domain.Entities.WebSiteResponseModel;
+using SharijhaAward.Application.Features.ContactUsPages.Commands.ResponseForWebsite;
 
 namespace SharijhaAward.Application.Profiles
 {
@@ -577,6 +579,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<MessageType, MessageTypeListVM>().ReverseMap();
 
             CreateMap<Circular, CreateCircularCommand>().ReverseMap();
+            CreateMap<CircularAttachment, UpdateCircularFilesDto>().ReverseMap();
             CreateMap<Circular, UpdateCircularCommand>().ReverseMap();
             CreateMap<Circular, CircularListVm>().ReverseMap();
             CreateMap<Circular, CircularDto>().ReverseMap();
@@ -727,6 +730,7 @@ namespace SharijhaAward.Application.Profiles
             CreateMap<Template, CreateTemplateCommand>().ReverseMap();
             CreateMap<DigitalSignature, CreateDigitalSignatureCommand>().ReverseMap();
             CreateMap<CreateNewsTickerCommand, NewsTicker>().ReverseMap();
+            CreateMap<ResponseForWebsiteCommand, WebSiteResponse>().ReverseMap();
 
             // Update..
             CreateMap<DynamicAttributeSection, UpdateDynamicAttributeSectionCommand>().ReverseMap();

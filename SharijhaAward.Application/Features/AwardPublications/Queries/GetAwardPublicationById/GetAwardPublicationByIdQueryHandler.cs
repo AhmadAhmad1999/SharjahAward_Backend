@@ -1,41 +1,61 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
-using SharijhaAward.Domain.Entities.CycleModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AwardPublications.Queries.GetAwardPublicationById
 {
     public class GetAwardPublicationByIdQueryHandler
         : IRequestHandler<GetAwardPublicationByIdQuery, BaseResponse<AwardPublicationDto>>
     {
-        private readonly IAsyncRepository<AwardPublication> _awardPublicationRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<AwardPublication> _AwardPublicationRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAwardPublicationByIdQueryHandler(IAsyncRepository<AwardPublication> awardPublicationRepository, IMapper mapper)
+        public GetAwardPublicationByIdQueryHandler(IAsyncRepository<AwardPublication> _AwardPublicationRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _awardPublicationRepository = awardPublicationRepository;
-            _mapper = mapper;
+            this._AwardPublicationRepository = _AwardPublicationRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<AwardPublicationDto>> Handle(GetAwardPublicationByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<AwardPublicationDto>> Handle(GetAwardPublicationByIdQuery Request, CancellationToken cancellationToken)
         {
-            var AwardPublication = await _awardPublicationRepository.GetByIdAsync(request.Id);
+            string ResponseMessage = string.Empty;
+
+            AwardPublication? AwardPublicationEntitty = await _AwardPublicationRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
            
-            if(AwardPublication == null)
+            if (AwardPublicationEntitty == null)
             {
-                return new BaseResponse<AwardPublicationDto>("", false, 404);
+                ResponseMessage = Request.lang == "en"
+                    ? "Award publication is not found"
+                    : "إصدار الجائزة غير موجود";
+
+                return new BaseResponse<AwardPublicationDto>(ResponseMessage, false, 404);
             }
 
-            var data = _mapper.Map<AwardPublicationDto>(AwardPublication);
+            AwardPublicationDto Response = _Mapper.Map<AwardPublicationDto>(AwardPublicationEntitty);
 
-            return new BaseResponse<AwardPublicationDto>("", true, 200, data);
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            Response.ImageUrl = Response.ImageUrl.Contains("wwwroot")
+                ? (WWWRootFilePath + Response.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                : Response.ImageUrl.Replace("\\", "/");
+
+            Response.PublicationUrl = Response.PublicationUrl.Contains("wwwroot")
+                ? (WWWRootFilePath + Response.PublicationUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                : Response.PublicationUrl.Replace("\\", "/");
+
+            return new BaseResponse<AwardPublicationDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

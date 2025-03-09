@@ -35,7 +35,8 @@ namespace SharijhaAward.Persistence.Seeders
                        ExpectedNumberOfWinners = null,
                        RelatedToClasses = null,
                        ParentId = null,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =2,
@@ -53,14 +54,15 @@ namespace SharijhaAward.Persistence.Seeders
                        CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                        FinalArbitrationQualificationMark = 100,
                        MinimumWinningScore = 90,
-                       MinimumAmountToObtainAStatement = 50,
-                       MaximumAmountToObtainAStatement = 60,
+                       MinimumAmountToObtainAStatement2 = 50,
+                       MaximumAmountToObtainAStatement2 = 60,
                        MinimumRequirementToObtainACertificate = 65,
                        MaximumRequirementToObtainACertificate = 80,
                        ExpectedNumberOfWinners = 4,
                        RelatedToClasses = false,
                        ParentId = 1,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =3,
@@ -81,7 +83,8 @@ namespace SharijhaAward.Persistence.Seeders
                        ExpectedNumberOfWinners = null,
                        RelatedToClasses = false,
                        ParentId = null,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =4,
@@ -99,14 +102,15 @@ namespace SharijhaAward.Persistence.Seeders
                        CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                        FinalArbitrationQualificationMark = 100,
                        MinimumWinningScore = 90,
-                       MinimumAmountToObtainAStatement = 50,
-                       MaximumAmountToObtainAStatement = 60,
+                       MinimumAmountToObtainAStatement2 = 50,
+                       MaximumAmountToObtainAStatement2 = 60,
                        MinimumRequirementToObtainACertificate = 65,
                        MaximumRequirementToObtainACertificate = 80,
                        ExpectedNumberOfWinners = 3,
                        RelatedToClasses = false,
                        ParentId = 3,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =5,
@@ -124,14 +128,15 @@ namespace SharijhaAward.Persistence.Seeders
                        CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Individual,
                        FinalArbitrationQualificationMark = 100,
                        MinimumWinningScore = 90,
-                       MinimumAmountToObtainAStatement = 50,
-                       MaximumAmountToObtainAStatement = 60,
+                       MinimumAmountToObtainAStatement2 = 50,
+                       MaximumAmountToObtainAStatement2 = 60,
                        MinimumRequirementToObtainACertificate = 65,
                        MaximumRequirementToObtainACertificate = 80,
                        ExpectedNumberOfWinners = 4,
                        RelatedToClasses = false,
                        ParentId = 3,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =6,
@@ -152,7 +157,8 @@ namespace SharijhaAward.Persistence.Seeders
                        ExpectedNumberOfWinners = null,
                        RelatedToClasses = false,
                        ParentId = null,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =7,
@@ -170,14 +176,15 @@ namespace SharijhaAward.Persistence.Seeders
                        CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Group,
                        FinalArbitrationQualificationMark = 100,
                        MinimumWinningScore = 90,
-                       MinimumAmountToObtainAStatement = 50,
-                       MaximumAmountToObtainAStatement = 60,
+                       MinimumAmountToObtainAStatement2 = 50,
+                       MaximumAmountToObtainAStatement2 = 60,
                        MinimumRequirementToObtainACertificate = 65,
                        MaximumRequirementToObtainACertificate = 80,
                        ExpectedNumberOfWinners = 4,
                        RelatedToClasses = false,
                        ParentId = 6,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    }, new Category()
                    {
                        // Id =8,
@@ -195,14 +202,15 @@ namespace SharijhaAward.Persistence.Seeders
                        CategoryClassification = Domain.Constants.CategoryConstants.CategoryClassification.Group,
                        FinalArbitrationQualificationMark = 100,
                        MinimumWinningScore = 90,
-                       MinimumAmountToObtainAStatement = 50,
-                       MaximumAmountToObtainAStatement = 60,
+                       MinimumAmountToObtainAStatement2 = 50,
+                       MaximumAmountToObtainAStatement2 = 60,
                        MinimumRequirementToObtainACertificate = 65,
                        MaximumRequirementToObtainACertificate = 80,
                        ExpectedNumberOfWinners = 4,
                        RelatedToClasses = false,
                        ParentId = 6,
-                       CycleId = 1
+                       CycleId = 1,
+                       ContainStatment1 = true
                    });
                  await _context.SaveChangesAsync();
             }

@@ -1,41 +1,55 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Cycles.Queries.ExportToExcel;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Queries.ExportToExcel
 {
     public class ExportToExcelQueryHandler
         : IRequestHandler<ExportToExcelQuery, BaseResponse<byte[]>>
     {
-        private readonly IAsyncRepository<CycleCondition> _cycleConditionRepository;
-        private readonly IExcelHelper<CycleConditionExportDto> _excelHelper;
-        private readonly IMapper _mapper;
-        
-        public ExportToExcelQueryHandler(IAsyncRepository<CycleCondition> cycleConditionRepository, IExcelHelper<CycleConditionExportDto> excelHelper, IMapper mapper)
+        private readonly IAsyncRepository<CycleCondition> _CycleConditionRepository;
+        private readonly IExcelHelper<CycleConditionExportDto> _CycleConditionExportDtoHelper;
+        private readonly IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository;
+
+        public ExportToExcelQueryHandler(IAsyncRepository<CycleCondition> _CycleConditionRepository,
+            IExcelHelper<CycleConditionExportDto> _CycleConditionExportDtoHelper, 
+            IAsyncRepository<CycleConditionAttachmentType> _CycleConditionAttachmentTypeRepository)
         {
-            _cycleConditionRepository = cycleConditionRepository;
-            _excelHelper = excelHelper;
-            _mapper = mapper;
+            this._CycleConditionRepository = _CycleConditionRepository;
+            this._CycleConditionExportDtoHelper = _CycleConditionExportDtoHelper;
+            this._CycleConditionAttachmentTypeRepository = _CycleConditionAttachmentTypeRepository;
         }
 
         public async Task<BaseResponse<byte[]>> Handle(ExportToExcelQuery request, CancellationToken cancellationToken)
         {
-            var cycleConditions = await _cycleConditionRepository.ListAllAsync();
+            IReadOnlyList<CycleCondition> CycleConditionEntities = await _CycleConditionRepository
+                .ListAllAsync();
 
-            var data = _mapper.Map<List<CycleConditionExportDto>>(cycleConditions);
+            List<CycleConditionAttachmentType> CycleConditionAttachmentTypeEntities = _CycleConditionAttachmentTypeRepository
+                .Where(x => CycleConditionEntities.Select(y => y.Id).Contains(x.CycleConditionId) &&
+                    x.AttachmentType != null)
+                .ToList();
 
-            var file = _excelHelper.ExportToExcel(data);
+            List<CycleConditionExportDto> Response = CycleConditionEntities
+                .Select(x => new CycleConditionExportDto()
+                {
+                    ArabicDescription = x.ArabicDescription,
+                    AttachmentType = CycleConditionAttachmentTypeEntities
+                        .Where(y => y.CycleConditionId == x.Id)
+                        .Select(y => y.AttachmentType!.Value)
+                        .ToList(),
+                    Id = x.Id,
+                    EnglishDescription = x.EnglishDescription,
+                    NeedAttachment = x.NeedAttachment,
+                    RequiredAttachmentNumber = x.RequiredAttachmentNumber,
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB
+                }).ToList();
 
-            return new BaseResponse<byte[]>("", true, 200, file);
+            byte[]? ExportedFile = _CycleConditionExportDtoHelper.ExportToExcel(Response);
+
+            return new BaseResponse<byte[]>(string.Empty, true, 200, ExportedFile);
         }
     }
 }

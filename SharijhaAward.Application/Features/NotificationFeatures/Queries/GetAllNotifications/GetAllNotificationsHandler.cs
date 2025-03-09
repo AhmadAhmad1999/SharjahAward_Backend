@@ -22,29 +22,59 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
         public async Task<BaseResponse<List<GetAllNotificationsListVM>>> 
             Handle(GetAllNotificationsQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = Request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
             string ResponseMessage = string.Empty;
 
-            List<GetAllNotificationsListVM> NotificationEntities = await _NotificationRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, Request.page, Request.perPage)
-                .Select(x => new GetAllNotificationsListVM()
-                {
-                    ArabicBody = x.ArabicBody,
-                    ArabicTitle = x.ArabicTitle,
-                    Body = Request.lang == "en"
-                        ? x.EnglishBody : x.ArabicBody,
-                    EnglishBody = x.EnglishBody,
-                    CreatedAt = x.CreatedAt,
-                    EnglishTitle = x.EnglishTitle,
-                    Id = x.Id,
-                    isReaded = false,
-                    Title = Request.lang == "en"
-                        ? x.EnglishTitle : x.ArabicTitle,
-                }).ToListAsync();
+            List<GetAllNotificationsListVM> NotificationEntities = new List<GetAllNotificationsListVM>();
 
-            int TotalCount = await _NotificationRepository.WhereThenFilter(x => true, filterObject)
-                .CountAsync();
+            if (Request.page != 0 &&
+                Request.perPage != -1)
+            {
+                NotificationEntities = _NotificationRepository
+                    .WhereThenFilter(x => !x.isStaticNotification, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .Select(x => new GetAllNotificationsListVM()
+                    {
+                        ArabicBody = x.ArabicBody,
+                        ArabicTitle = x.ArabicTitle,
+                        Body = Request.lang == "en"
+                            ? x.EnglishBody : x.ArabicBody,
+                        EnglishBody = x.EnglishBody,
+                        CreatedAt = x.CreatedAt,
+                        EnglishTitle = x.EnglishTitle,
+                        Id = x.Id,
+                        isReaded = false,
+                        Title = Request.lang == "en"
+                            ? x.EnglishTitle : x.ArabicTitle
+                    }).ToList();
+            }
+            else
+            {
+                NotificationEntities = _NotificationRepository
+                    .WhereThenFilter(x => !x.isStaticNotification, FilterObject)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new GetAllNotificationsListVM()
+                    {
+                        ArabicBody = x.ArabicBody,
+                        ArabicTitle = x.ArabicTitle,
+                        Body = Request.lang == "en"
+                            ? x.EnglishBody : x.ArabicBody,
+                        EnglishBody = x.EnglishBody,
+                        CreatedAt = x.CreatedAt,
+                        EnglishTitle = x.EnglishTitle,
+                        Id = x.Id,
+                        isReaded = false,
+                        Title = Request.lang == "en"
+                            ? x.EnglishTitle : x.ArabicTitle
+                    }).ToList();
+            }
+
+            int TotalCount = _NotificationRepository
+                .WhereThenFilter(x => !x.isStaticNotification, FilterObject)
+                .Count();
 
             Pagination PaginationParameter = new Pagination(Request.page,
                 Request.perPage, TotalCount);

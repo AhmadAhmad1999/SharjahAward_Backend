@@ -33,21 +33,15 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetActiveCycle
                     CycleEntity.RegistrationPortalClosingDate > DateTime.UtcNow)
                     return new BaseResponse<bool>(ResponseMessage, true, 200, true);
 
-                else
-                    return new BaseResponse<bool>(ResponseMessage, true, 200, false);
+                return new BaseResponse<bool>(ResponseMessage, true, 200, false);
             }
 
-            else
-            {
-                var UserTokenEntitiesToDelete = await _UserTokenRepository
+            var UserTokenEntitiesToDelete = await _UserTokenRepository
                 .ListAllAsync();
 
-                await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
+            await _UserTokenRepository.DeleteListAsync(UserTokenEntitiesToDelete);
 
-                return new BaseResponse<bool>(ResponseMessage, true, 200, false);
-
-            }
-                
+            return new BaseResponse<bool>(ResponseMessage, true, 200, false);
         }
     }
 }

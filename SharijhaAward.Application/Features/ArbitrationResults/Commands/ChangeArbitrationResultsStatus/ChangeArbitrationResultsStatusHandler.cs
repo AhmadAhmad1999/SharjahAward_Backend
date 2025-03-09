@@ -112,6 +112,9 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                             }
                         }
 
+                        byte[] NotAuthenticatedHeaderImageBytes = await File.ReadAllBytesAsync(Request.ImagePath + "/CertificatesMainTemplates/logo_dark_ar.png");
+                        string NotAuthenticatedHeaderImagebase64String = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes);
+
                         List<ArbitrationResult> ArbitrationResultEntitiesToUpdate = await _ArbitrationResultRepository
                             .Where(x => Request.FormsIds.Contains(x.ProvidedFormId))
                             .ToListAsync();
@@ -227,8 +230,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         string HTMLContentEvaluationFormCopyForColor = HTMLContentEvaluationFormCopy[0]
                                             .Replace("###Color###", TemplateEntity.FontColor);
 
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
+                                        
                                         ArabicHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
                                         ArabicEvaluationFormHTMLContent = HTMLContentEvaluationFormCopyForColor + HTMLContentEvaluationFormCopy[2];
+
+                                        ArabicHTMLContent = ArabicHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
+                                        ArabicEvaluationFormHTMLContent = ArabicEvaluationFormHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -239,8 +252,20 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    ArabicHTMLContent = ArabicHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+                                    
+                                    ArabicEvaluationFormHTMLContent = ArabicEvaluationFormHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
+
                                     IEnumerable<DynamicAttributeValue> ArabicDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
@@ -433,8 +458,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         string HTMLEvaluationFormContentCopyForColor = HTMLEvaluationFormContentCopy[0]
                                             .Replace("###Color###", TemplateEntity.FontColor);
 
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
+                                        
                                         EnglishHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
                                         EnglishEvaluationFormHTMLContent = HTMLEvaluationFormContentCopyForColor + HTMLEvaluationFormContentCopy[2];
+
+                                        EnglishHTMLContent = EnglishHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
+                                        EnglishEvaluationFormHTMLContent = EnglishEvaluationFormHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -445,8 +480,20 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    EnglishHTMLContent = EnglishHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
+                                    EnglishEvaluationFormHTMLContent = EnglishEvaluationFormHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
+
                                     IEnumerable<DynamicAttributeValue> EnglishDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo EnglishCulture = new CultureInfo("en-US");
 
@@ -697,8 +744,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                             TemplateTypes TemplateType = TemplateTypes.Testimonial_Version_1;
 
                             ArbitrationResult? ArbitrationResultEntity = ArbitrationResultEntitiesToUpdate
-                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null);
+                                .FirstOrDefault(x => !x.ProvidedForm!.Category!.ContainStatment1);
 
                             if (ArbitrationResultEntity is not null)
                             {
@@ -771,7 +817,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                     {
                                         string[] HTMLContentCopy = ArabicHTMLContent.Split("<!-- Start Image -->");
 
-                                        string HTMLContentCopyForColor = HTMLContentCopy[2];
+                                        string HTMLContentCopyForColor = HTMLContentCopy[2]
+                                            .Replace("###BackgroundColor###", TemplateEntity.BackgroundImageColor);
 
                                         ArabicHTMLContent = HTMLContentCopy[0] + HTMLContentCopyForColor;
                                     }
@@ -779,9 +826,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                     {
                                         string[] HTMLContentCopy = ArabicHTMLContent.Split("<!-- Start Color -->");
 
-                                        string HTMLContentCopyForColor = HTMLContentCopy[0];
+                                        string HTMLContentCopyForColor = HTMLContentCopy[0]
+                                            .Replace("###Color###", TemplateEntity.FontColor);
+
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                         ArabicHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
+
+                                        ArabicHTMLContent = ArabicHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -792,8 +848,17 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    ArabicHTMLContent = ArabicHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
                                     IEnumerable<DynamicAttributeValue> ArabicDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
@@ -859,9 +924,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                     {
                                         string[] HTMLContentCopy = EnglishHTMLContent.Split("<!-- Start Color -->");
 
-                                        string HTMLContentCopyForColor = HTMLContentCopy[0];
+                                        string HTMLContentCopyForColor = HTMLContentCopy[0]
+                                            .Replace("###Color###", TemplateEntity.FontColor);
 
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
+                                        
                                         EnglishHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
+
+                                        EnglishHTMLContent = EnglishHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -872,8 +946,17 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    EnglishHTMLContent = EnglishHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
                                     IEnumerable<DynamicAttributeValue> EnglishDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo EnglishCulture = new CultureInfo("en-US");
 
@@ -986,8 +1069,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                             TemplateTypes TemplateType = TemplateTypes.Testimonial_Version_2;
 
                             ArbitrationResult? ArbitrationResultEntity = ArbitrationResultEntitiesToUpdate
-                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null);
+                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 == null ||
+                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 == null);
 
                             if (ArbitrationResultEntity is not null)
                             {
@@ -1068,9 +1151,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                     {
                                         string[] HTMLContentCopy = ArabicHTMLContent.Split("<!-- Start Color -->");
 
-                                        string HTMLContentCopyForColor = HTMLContentCopy[0];
+                                        string HTMLContentCopyForColor = HTMLContentCopy[0]
+                                            .Replace("###Color###", TemplateEntity.FontColor);
 
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
+                                        
                                         ArabicHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
+
+                                        ArabicHTMLContent = ArabicHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -1081,8 +1173,17 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    ArabicHTMLContent = ArabicHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
                                     IEnumerable<DynamicAttributeValue> ArabicDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => ArabicProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
@@ -1145,9 +1246,18 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                     {
                                         string[] HTMLContentCopy = EnglishHTMLContent.Split("<!-- Start Color -->");
 
-                                        string HTMLContentCopyForColor = HTMLContentCopy[0];
+                                        string HTMLContentCopyForColor = HTMLContentCopy[0]
+                                            .Replace("###Color###", TemplateEntity.FontColor);
 
+                                        string FileNameForBackGroundImage = Path.GetFileName(TemplateEntity.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                        byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                        string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
+                                        
                                         EnglishHTMLContent = HTMLContentCopyForColor + HTMLContentCopy[2];
+
+                                        EnglishHTMLContent = EnglishHTMLContent
+                                            .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                     }
                                     else
                                     {
@@ -1158,8 +1268,17 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         return new BaseResponse<object>(ResponseMessage, true, 400);
                                     }
 
+                                    string FileNameForDigitalSignature = Path.GetFileName(DigitalSignatureEntity!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                    byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                    string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                    EnglishHTMLContent = EnglishHTMLContent
+                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                        .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
                                     IEnumerable<DynamicAttributeValue> EnglishDynamicAttributeValueEntities = DynamicAttributeValueEntities
-                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Contains(x.Id));
+                                        .Where(x => EnglishProvidedFormEntities.Select(y => y.Id).Any(y => y == x.RecordId));
 
                                     CultureInfo EnglishCulture = new CultureInfo("en-US");
 
@@ -1319,38 +1438,46 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                             .Where(x => x.TemplateType == TemplateTypes.CertificateOfParticipation)
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1360,38 +1487,45 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                             .Where(x => x.TemplateType == TemplateTypes.Evaluation_Form)
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1408,38 +1542,45 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                             .Where(x => x.TemplateType == TemplateTypes.CertificateOfParticipation)
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1449,38 +1590,45 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                             .Where(x => x.TemplateType == TemplateTypes.Evaluation_Form)
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1493,8 +1641,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                         if (Request.isStatment1 == CertificationActionTypes.True)
                         {
                             ArbitrationResult? ArbitrationResultEntity = ArbitrationResultEntitiesToUpdate
-                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null);
+                                .FirstOrDefault(x => !x.ProvidedForm!.Category!.ContainStatment1);
 
                             if (ArbitrationResultEntity is not null)
                             {
@@ -1523,38 +1670,46 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         List<RecipientsWithViews> ArabicRecipients = ArabicSavedCertificateEntities
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1570,38 +1725,46 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         List<RecipientsWithViews> EnglishRecipients = EnglishSavedCertificateEntities
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies
@@ -1614,8 +1777,8 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                         if (Request.isStatment2 == CertificationActionTypes.True)
                         {
                             ArbitrationResult? ArbitrationResultEntity = ArbitrationResultEntitiesToUpdate
-                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null);
+                                .FirstOrDefault(x => x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 == null ||
+                                    x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 == null);
 
                             if (ArbitrationResultEntity is not null)
                             {
@@ -1659,7 +1822,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                                     string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:BackGroundImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
 
                                                 string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
@@ -1675,7 +1838,7 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
 
                                                 Body = Body
                                                     .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
-                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImageBytes2}'");
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
 
                                                 return new RecipientsWithViews()
                                                 {
@@ -1698,38 +1861,46 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Commands.ChangeA
                                         List<RecipientsWithViews> EnglishRecipients = EnglishSavedCertificateEntities
                                             .Select(x =>
                                             {
-                                                using (StreamReader StreamReader = new StreamReader(x.FilePath))
+                                                // Fetch content from the URL
+                                                string Body = File.ReadAllText(x.FilePath);
+
+                                                AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+
+                                                if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
                                                 {
-                                                    string Body = StreamReader.ReadToEnd();
+                                                    string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
 
-                                                    AlternateView AlternateView = AlternateView.CreateAlternateViewFromString(Body, null, "text/html");
+                                                    LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
+                                                    AlternateView.LinkedResources.Add(BackGroundImage1);
 
-                                                    if (!string.IsNullOrEmpty(x.Template!.BackgroundImageUrl))
-                                                    {
-                                                        string FileNameForBackGroundImage = Path.GetFileName(x.Template!.BackgroundImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                        LinkedResource BackGroundImage1 = new LinkedResource($"wwwroot/CertificateTemplates/{FileNameForBackGroundImage}") { ContentId = "BackGroundImage" };
-                                                        AlternateView.LinkedResources.Add(BackGroundImage1);
-                                                    }
-
-                                                    string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
-
-                                                    LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
-                                                    AlternateView.LinkedResources.Add(BackGroundImage2);
-
-                                                    LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
-                                                    AlternateView.LinkedResources.Add(HeaderImage);
+                                                    byte[] NotAuthenticatedHeaderImageBytes3 = File.ReadAllBytes(Request.ImagePath + $"/CertificateTemplates/{FileNameForBackGroundImage}");
+                                                    string NotAuthenticatedHeaderImagebase64String3 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes3);
 
                                                     Body = Body
-                                                        .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'");
-
-                                                    return new RecipientsWithViews()
-                                                    {
-                                                        Recipient = x.ProvidedForm!.User!.Email,
-                                                        Body = Body,
-                                                        AlternateView = AlternateView
-                                                    };
+                                                        .Replace("'cid:BackGroundImage'", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String3}'");
                                                 }
+
+                                                string FileNameForDigitalSignature = Path.GetFileName(x.DigitalSignature!.ImageUrl.Replace("\\", "/").Replace("\"", "/"));
+
+                                                LinkedResource BackGroundImage2 = new LinkedResource($"wwwroot/DigitalSignatures/{FileNameForDigitalSignature}") { ContentId = "DigitalSignature" };
+                                                AlternateView.LinkedResources.Add(BackGroundImage2);
+
+                                                LinkedResource HeaderImage = new LinkedResource("wwwroot/assets/qr/logos.png") { ContentId = "LogoImage" };
+                                                AlternateView.LinkedResources.Add(HeaderImage);
+
+                                                byte[] NotAuthenticatedHeaderImageBytes2 = File.ReadAllBytes(Request.ImagePath + $"/DigitalSignatures/{FileNameForDigitalSignature}");
+                                                string NotAuthenticatedHeaderImagebase64String2 = Convert.ToBase64String(NotAuthenticatedHeaderImageBytes2);
+
+                                                Body = Body
+                                                    .Replace("\"cid:LogoImage\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String}'")
+                                                    .Replace("\"cid:DigitalSignature\"", $"'data:image/png;base64,{NotAuthenticatedHeaderImagebase64String2}'");
+
+                                                return new RecipientsWithViews()
+                                                {
+                                                    Recipient = x.ProvidedForm!.User!.Email,
+                                                    Body = Body,
+                                                    AlternateView = AlternateView
+                                                };
                                             }).ToList();
 
                                         await _EmailSender.SendEmailAsyncWithDifferentBodies

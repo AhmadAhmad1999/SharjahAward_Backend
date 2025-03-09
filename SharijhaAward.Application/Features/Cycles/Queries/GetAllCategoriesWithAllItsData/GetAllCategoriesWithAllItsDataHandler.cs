@@ -82,8 +82,8 @@ namespace SharijhaAward.Application.Features.Cycles.Queries.GetAllCategoriesWith
                 {
                     Id = x.Id,
                     Name = Request.lang == "en"
-                        ? x.EnglishTitle
-                        : x.ArabicTitle,
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
                     ParentId = x.CategoryId
                 }).ToListAsync();
 

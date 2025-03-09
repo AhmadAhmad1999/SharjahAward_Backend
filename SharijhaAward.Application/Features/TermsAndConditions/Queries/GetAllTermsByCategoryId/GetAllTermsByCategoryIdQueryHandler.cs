@@ -14,84 +14,97 @@ namespace SharijhaAward.Application.Features.TermsAndConditions.Queries.GetAllTe
     public class GetAllTermsByCategoryIdQueryHandler
         : IRequestHandler<GetAllTermsByCategoryIdQuery, BaseResponse<List<TermAndConditionListVM>>>
     {
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IAsyncRepository<TermAndCondition> _termRepository;
-        private readonly IAsyncRepository<ConditionAttachment> _conditionAttachmentRepository;
-        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _providedFormRepository;
-        private readonly IAsyncRepository<ConditionsProvidedForms> _conditionsProvidedFormsRepository;
-        private readonly IUserRepository _userRepository;
-   
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IAsyncRepository<TermAndCondition> _TermAndConditionRepository;
+        private readonly IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
+        private readonly IAsyncRepository<ConditionsProvidedForms> _ConditionsProvidedFormsRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository;
+        private readonly IMapper _Mapper;
 
         public GetAllTermsByCategoryIdQueryHandler(
-            IAsyncRepository<Category> categoryRepository,
-            IAsyncRepository<TermAndCondition> termRepository,
-            IAsyncRepository<ConditionAttachment> conditionAttachmentRepository,
-            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> providedFormRepository,
-            IAsyncRepository<ConditionsProvidedForms> conditionsProvidedFormsRepository,
-            IUserRepository userRepository,
-         
-            IMapper mapper)
+            IAsyncRepository<Category> _CategoryRepository,
+            IAsyncRepository<TermAndCondition> _TermAndConditionRepository,
+            IAsyncRepository<ConditionAttachment> _ConditionAttachmentRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
+            IAsyncRepository<ConditionsProvidedForms> _ConditionsProvidedFormsRepository,
+            IUserRepository _UserRepository,
+            IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository,
+            IMapper _Mapper)
         {
-            _categoryRepository = categoryRepository;
-            _providedFormRepository = providedFormRepository;
-            _conditionAttachmentRepository = conditionAttachmentRepository;
-            _conditionsProvidedFormsRepository = conditionsProvidedFormsRepository;
-            _termRepository = termRepository;
-            _userRepository = userRepository;
-     
-            _mapper = mapper;
+            this._CategoryRepository = _CategoryRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._ConditionAttachmentRepository = _ConditionAttachmentRepository;
+            this._ConditionsProvidedFormsRepository = _ConditionsProvidedFormsRepository;
+            this._TermAndConditionRepository = _TermAndConditionRepository;
+            this._UserRepository = _UserRepository;
+            this._TermAndConditionAttachmentTypeRepository = _TermAndConditionAttachmentTypeRepository;
+            this._Mapper = _Mapper;
         }
-        public async Task<BaseResponse<List<TermAndConditionListVM>>> Handle(GetAllTermsByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TermAndConditionListVM>>> 
+            Handle(GetAllTermsByCategoryIdQuery Request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
-            string msg;
-            if(category == null)
+            string ResponseMessage = string.Empty;
+
+            Category? CategoryEntity = await _CategoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
+
+            if (CategoryEntity is null)
             {
-                msg = request.lang == "en"
-                    ? "Category Not Found"
+                ResponseMessage = Request.lang == "en"
+                    ? "Category is not found"
                     : "الفئة غير موجودة";
-                return new BaseResponse<List<TermAndConditionListVM>>(msg, false, 404);
+
+                return new BaseResponse<List<TermAndConditionListVM>>(ResponseMessage, false, 404);
             }
 
-            var form = _providedFormRepository.FirstOrDefault(p => p.Id == request.formId);
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = _ProvidedFormRepository
+                .FirstOrDefault(x => x.Id == Request.formId);
 
-            var Terms = await _termRepository
-                .Where(t => t.CategoryId == category.Id)
+            List<TermAndCondition> TermAndConditionEntities = await _TermAndConditionRepository
+                .Where(t => t.CategoryId == CategoryEntity.Id)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
             
-            List<ConditionsProvidedForms> conditionsProvideds = await _conditionsProvidedFormsRepository
-                .Where(x => Terms.Select(y => y.Id).Contains(x.TermAndConditionId) &&
-                    x.ProvidedFormId == form!.Id)
+            List<ConditionsProvidedForms> ConditionsProvidedFormsEntities = await _ConditionsProvidedFormsRepository
+                .Where(x => TermAndConditionEntities.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.ProvidedFormId == ProvidedFormEntity!.Id)
                 .ToListAsync();
            
-            var data = _mapper.Map<List<TermAndConditionListVM>>(Terms);
+            var Response = _Mapper.Map<List<TermAndConditionListVM>>(TermAndConditionEntities);
 
-            List<ConditionAttachment> AllConditionAttachmentEntities = await _conditionAttachmentRepository
-                .Where(x => conditionsProvideds.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
+            List<ConditionAttachment> AllConditionAttachmentEntities = await _ConditionAttachmentRepository
+                .Where(x => ConditionsProvidedFormsEntities.Select(y => y.Id).Any(y => y == x.ConditionsProvidedFormsId))
                 .ToListAsync();
 
-            for (int i = 0; i<data.Count; i++)
+            List<TermAndConditionAttachmentType> TermAndConditionAttachmentTypeEntities = _TermAndConditionAttachmentTypeRepository
+                .Where(x => TermAndConditionEntities.Select(y => y.Id).Contains(x.TermAndConditionId) &&
+                    x.AttachmentType != null)
+                .ToList();
+
+            for (int i = 0; i < Response.Count; i++)
             {
-                data[i].ConditionsAttachments = _mapper.Map<ConditionProvidedFormListVm>(conditionsProvideds[i]);
+                Response[i].ConditionsAttachments = _Mapper.Map<ConditionProvidedFormListVm>(ConditionsProvidedFormsEntities[i]);
                
-                if (data[i].NeedAttachment)
+                if (Response[i].NeedAttachment)
                 {
-                    data[i].ConditionsAttachments!.Attachments = _mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
-                        .Where(x => x.ConditionsProvidedFormsId == conditionsProvideds[i].Id)
+                    Response[i].ConditionsAttachments!.Attachments = _Mapper.Map<List<AttachmentListVM>>(AllConditionAttachmentEntities
+                        .Where(x => x.ConditionsProvidedFormsId == ConditionsProvidedFormsEntities[i].Id)
                         .ToList());
                 }
 
-                data[i].Title = request.lang == "en"
-                    ? data[i].EnglishTitle
-                    : data[i].ArabicTitle;
+                Response[i].Description = Request.lang == "en"
+                    ? Response[i].EnglishDescription
+                    : Response[i].ArabicDescription;
 
-                data[i].Description = request.lang == "en"
-                    ? data[i].EnglishDescription
-                    : data[i].ArabicDescription;
+                Response[i].AttachmentType = TermAndConditionAttachmentTypeEntities
+                    .Where(x => x.TermAndConditionId == Response[i].Id)
+                    .Select(x => x.AttachmentType!.Value)
+                    .ToList();
             }
-            return new BaseResponse<List<TermAndConditionListVM>>("", true, 200, data);
+
+            return new BaseResponse<List<TermAndConditionListVM>>(string.Empty, true, 200, Response);
         }
     }
 }

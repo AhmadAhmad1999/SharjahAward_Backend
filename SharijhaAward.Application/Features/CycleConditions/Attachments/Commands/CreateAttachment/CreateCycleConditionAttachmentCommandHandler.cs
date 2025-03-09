@@ -4,18 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
-using SharijhaAward.Domain.Entities.AttachmentModel;
-using SharijhaAward.Domain.Entities.ConditionsProvidedFormsModel;
 using SharijhaAward.Domain.Entities.CycleConditionModel;
 using SharijhaAward.Domain.Entities.CycleConditionsProvidedFormModel;
 using SharijhaAward.Domain.Entities.SystemAttachmentModel;
-using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.CycleConditions.Attachments.Commands.CreateAttachment
 {

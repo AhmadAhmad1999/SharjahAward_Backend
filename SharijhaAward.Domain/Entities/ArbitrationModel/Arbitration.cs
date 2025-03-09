@@ -27,5 +27,7 @@ namespace SharijhaAward.Domain.Entities.ArbitrationModel
         public FormStatus isAcceptedFromChairmanFromArbitrationAudit { get; set; }
         public int? DoneArbitrationUserId { get; set; }
         public User? DoneArbitrationUser { get; set; }
+        public int? RollbackArbitrationId { get; set; }
+        public Arbitration? RollbackArbitration { get; set; }
     }
 }

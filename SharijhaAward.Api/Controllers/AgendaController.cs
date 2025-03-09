@@ -10,6 +10,7 @@ using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaByCycleId;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendaById;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAgendasForAwardTeam;
 using SharijhaAward.Application.Features.Agendas.Queries.GetAllAgenda;
+using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -18,11 +19,11 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class AgendaController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
       
         public AgendaController(IMediator mediator)
         {
-            _mediator = mediator;
+            _Mediator = mediator;
            
         }
 
@@ -34,7 +35,7 @@ namespace SharijhaAward.Api.Controllers
 
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -52,7 +53,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             command.lang = language!;
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -69,7 +70,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new DeleteAgendaCommand()
+            var response = await _Mediator.Send(new DeleteAgendaCommand()
             {
                 Id = Id,
                 lang = language!
@@ -88,7 +89,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAllAgendaQuery
+            var response = await _Mediator.Send(new GetAllAgendaQuery
             {
                 lang = Language!,
                 page = page,
@@ -109,7 +110,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAgendaByIdQuery()
+            var response = await _Mediator.Send(new GetAgendaByIdQuery()
             {
                 Id = Id,
                 lang = Language!
@@ -129,7 +130,7 @@ namespace SharijhaAward.Api.Controllers
             //get Language from header
             var Language = HttpContext.Request.Headers["lang"];
 
-            var response = await _mediator.Send(new GetAgendaByCycleIdQuery()
+            var response = await _Mediator.Send(new GetAgendaByCycleIdQuery()
             {
                 page = page,
                 perPage = perPage,
@@ -156,12 +157,8 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = Language!;
 
-            if(token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -174,7 +171,7 @@ namespace SharijhaAward.Api.Controllers
         [HttpGet("AgendasExportToExcel", Name = "AgendasExportToExcel")]
         public async Task<IActionResult> AgendasExportToExcel()
         {
-            var response = await _mediator.Send(new ExportToExcelQuery());
+            var response = await _Mediator.Send(new ExportToExcelQuery());
 
             return response.statusCode switch
             {

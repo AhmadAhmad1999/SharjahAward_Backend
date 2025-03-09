@@ -23,20 +23,16 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 		<PackageReference Include="EFCore.AutomaticMigrations" Version="8.0.5" />
-		<PackageReference Include="EntityFramework" Version="6.5.1" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.5" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -58,6 +54,8 @@
 	<ItemGroup>
 		<Folder Include="QREmailHelper\" />
 		<Folder Include="wwwroot\AdvancedFormsFiles\" />
+		<Folder Include="wwwroot\CertificateTemplates\" />
+		<Folder Include="wwwroot\DigitalSignatures\" />
 		<Folder Include="wwwroot\DynamicFiles\GeneratedBarcode\" />
 		<Folder Include="wwwroot\DynamicFiles\HTMLCodes\" />
 		<Folder Include="wwwroot\Images\" />
@@ -79,7 +77,6 @@
 		<Folder Include="wwwroot\UploadedFiles\ContactUsFiles\" />
 		<Folder Include="wwwroot\UploadedFiles\ExcelFiles\" />
 		<Folder Include="wwwroot\UploadedFiles\ExplanatoryGuide\" />
-		<Folder Include="wwwroot\UploadedFiles\Icons\" />
 		<Folder Include="wwwroot\UploadedFiles\Images\" />
 		<Folder Include="wwwroot\UploadedFiles\Pdf\" />
 		<Folder Include="wwwroot\UploadedFiles\Videos\" />

@@ -4,66 +4,103 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.TermsAndConditionsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.TermsAndConditions.Commands.UpdateTermAndCondition
 {
     public class UpdateTermAndConditionCommandHandler 
         : IRequestHandler<UpdateTermAndConditionCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TermAndCondition> _termAndConditionRepository;
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<TermAndCondition> _TermAndConditionRepository;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository;
 
-        public UpdateTermAndConditionCommandHandler(IAsyncRepository<TermAndCondition> termAndConditionRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public UpdateTermAndConditionCommandHandler(IAsyncRepository<TermAndCondition> _TermAndConditionRepository, 
+            IAsyncRepository<Category> _CategoryRepository, 
+            IMapper _Mapper,
+            IAsyncRepository<TermAndConditionAttachmentType> _TermAndConditionAttachmentTypeRepository)
         {
-            _termAndConditionRepository = termAndConditionRepository;
-            _categoryRepository = categoryRepository;
-            _mapper = mapper;
+            this._TermAndConditionRepository = _TermAndConditionRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._Mapper = _Mapper;
+            this._TermAndConditionAttachmentTypeRepository = _TermAndConditionAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(UpdateTermAndConditionCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateTermAndConditionCommand Request, CancellationToken cancellationToken)
         {
-            var termToUpdate = await _termAndConditionRepository.GetByIdAsync(request.Id);
-            string msg;
-            if (termToUpdate == null)
-            {
-                msg = request.lang == "en"
-                   ? "Term and Condition not Found"
-                   : "لا تتوفر بيانات";
+            string ResponseMessage = string.Empty;
 
-                return new BaseResponse<object>(msg, false, 404);
+            TermAndCondition? TermAndConditionEntity = await _TermAndConditionRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (TermAndConditionEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                   ? "Term and condition is not Found"
+                   : "الشرط الخاص بالفئة غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
-            var category = await _categoryRepository
-                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
+            Category? CategoryEntity = await _CategoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
 
-            if(category == null || category.ParentId == null)
+            if (CategoryEntity is null)
             {
-                msg = request.lang == "en"
-                   ? "Sub Category Not Found"
+                ResponseMessage = Request.lang == "en"
+                   ? "Sub Category is not found"
                    : "الفئة الفرعية غير موجودة";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
             
-            _mapper.Map(
-                  request, 
-                  termToUpdate,
-                  typeof(UpdateTermAndConditionCommand),
-                  typeof(TermAndCondition));
+            _Mapper.Map(Request, TermAndConditionEntity, typeof(UpdateTermAndConditionCommand), typeof(TermAndCondition));
 
-            await _termAndConditionRepository.UpdateAsync(termToUpdate);
+            await _TermAndConditionRepository.UpdateAsync(TermAndConditionEntity);
 
-            msg = request.lang == "en"
-                ? "Term and Condition has been Updated"
-                : "تم التعديل بنجاح";
+            List<TermAndConditionAttachmentType> TermAndConditionAttachmentTypeEntitiesToDelete = _TermAndConditionAttachmentTypeRepository
+                .Where(x => x.TermAndConditionId == Request.Id)
+                .ToList();
 
-            return new BaseResponse<object>(msg, true, 200);
+            IEnumerable<TermAndConditionAttachmentType> NewTermAndConditionAttachmentTypeEntities = Request.AttachmentType
+                .Select(x => new TermAndConditionAttachmentType()
+                {
+                    AttachmentType = x,
+                    TermAndConditionId = Request.Id
+                });
+
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    if (TermAndConditionAttachmentTypeEntitiesToDelete.Any())
+                        await _TermAndConditionAttachmentTypeRepository.DeleteListAsync(TermAndConditionAttachmentTypeEntitiesToDelete);
+
+                    if (NewTermAndConditionAttachmentTypeEntities.Any())
+                        await _TermAndConditionAttachmentTypeRepository.AddRangeAsync(NewTermAndConditionAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Term and condition has been updated successfully"
+                        : "تم التعديل بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

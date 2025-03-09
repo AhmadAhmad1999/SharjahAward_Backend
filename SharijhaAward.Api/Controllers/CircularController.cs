@@ -93,11 +93,6 @@ namespace SharijhaAward.Api.Controllers
            
             var token = HttpContext.Request.Headers.Authorization;
             
-            if(token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
-
             query.lang = language!;
             query.token = token!;
 
@@ -112,7 +107,7 @@ namespace SharijhaAward.Api.Controllers
         }
 
         [HttpGet("{Id}", Name = "GetCircularById")]
-        public async Task<IActionResult> GetCircularById(int Id)
+        public async Task<IActionResult> GetCircularById(int Id, bool View)
         {
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request?.Headers.Authorization;
@@ -121,7 +116,8 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = language!,
                 token = token!,
-                Id = Id
+                Id = Id,
+                View = View
             });
 
             return response.statusCode switch

@@ -16,5 +16,6 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         public int page { get; set; } = 1;
         public int PerPage { get; set; } = 10;
         public List<Filter>? filters { get; set; }
+        public EligableFilter? EligableFilter { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.Categories.Queries.GetCategoriesWithSubcategories;
@@ -9,11 +10,6 @@ using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using SharijhaAward.Domain.Entities.RewardModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
 {
@@ -25,14 +21,21 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
         private readonly IAsyncRepository<Cycle> _cycleRepository;
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAllCategoryQueryHandler(IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository, IAsyncRepository<Cycle> cycleRepository, IAsyncRepository<Reward> rewardRepository, IAsyncRepository<Category> categoryRepository, IMapper mapper)
+        public GetAllCategoryQueryHandler(IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
+            IAsyncRepository<Cycle> cycleRepository, 
+            IAsyncRepository<Reward> rewardRepository, 
+            IAsyncRepository<Category> categoryRepository, 
+            IMapper mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _categoryRepository = categoryRepository;
             _rewardRepository = rewardRepository;
             _cycleRepository = cycleRepository;
             _explanatoryGuideRepository = explanatoryGuideRepository;
             _mapper = mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<CategoryListVM>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
         {
@@ -51,7 +54,13 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
             var rewards = await _rewardRepository.ListAllAsync();
             
             var Rewards = _mapper.Map<List<RewardListVm>>(rewards);
-           
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
             for (int i = 0; i < data.Count; i++)
             {
                 List<Category> subCategories = _categoryRepository
@@ -80,10 +89,18 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
                         : subCategories[j].ArabicDescription;
 
                     data[i].subcategories[j].Rewards = Rewards.Where(r => r.CategoryId == subCategories[j].Id).ToList();
+
+                    data[i].subcategories[j].Icon = data[i].subcategories[j].Icon.Contains("wwwroot")
+                        ? (WWWRootFilePath + data[i].subcategories[j].Icon.Split("wwwroot")[1]).Replace("\\", "/")
+                        : data[i].subcategories[j].Icon.Replace("\\", "/");
                 }
 
                 data[i].Name = request.lang == "ar" ? data[i].ArabicName : data[i].EnglishName;
                 data[i].Description = request.lang == "ar" ? data[i].ArabicDescription : data[i].EnglishDescription;
+
+                data[i].Icon = data[i].Icon.Contains("wwwroot")
+                    ? (WWWRootFilePath + data[i].Icon.Split("wwwroot")[1]).Replace("\\", "/")
+                    : data[i].Icon.Replace("\\", "/");
             }
            
             int count = _categoryRepository.Where(c=>c.CycleId == Cycle!.Id).Count();

@@ -1,99 +1,54 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilities;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
-using SharijhaAward.Domain.Entities.IdentityModels;
-using SharijhaAward.Domain.Entities.ResponsibilityModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Responsibilities.Queries.GetAllResponsibilitiesByUserId
 {
     public class GetAllResponsibilitiesByUserIdQueryHandler
-        : IRequestHandler<GetAllResponsibilitiesByUserIdQuery, BaseResponse<List<ResponsibilityListVM>>>
+        : IRequestHandler<GetAllResponsibilitiesByUserIdQuery, BaseResponse<List<GetAllResponsibilitiesByUserIdListVM>>>
     {
         
-        private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
-        private readonly IAsyncRepository<Role> _roleRepository;
-        private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
-        private readonly IAsyncRepository<UserRole> _userRoleRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<ResponsibilityUser> _ResponsibilityUserRepository;
+        private readonly IJwtProvider _JwtProvider;
 
-        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<ResponsibilityUser> responsibilityUserRepository, IAsyncRepository<UserRole> userRoleRepository, IAsyncRepository<Responsibility> responsibilityRepository, IAsyncRepository<Role> roleRepository, IUserRepository userRepository, IJwtProvider jwtProvider, IMapper mapper)
+        public GetAllResponsibilitiesByUserIdQueryHandler(IAsyncRepository<ResponsibilityUser> _ResponsibilityUserRepository,
+            IJwtProvider _JwtProvider)
         {
-            _responsibilityRepository = responsibilityRepository;
-            _roleRepository = roleRepository;
-            _userRoleRepository = userRoleRepository;
-            _responsibilityUserRepository = responsibilityUserRepository;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-            _mapper = mapper;
+            this._ResponsibilityUserRepository = _ResponsibilityUserRepository;
+            this._JwtProvider = _JwtProvider;
         }
 
-        public async Task<BaseResponse<List<ResponsibilityListVM>>> Handle(GetAllResponsibilitiesByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<GetAllResponsibilitiesByUserIdListVM>>> 
+            Handle(GetAllResponsibilitiesByUserIdQuery Request, CancellationToken cancellationToken)
         {
+            string ResponseMessage = string.Empty;
 
-            var UserId = request.UserId != null
-                ? request.UserId
-                : int.Parse(_jwtProvider.GetUserIdFromToken(request.UserToken!));
+            if (Request.UserId is null && string.IsNullOrEmpty(Request.UserToken))
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "You must send either the user id directly or the token"
+                    : "يجب إرسال إحدى قيمتي معرف المستخدم او توكين فعالة له";
 
-            if (UserId == null && request.UserId == null)
-            {
-                return new BaseResponse<List<ResponsibilityListVM>>("", false, 400);
-            }
-            else if(UserId == null && request.UserToken == null)
-            {
-                return new BaseResponse<List<ResponsibilityListVM>>("Un Auth", false, 401);
-            }
-            var User = await _userRepository.GetByIdAsync(UserId);
-
-            if(User == null)
-            {
-                return new BaseResponse<List<ResponsibilityListVM>>("", false, 404);
+                return new BaseResponse<List<GetAllResponsibilitiesByUserIdListVM>>(ResponseMessage, false, 400);
             }
 
-            var Responsibilities = new List<Responsibility>();
-           
-            var UserResponsibility = await _responsibilityUserRepository
-            .Where(r => r.UserId == UserId)
-            .ToListAsync();
+            int UserId = Request.UserId != null
+                ? Request.UserId.Value
+                : int.Parse(_JwtProvider.GetUserIdFromToken(Request.UserToken!));
 
-            var RoleIds = _userRoleRepository
-                 .Where(u => u.UserId == User.Id)
-                 .Select(u => u.RoleId)
-                 .ToList();
+            List<GetAllResponsibilitiesByUserIdListVM> Response = await _ResponsibilityUserRepository
+                .Where(x => x.UserId == UserId)
+                .Select(x => new GetAllResponsibilitiesByUserIdListVM()
+                {
+                    Description = x.Responsibility!.Description,
+                    ResponsibilityId = x.ResponsibilityId,
+                    isAccept = x.IsAccept
+                }).ToListAsync();
 
-            foreach (var responsibility in UserResponsibility)
-            {
-                Responsibilities.Add(responsibility.Responsibility);
-            }
-
-            var data = _mapper.Map<List<ResponsibilityListVM>>(Responsibilities);
-
-            var AllResponsibilityUserEntitties = await _responsibilityUserRepository
-                .Where(x => Responsibilities.Select(y => y.Id).Contains(x.ResponsibilityId))
-                .ToListAsync();
-
-            for (int i=0; i < data.Count(); i++)
-            {
-                data[i].ResponsibilityUsers = _mapper.Map<List<ResponsibilityUserDto>>(AllResponsibilityUserEntitties
-                    .Where(x => x.ResponsibilityId == data[i].Id)
-                    .ToList());
-
-                data[i].RoleName = Responsibilities[i].Role!.ArabicName;
-            }
-
-            return new BaseResponse<List<ResponsibilityListVM>>("", true, 200, data);
-
+            return new BaseResponse<List<GetAllResponsibilitiesByUserIdListVM>>(ResponseMessage, true, 200, Response);
         }
     } 
 }

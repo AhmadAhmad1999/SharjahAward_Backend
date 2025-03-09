@@ -21,6 +21,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllEmailM
         public DateTime CreatedAt { get; set; }
         public string? PersonalPhotoUrl { get; set; } = string.Empty;
         public Gender? Gender {  get; set; }
+        public string? PhoneNumber {  get; set; }
         public List<EmailAttachmentListVm> Attachments { get; set; } = null!;
     }
 }

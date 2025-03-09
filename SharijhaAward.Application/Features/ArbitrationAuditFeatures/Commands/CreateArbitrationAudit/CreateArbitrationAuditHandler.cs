@@ -17,6 +17,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
         private readonly IAsyncRepository<Arbitration> _ArbitrationRepository;
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IMapper _Mapper;
         private readonly IJwtProvider _JwtProvider;
@@ -25,6 +26,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
             IAsyncRepository<Arbitration> ArbitrationRepository,
             IAsyncRepository<Criterion> CriterionRepository,
             IAsyncRepository<CriterionItem> CriterionItemRepository,
+            IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
             IUserRepository UserRepository,
             IMapper Mapper,
             IJwtProvider JwtProvider)
@@ -33,6 +35,7 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
             _ArbitrationRepository = ArbitrationRepository;
             _CriterionRepository = CriterionRepository;
             _CriterionItemRepository = CriterionItemRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
             _UserRepository = UserRepository;
             _Mapper = Mapper;
             _JwtProvider = JwtProvider;
@@ -43,6 +46,29 @@ namespace SharijhaAward.Application.Features.ArbitrationAuditFeatures.Commands.C
             string ResponseMessage = string.Empty;
 
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
+
+            Domain.Entities.ProvidedFormModel.ProvidedForm? ProvidedFormEntity = await _ProvidedFormRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.FormId);
+
+            if (ProvidedFormEntity is not null)
+            {
+                if (DateTime.UtcNow < ProvidedFormEntity.Category!.ArbitrationAuditStartDate)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Arbitration audit didn't start yet for the category of this form"
+                        : "عملية تدقيق التحكيم للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+                else if (DateTime.UtcNow > ProvidedFormEntity.Category!.ArbitrationAuditEndDate)
+                {
+                    ResponseMessage = Request.lang == "en"
+                        ? "Arbitration audit has already ended for the category of this form"
+                        : "عملية تدقيق التحكيم للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                    return new BaseResponse<object>(ResponseMessage, false, 400);
+                }
+            }
 
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);

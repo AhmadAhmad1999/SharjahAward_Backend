@@ -1,11 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+using SharijhaAward.Application.Features.Circulars.Command.CreateCircular;
 using SharijhaAward.Application.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Circulars.Command.UpdateCircular
 {
@@ -17,10 +12,21 @@ namespace SharijhaAward.Application.Features.Circulars.Command.UpdateCircular
         public List<int>? CoordinatorId { get; set; }
         public List<int>? ArbitratorId { get; set; }
         public List<int>? ChairmanId { get; set; }
+        public List<int>? SubcommitteeOfficerId { get; set; }
+        public List<int>? ChairmanOfCommitteesId { get; set; }
+        public List<int>? ExpertId { get; set; }
+        public List<int>? QualityId { get; set; }
         public bool AllCoordinators { get; set; }
         public bool AllArbitrators { get; set; }
         public bool AllChairmans { get; set; }
+        public bool AllSubcommitteeOfficers { get; set; }
+        public bool AllChairmanOfCommittees { get; set; }
+        public bool AllExperts { get; set; }
+        public bool AllQualities { get; set; }
         public string? lang { get; set; }
         public string? token { get; set; }
+        public List<int> CircularAttachmentsToDelete { get; set; } = new List<int>();
+        public List<UpdateCircularFilesDto> CircularAttachmentsToUpdate { get; set; } = new List<UpdateCircularFilesDto>();
+        public List<CircularFilesDto> CircularAttachmentsToAdd { get; set; } = new List<CircularFilesDto>();
     }
 }

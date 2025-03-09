@@ -138,13 +138,22 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                 CategoryClassification = MainCategoryInCategoryEntities.CategoryClassification,
                                 FinalArbitrationQualificationMark = MainCategoryInCategoryEntities.FinalArbitrationQualificationMark,
                                 ExpectedNumberOfWinners = MainCategoryInCategoryEntities.ExpectedNumberOfWinners,
-                                MinimumAmountToObtainAStatement = MainCategoryInCategoryEntities.MinimumAmountToObtainAStatement,
-                                MaximumAmountToObtainAStatement = MainCategoryInCategoryEntities.MaximumAmountToObtainAStatement,
+                                MinimumAmountToObtainAStatement2 = MainCategoryInCategoryEntities.MinimumAmountToObtainAStatement2,
+                                MaximumAmountToObtainAStatement2 = MainCategoryInCategoryEntities.MaximumAmountToObtainAStatement2,
                                 MinimumRequirementToObtainACertificate = MainCategoryInCategoryEntities.MinimumRequirementToObtainACertificate,
                                 MaximumRequirementToObtainACertificate = MainCategoryInCategoryEntities.MaximumRequirementToObtainACertificate,
                                 MinimumWinningScore = MainCategoryInCategoryEntities.MinimumWinningScore,
                                 RelatedToClasses = MainCategoryInCategoryEntities.RelatedToClasses,
-                                RelatedToEducationalEntities = MainCategoryInCategoryEntities.RelatedToEducationalEntities
+                                RelatedToEducationalEntities = MainCategoryInCategoryEntities.RelatedToEducationalEntities,
+                                ArbitrationAuditEndDate = MainCategoryInCategoryEntities.ArbitrationAuditEndDate,
+                                ArbitrationAuditStartDate = MainCategoryInCategoryEntities.ArbitrationAuditStartDate,
+                                ContainStatment1 = MainCategoryInCategoryEntities.ContainStatment1,
+                                FinalArbitrationEndDate = MainCategoryInCategoryEntities.FinalArbitrationEndDate,
+                                FinalArbitrationStartDate = MainCategoryInCategoryEntities.FinalArbitrationStartDate,
+                                InitialArbitrationEndDate = MainCategoryInCategoryEntities.InitialArbitrationEndDate,
+                                InitialArbitrationStartDate = MainCategoryInCategoryEntities.InitialArbitrationStartDate,
+                                SortingFormsEndDate = MainCategoryInCategoryEntities.SortingFormsEndDate,
+                                SortingFormsStartDate = MainCategoryInCategoryEntities.SortingFormsStartDate
                             };
 
                             await _CategoryRepository.AddAsync(NewMainCategoryEntity);
@@ -173,14 +182,23 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                         CategoryClassification = SubCategoryInCategoryEntities.CategoryClassification,
                                         FinalArbitrationQualificationMark = SubCategoryInCategoryEntities.FinalArbitrationQualificationMark,
                                         ExpectedNumberOfWinners = SubCategoryInCategoryEntities.ExpectedNumberOfWinners,
-                                        MinimumAmountToObtainAStatement = SubCategoryInCategoryEntities.MinimumAmountToObtainAStatement,
-                                        MaximumAmountToObtainAStatement = SubCategoryInCategoryEntities.MaximumAmountToObtainAStatement,
+                                        MinimumAmountToObtainAStatement2 = SubCategoryInCategoryEntities.MinimumAmountToObtainAStatement2,
+                                        MaximumAmountToObtainAStatement2 = SubCategoryInCategoryEntities.MaximumAmountToObtainAStatement2,
                                         MinimumRequirementToObtainACertificate = SubCategoryInCategoryEntities.MinimumRequirementToObtainACertificate,
                                         MaximumRequirementToObtainACertificate = SubCategoryInCategoryEntities.MaximumRequirementToObtainACertificate,
                                         MinimumWinningScore = SubCategoryInCategoryEntities.MinimumWinningScore,
                                         RelatedToClasses = SubCategoryInCategoryEntities.RelatedToClasses,
                                         RelatedToEducationalEntities = SubCategoryInCategoryEntities.RelatedToEducationalEntities,
-                                        ParentId = MainCategoryId
+                                        ParentId = MainCategoryId,
+                                        ArbitrationAuditEndDate = SubCategoryInCategoryEntities.ArbitrationAuditEndDate,
+                                        ArbitrationAuditStartDate = SubCategoryInCategoryEntities.ArbitrationAuditStartDate,
+                                        ContainStatment1 = SubCategoryInCategoryEntities.ContainStatment1,
+                                        FinalArbitrationEndDate = SubCategoryInCategoryEntities.FinalArbitrationEndDate,
+                                        FinalArbitrationStartDate = SubCategoryInCategoryEntities.FinalArbitrationStartDate,
+                                        InitialArbitrationEndDate = SubCategoryInCategoryEntities.InitialArbitrationEndDate,
+                                        InitialArbitrationStartDate = SubCategoryInCategoryEntities.InitialArbitrationStartDate,
+                                        SortingFormsEndDate = SubCategoryInCategoryEntities.SortingFormsEndDate,
+                                        SortingFormsStartDate = SubCategoryInCategoryEntities.SortingFormsStartDate
                                     };
 
                                     await _CategoryRepository.AddAsync(NewSubCategoryEntity);
@@ -231,7 +249,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                             SizeOfAttachmentInKB = MainCriterionImport.SizeOfAttachmentInKB,
                                             CategoryId = SubCategoryId,
                                             MaxAttachmentNumber = MainCriterionImport.MaxAttachmentNumber,
-                                            AttachmentType = MainCriterionImport.AttachmentType,
                                             AttachFilesOnSubCriterion = MainCriterionImport.AttachFilesOnSubCriterion
                                         };
 
@@ -253,7 +270,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                                 Score = SubCriterionImport.Score,
                                                 SizeOfAttachmentInKB = SubCriterionImport.SizeOfAttachmentInKB,
                                                 MaxAttachmentNumber = SubCriterionImport.MaxAttachmentNumber,
-                                                AttachmentType = SubCriterionImport.AttachmentType,
                                                 AttachFilesOnSubCriterion = SubCriterionImport.AttachFilesOnSubCriterion
                                             };
 
@@ -272,7 +288,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                                     ActualScore = x.ActualScore,
                                                     SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                                                     MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                                    AttachmentType = x.AttachmentType
                                                 });
 
                                             await _CriterionItemRepository.AddRangeAsync(SubCriterionItemImportRequests);
@@ -307,14 +322,23 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                         CategoryClassification = SubCategoryInCategoryEntities.CategoryClassification,
                                         FinalArbitrationQualificationMark = SubCategoryInCategoryEntities.FinalArbitrationQualificationMark,
                                         ExpectedNumberOfWinners = SubCategoryInCategoryEntities.ExpectedNumberOfWinners,
-                                        MinimumAmountToObtainAStatement = SubCategoryInCategoryEntities.MinimumAmountToObtainAStatement,
-                                        MaximumAmountToObtainAStatement = SubCategoryInCategoryEntities.MaximumAmountToObtainAStatement,
+                                        MinimumAmountToObtainAStatement2 = SubCategoryInCategoryEntities.MinimumAmountToObtainAStatement2,
+                                        MaximumAmountToObtainAStatement2 = SubCategoryInCategoryEntities.MaximumAmountToObtainAStatement2,
                                         MinimumRequirementToObtainACertificate = SubCategoryInCategoryEntities.MinimumRequirementToObtainACertificate,
                                         MaximumRequirementToObtainACertificate = SubCategoryInCategoryEntities.MaximumRequirementToObtainACertificate,
                                         MinimumWinningScore = SubCategoryInCategoryEntities.MinimumWinningScore,
                                         RelatedToClasses = SubCategoryInCategoryEntities.RelatedToClasses,
                                         RelatedToEducationalEntities = SubCategoryInCategoryEntities.RelatedToEducationalEntities,
-                                        ParentId = MainCategoryId
+                                        ParentId = MainCategoryId,
+                                        ArbitrationAuditEndDate = SubCategoryInCategoryEntities.ArbitrationAuditEndDate,
+                                        ArbitrationAuditStartDate = SubCategoryInCategoryEntities.ArbitrationAuditStartDate,
+                                        ContainStatment1 = SubCategoryInCategoryEntities.ContainStatment1,
+                                        FinalArbitrationEndDate = SubCategoryInCategoryEntities.FinalArbitrationEndDate,
+                                        FinalArbitrationStartDate = SubCategoryInCategoryEntities.FinalArbitrationStartDate,
+                                        InitialArbitrationEndDate = SubCategoryInCategoryEntities.InitialArbitrationEndDate,
+                                        InitialArbitrationStartDate = SubCategoryInCategoryEntities.InitialArbitrationStartDate,
+                                        SortingFormsEndDate = SubCategoryInCategoryEntities.SortingFormsEndDate,
+                                        SortingFormsStartDate = SubCategoryInCategoryEntities.SortingFormsStartDate
                                     };
 
                                     await _CategoryRepository.AddAsync(NewSubCategoryEntity);
@@ -365,7 +389,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                             SizeOfAttachmentInKB = MainCriterionImport.SizeOfAttachmentInKB,
                                             CategoryId = SubCategoryId,
                                             MaxAttachmentNumber = MainCriterionImport.MaxAttachmentNumber,
-                                            AttachmentType = MainCriterionImport.AttachmentType,
                                             AttachFilesOnSubCriterion = MainCriterionImport.AttachFilesOnSubCriterion,
                                         };
 
@@ -387,7 +410,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                                 Score = SubCriterionImport.Score,
                                                 SizeOfAttachmentInKB = SubCriterionImport.SizeOfAttachmentInKB,
                                                 MaxAttachmentNumber = SubCriterionImport.MaxAttachmentNumber,
-                                                AttachmentType = SubCriterionImport.AttachmentType,
                                                 AttachFilesOnSubCriterion = SubCriterionImport.AttachFilesOnSubCriterion
                                             };
 
@@ -406,7 +428,6 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                                                     ActualScore = x.ActualScore,
                                                     SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                                                     MaxAttachmentNumber = x.MaxAttachmentNumber,
-                                                    AttachmentType = x.AttachmentType
                                                 });
 
                                             await _CriterionItemRepository.AddRangeAsync(SubCriterionItemImportRequests);
@@ -440,13 +461,11 @@ namespace SharijhaAward.Application.Features.Cycles.Commands.ImportFromOldCycle
                 {
                     Id = 0,
                     CategoryId = SubCategoryId,
-                    ArabicTitle = x.ArabicTitle,
-                    EnglishTitle = x.EnglishTitle,
                     ArabicDescription = x.ArabicDescription,
                     EnglishDescription = x.EnglishDescription,
                     NeedAttachment = x.NeedAttachment,
                     RequiredAttachmentNumber = x.RequiredAttachmentNumber,
-                    AttachmentType = x.AttachmentType,
+                    //AttachmentType = x.AttachmentType,
                     SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
                     IsAgree = x.IsAgree
                 }).ToListAsync();

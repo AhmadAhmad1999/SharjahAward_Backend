@@ -11,6 +11,5 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
         [EnglishNameValidation]
         public string EnglishName { get; set; } = string.Empty;
         public List<EducationalInstitutionListVM> EducationalInstitutions { get; set; } = new List<EducationalInstitutionListVM>();
-      
     }
 }

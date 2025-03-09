@@ -29,6 +29,10 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateIn
         public List<CreateInterviewInviteeDto> Invitees { get; set; } = new List<CreateInterviewInviteeDto>();
         
         public string? lang { get; set; }
+
+        public string? TenantId { get; set; }
+        public string? ClientId { get; set; }
+        public string? ClientSecret { get; set; }
     }
 }
 

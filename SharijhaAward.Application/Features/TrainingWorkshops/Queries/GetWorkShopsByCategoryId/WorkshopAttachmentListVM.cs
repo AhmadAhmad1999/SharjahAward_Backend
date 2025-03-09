@@ -1,11 +1,6 @@
 ﻿using SharijhaAward.Application.Helpers.ArabicNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkShopsByCategoryId
 {
@@ -19,6 +14,6 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
         public string ArabicName { get; set; } = string.Empty;
         public string AttachementURl { get; set; } = string.Empty;
         public int SizeOfAttachmentInKB { get; set; }
-        public AttachmentType AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
     }
 }

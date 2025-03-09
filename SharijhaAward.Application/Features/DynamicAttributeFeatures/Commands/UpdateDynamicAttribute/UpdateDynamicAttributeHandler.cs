@@ -115,7 +115,7 @@ namespace SharijhaAward.Application.Features.DynamicAttributeFeatures.Commands.U
                 .FirstOrDefaultAsync(x => x.DynamicAttributeId == Request.Id);
 
             List<Dependency> DependenciesEntities = await _DependencyRepository
-                .Where(x => x.DynamicAttributeId == Request.Id)
+                .Where(x => x.MainDynamicAttributeId == Request.Id)
                 .ToListAsync();
 
             List<DependencyValidation> DependencyValidationEntities = await _DependencyValidationRepository

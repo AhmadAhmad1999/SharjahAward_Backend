@@ -11,6 +11,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
         public string ArabicName { get; set; } = null!;
         [EnglishNameValidation]
         public string EnglishName { get; set; } = null!;
+        public int CycleId { get; set; }
         public string? lang { get; set; }
     }
 }

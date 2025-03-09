@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities;
 using SharijhaAward.Domain.Entities.ArbitratorClassModel;
@@ -12,8 +11,6 @@ using SharijhaAward.Domain.Entities.ArbitratorModel;
 using SharijhaAward.Domain.Entities.CategoryArbitratorModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using SharijhaAward.Domain.Entities.ResponsibilityModel;
-using System.Globalization;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Transactions;
 
@@ -32,6 +29,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
         private readonly IAsyncRepository<ResponsibilityUser> _responsibilityUserRepository;
         private readonly IAsyncRepository<Responsibility> _responsibilityRepository;
+        private readonly IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository;
 
         public CreateArbitratorHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
             IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
@@ -42,7 +40,8 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             IAsyncRepository<ArbitratorClass> ArbitratorClassRepository,
             IAsyncRepository<UserRole> UserRoleRepository,
             IAsyncRepository<ResponsibilityUser> responsibilityUserRepository,
-            IAsyncRepository<Responsibility> responsibilityRepository)
+            IAsyncRepository<Responsibility> responsibilityRepository,
+            IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository)
         {
             _ArbitratorRepository = ArbitratorRepository;
             _CategoryArbitratorRepository = CategoryArbitratorRepository;
@@ -54,6 +53,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
             _UserRoleRepository = UserRoleRepository;
             _responsibilityUserRepository = responsibilityUserRepository;
             _responsibilityRepository = responsibilityRepository;
+            this._SubcommitteeCategoryRepository = _SubcommitteeCategoryRepository;
         }
 
         public async Task<BaseResponse<int>> Handle(CreateArbitratorCommand Request, CancellationToken cancellationToken)
@@ -233,6 +233,19 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.CreateArbitrat
                             .Replace("\"cid:HeaderImage\"", $"'data:image/png;base64,{HeaderImagebase64String}'");
 
                         await _EmailSender.SendEmailAsync(Recipients, EmailSubject, FullEmailBody, AlternateView);
+                    }
+
+                    if (Request.SubcommitteeOfficerCategories.Any() &&
+                        Request.isSubcommitteeOfficer)
+                    {
+                        List<SubcommitteeCategory> NewSubcommitteeCategoryEntitiesAsOfficer = Request.SubcommitteeOfficerCategories
+                            .Select(x => new SubcommitteeCategory()
+                            {
+                                ArbitratorId = NewArbitratorEntity.Id,
+                                CategoryId = x
+                            }).ToList();
+
+                        await _SubcommitteeCategoryRepository.AddRangeAsync(NewSubcommitteeCategoryEntitiesAsOfficer);
                     }
 
                     Transaction.Complete();

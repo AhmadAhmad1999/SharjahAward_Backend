@@ -14,7 +14,8 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Comman
         [ArabicNameValidation]
         public string ArabicName { get; set; } = string.Empty;
         public IFormFile attachment { get; set; } = null!;
-        public AttachmentType AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
         public int WorkshopeId { get; set; }
+        public string? lang { get; set; }
     }
 }

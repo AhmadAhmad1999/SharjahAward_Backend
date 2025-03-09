@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
+using Google.Apis.Auth.OAuth2.Responses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
+using Newtonsoft.Json;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.InterviewModel;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Transactions;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview
@@ -15,18 +20,21 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
         private readonly IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository;
         private readonly IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository;
         private readonly IMapper _Mapper;
+        private readonly HttpClient _HttpClient;
 
         public UpdateInterviewHandler(IAsyncRepository<Interview> _InterviewRepository,
             IAsyncRepository<InterviewInvitee> _InterviewInviteeRepository,
             IAsyncRepository<InterviewInviteeParticipant> _InterviewInviteeParticipantRepository,
             IAsyncRepository<InterviewInviteeNoteAndQuestion> _InterviewInviteeNoteAndQuestionRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            HttpClient _HttpClient)
         {
             this._InterviewRepository = _InterviewRepository;
             this._InterviewInviteeRepository = _InterviewInviteeRepository;
             this._InterviewInviteeParticipantRepository = _InterviewInviteeParticipantRepository;
             this._InterviewInviteeNoteAndQuestionRepository = _InterviewInviteeNoteAndQuestionRepository;
             this._Mapper = _Mapper;
+            this._HttpClient = _HttpClient;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateInterviewCommand Request, CancellationToken cancellationToken)
@@ -57,6 +65,16 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
 
                 return new BaseResponse<object>(ResponseMessage, false, 400);
             }
+
+            string? AccessToken = await GetAccessTokenAsync(Request.TenantId!, Request.ClientId!, Request.ClientSecret!);
+
+            if (string.IsNullOrEmpty(AccessToken))
+                return new BaseResponse<object>("Failed to acquire access token.", false, 500);
+
+            string CreateMeetingExternalAPI = "https://graph.microsoft.com/v1.0/users/b1ea9cf6-8581-47bc-bda8-18f6f5b4c9b2/onlineMeetings";
+
+            _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+            _HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             TransactionOptions TransactionOptions = new TransactionOptions
             {
@@ -98,6 +116,44 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
 
                         else
                         {
+                            var NewOnlineMeeting = new
+                            {
+                                startDateTime = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1)),
+                                endDateTime = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes),
+                                subject = InterviewEntity.ArabicName + " - " + InterviewEntity.EnglishName
+                            };
+
+                            StringContent StringContent = new StringContent(JsonConvert.SerializeObject(NewOnlineMeeting), Encoding.UTF8, "application/json");
+
+                            var Response = await _HttpClient.PostAsync(CreateMeetingExternalAPI, StringContent, cancellationToken);
+
+                            string InviteeLink = string.Empty;
+
+                            if (Response.IsSuccessStatusCode)
+                            {
+                                string ResponseBody = await Response.Content.ReadAsStringAsync();
+                                OnlineMeeting? CreatedMeeting = JsonConvert.DeserializeObject<OnlineMeeting>(ResponseBody);
+
+                                if (CreatedMeeting is not null
+                                    ? !string.IsNullOrEmpty(CreatedMeeting.JoinWebUrl)
+                                    : false)
+                                {
+                                    InviteeLink = CreatedMeeting.JoinWebUrl;
+                                }
+                                else
+                                {
+                                    return new BaseResponse<object>($"Error creating meeting", false, (int)Response.StatusCode);
+                                }
+                            }
+                            else
+                            {
+                                string ErrorResponse = await Response.Content.ReadAsStringAsync();
+                                return new BaseResponse<object>($"Error creating meeting: {ErrorResponse}", false, (int)Response.StatusCode);
+                            }
+
                             InterviewInvitee NewInterviewInviteeEntity = new InterviewInvitee()
                             {
                                 OrderId = Invitee.OrderId,
@@ -107,7 +163,7 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                                 EndDate = InterviewEntity.StartDate
                                     .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
                                     .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes),
-                                InviteeLink = Invitee.InviteeLink
+                                InviteeLink = InviteeLink
                             };
 
                             await _InterviewInviteeRepository.AddAsync(NewInterviewInviteeEntity);
@@ -122,12 +178,52 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                         {
                             _Mapper.Map(Invitee, InterviewInviteeEntityToUpdate, typeof(UpdateInterviewInviteeDto), typeof(InterviewInvitee));
 
+                            var NewOnlineMeeting = new
+                            {
+                                startDateTime = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1)),
+                                endDateTime = InterviewEntity.StartDate
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
+                                    .AddMinutes(InterviewEntity.PeriodOfEachInviteeInMinutes),
+                                subject = InterviewEntity.ArabicName + " - " + InterviewEntity.EnglishName
+                            };
+
+                            StringContent StringContent = new StringContent(JsonConvert.SerializeObject(NewOnlineMeeting), Encoding.UTF8, "application/json");
+
+                            var Response = await _HttpClient.PostAsync(CreateMeetingExternalAPI, StringContent, cancellationToken);
+
+                            string InviteeLink = string.Empty;
+
+                            if (Response.IsSuccessStatusCode)
+                            {
+                                string ResponseBody = await Response.Content.ReadAsStringAsync();
+                                OnlineMeeting? CreatedMeeting = JsonConvert.DeserializeObject<OnlineMeeting>(ResponseBody);
+
+                                if (CreatedMeeting is not null
+                                    ? !string.IsNullOrEmpty(CreatedMeeting.JoinWebUrl)
+                                    : false)
+                                {
+                                    InviteeLink = CreatedMeeting.JoinWebUrl;
+                                }
+                                else
+                                {
+                                    return new BaseResponse<object>($"Error creating meeting", false, (int)Response.StatusCode);
+                                }
+                            }
+                            else
+                            {
+                                string ErrorResponse = await Response.Content.ReadAsStringAsync();
+                                return new BaseResponse<object>($"Error creating meeting: {ErrorResponse}", false, (int)Response.StatusCode);
+                            }
+
                             InterviewInviteeEntityToUpdate.StartDate = Request.StartDate
                                 .AddMinutes(Request.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1));
 
                             InterviewInviteeEntityToUpdate.EndDate = Request.StartDate
                                 .AddMinutes(Request.PeriodOfEachInviteeInMinutes * (Invitee.OrderId + 1))
                                 .AddMinutes(Request.PeriodOfEachInviteeInMinutes);
+
+                            InterviewInviteeEntityToUpdate.InviteeLink = InviteeLink;
 
                             await _InterviewInviteeRepository.UpdateAsync(InterviewInviteeEntityToUpdate);
                         }
@@ -231,6 +327,41 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateIn
                     Transaction.Dispose();
                     throw;
                 }
+            }
+        }
+        private async Task<string> GetAccessTokenAsync(string tenantId, string clientId, string clientSecret)
+        {
+            string CreateTokenExternalAPIURL = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
+            HttpRequestMessage TokenRequest = new HttpRequestMessage(HttpMethod.Post, CreateTokenExternalAPIURL);
+
+            Dictionary<string, string> FormData = new Dictionary<string, string>
+            {
+                { "grant_type", "client_credentials" },
+                { "client_id", clientId },
+                { "client_secret", clientSecret },
+                { "scope", "https://graph.microsoft.com/.default" }
+            };
+
+            TokenRequest.Content = new FormUrlEncodedContent(FormData);
+
+            HttpResponseMessage Response = await _HttpClient.SendAsync(TokenRequest);
+            if (Response.IsSuccessStatusCode)
+            {
+                var responseBody = await Response.Content.ReadAsStringAsync();
+                var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
+                if (tokenResponse is not null)
+                    return tokenResponse.AccessToken;
+
+                else
+                {
+                    var errorResponse = await Response.Content.ReadAsStringAsync();
+                    throw new Exception($"Failed to acquire access token: {errorResponse}");
+                }
+            }
+            else
+            {
+                var errorResponse = await Response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to acquire access token: {errorResponse}");
             }
         }
     }

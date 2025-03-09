@@ -1,47 +1,45 @@
-﻿using AutoMapper;
+﻿using ErrorOr;
 using MediatR;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplanatoryGuideByCategoryId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.AwardPublicationsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.AwardPublications.Queries.DownloadAwardPublication
 {
     public class DownloadAwardPublicationQueryHandler
         : IRequestHandler<DownloadAwardPublicationQuery, BaseResponse<DownloadPublicationDto>>
     {
-        private readonly IAsyncRepository<AwardPublication> _awardPublicationRepository;
-        private readonly IFileService _fileService;
+        private readonly IAsyncRepository<AwardPublication> _AwardPublicationRepository;
+        private readonly IFileService _FileService;
 
-        public DownloadAwardPublicationQueryHandler(IAsyncRepository<AwardPublication> awardPublicationRepository, IFileService fileService)
+        public DownloadAwardPublicationQueryHandler(IAsyncRepository<AwardPublication> _AwardPublicationRepository, IFileService _FileService)
         {
-            _awardPublicationRepository = awardPublicationRepository;
-            _fileService = fileService;
+            this._AwardPublicationRepository = _AwardPublicationRepository;
+            this._FileService = _FileService;
         }
 
-        public async Task<BaseResponse<DownloadPublicationDto>> Handle(DownloadAwardPublicationQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<DownloadPublicationDto>> Handle(DownloadAwardPublicationQuery Request, CancellationToken cancellationToken)
         {
-            var AwardPublication = await _awardPublicationRepository.GetByIdAsync(request.PublicationId);
-            if(AwardPublication == null)
+            AwardPublication? AwardPublicationEntity = await _AwardPublicationRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.PublicationId);
+            
+            if (AwardPublicationEntity is null)
             {
                 return new BaseResponse<DownloadPublicationDto>("", false, 404);
             }
+
             byte[] fileContent;
             
-            fileContent = await _fileService.ReadFileAsync(AwardPublication.PublicationUrl, SystemFileType.Pdf);
+            fileContent = await _FileService
+                .ReadFileAsync(AwardPublicationEntity.PublicationUrl, SystemFileType.Pdf);
            
             var data = new DownloadPublicationDto()
             {
                 fileContent = fileContent!,
                 fileContentType = "applection/pdf",
-                fileFileName = AwardPublication.Title
+                fileFileName = AwardPublicationEntity.Title
             };
 
             return new BaseResponse<DownloadPublicationDto>("", true, 200, data);

@@ -4,7 +4,6 @@ using SharijhaAward.Application.Helpers.PasswordValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants;
-using System.ComponentModel.DataAnnotations;
 
 namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
 {

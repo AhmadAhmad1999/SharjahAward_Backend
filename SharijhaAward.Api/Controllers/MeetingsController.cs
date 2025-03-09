@@ -285,7 +285,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> CreateMeetingURL([FromQuery] CreateMeetingURLCommand CreateMeetingURLCommand)
+        public async Task<IActionResult> CreateMeetingURL([FromBody] CreateMeetingURLCommand CreateMeetingURLCommand)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

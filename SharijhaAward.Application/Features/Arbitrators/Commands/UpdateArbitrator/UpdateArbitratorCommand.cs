@@ -25,5 +25,7 @@ namespace SharijhaAward.Application.Features.Arbitrators.Commands.UpdateArbitrat
         public string? lang { get; set; }
         public string? WWWRootFilePath { get; set; }
         public List<ArbitratorCateogryClassesCommand> ArbitratorCateogryClasses { get; set; } = new List<ArbitratorCateogryClassesCommand>();
+        public bool isSubcommitteeOfficer { get; set; } = false;
+        public List<int> SubcommitteeOfficerCategories { get; set; } = new List<int>();
     }
 }

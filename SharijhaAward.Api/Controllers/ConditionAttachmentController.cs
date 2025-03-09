@@ -29,10 +29,6 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             command.lang = language!;
             command.token = token!;
@@ -54,11 +50,7 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
             var token = HttpContext.Request.Headers.Authorization;
 
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
-
+            
             command.lang = language!;
             command.token = token!;
 

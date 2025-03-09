@@ -89,7 +89,10 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgFor
                     IsRead = x.IsRead,
                     CreatedAt = x.CreatedAt,
                     PersonalPhotoUrl = x.User!.ImageURL,
-                    Gender = x.User!.Gender
+                    Gender = x.User!.Gender,
+                    PhoneNumber = x.UserId != null
+                        ? x.User!.PhoneNumber
+                        : x.PhoneNumber
                 }).ToListAsync();
             
             int Count = await _EmailMessageRepository

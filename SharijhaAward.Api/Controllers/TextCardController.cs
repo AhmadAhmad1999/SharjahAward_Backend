@@ -84,10 +84,6 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             var response = await _mediator.Send(new GetAllTextCardsQuery()
             {
@@ -130,10 +126,6 @@ namespace SharijhaAward.Api.Controllers
             var language = HttpContext.Request.Headers["lang"];
 
             var token = HttpContext.Request.Headers.Authorization;
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             var response = await _mediator.Send(new GetAllTextCardDashboradQuery()
             {

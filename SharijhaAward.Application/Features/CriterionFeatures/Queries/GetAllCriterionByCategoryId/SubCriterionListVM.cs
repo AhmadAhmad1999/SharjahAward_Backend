@@ -10,7 +10,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetAllCri
         public bool? rejected { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int? MaxAttachmentNumber { get; set; }
-        public AttachmentType? AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
         public bool AttachFilesOnSubCriterion { get; set; }
         public List<AttachmentListVM> SubCriterionAttachments { get; set; } = new List<AttachmentListVM>();
         public List<CriterionItemListVM> CriterionItemListVM { get; set; } = new List<CriterionItemListVM>();

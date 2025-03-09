@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
+using SharijhaAward.Domain.Constants;
 
 namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep
 {
@@ -10,5 +11,6 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInt
         public int page { get; set; } = 1;
         public int perPage { get; set; } = 10;
         public List<Filter>? filters { get; set; }
+        public MeetingTypes? Type { get; set; }
     }
 }

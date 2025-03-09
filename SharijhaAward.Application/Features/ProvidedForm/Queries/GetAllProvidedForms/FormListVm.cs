@@ -27,6 +27,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllProvided
         public bool? SucceedToFinalArbitration { get; set; }
         public bool? needSing { get; set; }
         public List<int>? RejectedSteps { get; set; }
-
+        public string PhoneNumber { get; set; } = null!;
+        public string Email { get; set; } = string.Empty;
     }
 }

@@ -72,6 +72,16 @@ namespace SharijhaAward.Persistence.Seeders
                        // Id = 6,
                        EnglishName = "Award Team",
                        ArabicName = "فريق الجائزة"
+                   }, new Role
+                   {
+                       // Id = 7,
+                       EnglishName = "Expert",
+                       ArabicName = "خبير"
+                   }, new Role
+                   {
+                       // Id = 8,
+                       EnglishName = "Quality",
+                       ArabicName = "الجودة"
                    }
                 );
                 await _context.SaveChangesAsync();

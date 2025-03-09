@@ -11,6 +11,7 @@ using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Querie
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Domain.Constants;
+using SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAddForUser;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -116,7 +117,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> GetAllDynamicAttributeSectionsForView(int? CategoryId,
-            bool? isArbitrator, int EventId, InviteeTypes? InviteeType, int Page = 1, int PerPage = 10)
+            bool? isArbitrator, int EventId, InviteeTypes? InviteeType, int? RoleId, int Page = 1, int PerPage = 10)
         {
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
@@ -132,7 +133,8 @@ namespace SharijhaAward.Api.Controllers
                 perPage = PerPage,
                 WWWRootFilePath = _WebHostEnvironment.WebRootPath,
                 EventId = EventId,
-                InviteeType = InviteeType
+                InviteeType = InviteeType,
+                RoleId = RoleId
             });
 
             return Response.statusCode switch
@@ -225,6 +227,34 @@ namespace SharijhaAward.Api.Controllers
                 : "en";
 
             BaseResponse<object>? Response = await _Mediator.Send(ReorderDynamicAttributesInsideTheSectionsCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllDynamicAttributeSectionsForAddForUser")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllDynamicAttributeSectionsForAddForUser(int UserId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<RolesListVM>> Response = await _Mediator.Send(new GetAllDynamicAttributeSectionsForAddForUserQuery()
+            {
+                lang = HeaderValue!,
+                UserId = UserId
+            });
 
             return Response.statusCode switch
             {

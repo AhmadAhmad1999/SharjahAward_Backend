@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Queries.GetAdvancedFormBuilderById;
@@ -20,6 +21,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
         private readonly IAsyncRepository<VirtualTableForSection> _VirtualTableForSectionRepository;
         private readonly IAsyncRepository<AdvancedFormBuilderValue> _AdvancedFormBuilderValueRepository;
         private readonly IAsyncRepository<AdvancedFormBuilderTableValue> _AdvancedFormBuilderTableValueRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAllAdvancedFormBuilderSectionsForAddHandler(IAsyncRepository<AdvancedFormBuilderSection> _AdvancedFormBuilderSectionRepository,
             IAsyncRepository<AdvancedFormBuilderListValue> _AdvancedFormBuilderListValueRepository,
@@ -28,7 +30,8 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
             IAsyncRepository<AdvancedFormBuilderViewWhenRelation> _AdvancedFormBuilderViewWhenRelationRepository,
             IAsyncRepository<VirtualTableForSection> _VirtualTableForSectionRepository,
             IAsyncRepository<AdvancedFormBuilderValue> _AdvancedFormBuilderValueRepository,
-            IAsyncRepository<AdvancedFormBuilderTableValue> _AdvancedFormBuilderTableValueRepository)
+            IAsyncRepository<AdvancedFormBuilderTableValue> _AdvancedFormBuilderTableValueRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._AdvancedFormBuilderSectionRepository = _AdvancedFormBuilderSectionRepository;
             this._AdvancedFormBuilderListValueRepository = _AdvancedFormBuilderListValueRepository;
@@ -38,6 +41,7 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
             this._VirtualTableForSectionRepository = _VirtualTableForSectionRepository;
             this._AdvancedFormBuilderValueRepository = _AdvancedFormBuilderValueRepository;
             this._AdvancedFormBuilderTableValueRepository = _AdvancedFormBuilderTableValueRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<GetAllAdvancedFormBuilderSectionsForAddListVM>>>
             Handle(GetAllAdvancedFormBuilderSectionsForAddQuery Request, CancellationToken cancellationToken)
@@ -167,7 +171,20 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
 
                                 if (CheckIfValueIsAlreadyInserted != null)
                                 {
-                                    AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                    if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                    {
+                                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                        string WWWRootFilePath = isHttps
+                                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                        AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                    }
+                                    else
+                                    {
+                                        AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                    }
                                 }
                             }
                             else if (AdvancedFormBuilderInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())
@@ -331,7 +348,20 @@ namespace SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures
 
                                         if (CheckIfValueIsAlreadyInserted != null)
                                         {
-                                            AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                            if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                            {
+                                                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                                string WWWRootFilePath = isHttps
+                                                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                                AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                            }
+                                            else
+                                            {
+                                                AdvancedFormBuilderInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                            }
                                         }
                                     }
                                     else if (AdvancedFormBuilderInSection.AttributeDataTypeName.ToLower() == "Phone Number".ToLower())

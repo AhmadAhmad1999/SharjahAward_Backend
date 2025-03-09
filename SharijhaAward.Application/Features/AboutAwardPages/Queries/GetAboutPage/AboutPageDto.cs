@@ -1,11 +1,4 @@
-﻿using SharijhaAward.Domain.Entities.AboutAwardPageModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage
+﻿namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPage
 {
     public class AboutPageDto
     {

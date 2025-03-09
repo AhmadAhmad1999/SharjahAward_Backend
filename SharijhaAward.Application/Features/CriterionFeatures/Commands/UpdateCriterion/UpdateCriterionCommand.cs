@@ -12,7 +12,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
         public int Score { get; set; }
         public int? SizeOfAttachmentInKB { get; set; }
         public int? MaxAttachmentNumber { get; set; }
-        public AttachmentType? AttachmentType { get; set; }
+        public List<AttachmentType> AttachmentType { get; set; } = new List<AttachmentType>();
         public bool? AttachFilesOnSubCriterion { get; set; }
         public string? lang { get; set; }
     }

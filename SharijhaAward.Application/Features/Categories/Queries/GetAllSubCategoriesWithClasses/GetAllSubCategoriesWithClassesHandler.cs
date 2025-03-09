@@ -69,7 +69,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                                 ClassName = Request.lang == "en"
                                     ? y.EducationalClass!.EnglishName
                                     : y.EducationalClass!.ArabicName
-                            }).ToList()
+                            }).ToList(),
+                        ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                        ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                        FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                        FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                        InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                        InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                        SortingFormsEndDate = x.SortingFormsEndDate,
+                        SortingFormsStartDate = x.SortingFormsStartDate,
+                        MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                     }).ToList();
 
                 return new BaseResponse<List<GetAllSubCategoriesWithClassesListVM>>(ResponseMessage, true, 200, Response);
@@ -102,7 +111,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                                 ClassName = Request.lang == "en"
                                     ? y.EducationalClass!.EnglishName
                                     : y.EducationalClass!.ArabicName
-                            }).ToList()
+                            }).ToList(),
+                        ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                        ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                        FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                        FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                        InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                        InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                        SortingFormsEndDate = x.SortingFormsEndDate,
+                        SortingFormsStartDate = x.SortingFormsStartDate,
+                        MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                     }).ToList();
 
                 return new BaseResponse<List<GetAllSubCategoriesWithClassesListVM>>(ResponseMessage, true, 200, Response);

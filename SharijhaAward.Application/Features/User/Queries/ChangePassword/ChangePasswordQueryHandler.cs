@@ -54,24 +54,22 @@ namespace SharijhaAward.Application.Features.User.Queries.ChangePassword
 
             byte[] salt = new byte[16] { 52, 123, 55, 148, 64, 30, 175, 37, 25, 240, 115, 57, 13, 255, 41, 74 };
 
-            if (request.Id == null)
+            string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            password: request.OldPassword!,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 100000,
+            numBytesRequested: 256 / 8));
+
+            if (CheckPassword != user.Password)
             {
-                string CheckPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: request.OldPassword!,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
+                msg = request.lang == "en"
+                    ? "Old password is not correct"
+                    : "كلمة المرور القديمة غير صحيحة";
 
-                if (CheckPassword != user.Password)
-                {
-                    msg = request.lang == "en"
-                        ? "Old password is not correct"
-                        : "كلمة المرور القديمة غير صحيحة";
-
-                    return new BaseResponse<object>(msg, false, 400);
-                }
+                return new BaseResponse<object>(msg, false, 400);
             }
+
             msg = request.lang == "en"
                 ? "Password has been Changed"
                 : "تم تعديل كلمة المرور";

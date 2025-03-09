@@ -9,6 +9,11 @@ using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllMsgForAwar
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetEmailMessageById;
 using SharijhaAward.Application.Features.ContactUsPages.Queries.GetMsgByIdForAwardTeam;
 using SharijhaAward.Api.Logger;
+using Microsoft.Extensions.Primitives;
+using SharijhaAward.Application.Responses;
+using SharijhaAward.Application.Features.ContactUsPages.Commands.ResponseForWebsite;
+using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Queries.GetAllAdvancedFormBuilderSectionsForView;
+using SharijhaAward.Application.Features.ContactUsPages.Queries.GetAllWebsiteResponsesForMessage;
 
 namespace SharijhaAward.Api.Controllers
 {
@@ -17,11 +22,14 @@ namespace SharijhaAward.Api.Controllers
     [ApiController]
     public class ContactUsController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _Mediator;
+        private readonly IWebHostEnvironment _WebHostEnvironment;
 
-        public ContactUsController(IMediator mediator)
+        public ContactUsController(IMediator _Mediator,
+            IWebHostEnvironment _WebHostEnvironment)
         {
-            _mediator = mediator;
+            this._Mediator = _Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
         }
 
         [HttpPost(Name = "SendMessage")]
@@ -33,7 +41,7 @@ namespace SharijhaAward.Api.Controllers
             command.token = token!;
             command.lang = language!;
 
-            var response = await _mediator.Send(command);
+            var response = await _Mediator.Send(command);
 
             return response.statusCode switch
             {
@@ -55,7 +63,7 @@ namespace SharijhaAward.Api.Controllers
                     ? Unauthorized("Un Authorize")
                     : Unauthorized("إنتهت صلاحية الجلسة");
 
-            var response = await _mediator.Send(new GetAllEmailMessageQuery()
+            var response = await _Mediator.Send(new GetAllEmailMessageQuery()
             {
                 filter = filter,
                 page = page,
@@ -85,7 +93,7 @@ namespace SharijhaAward.Api.Controllers
 
            
 
-            var response = await _mediator.Send(new DeleteMessageCommand()
+            var response = await _Mediator.Send(new DeleteMessageCommand()
             {
                 Id = Id,
                 lang = Language!,
@@ -111,7 +119,7 @@ namespace SharijhaAward.Api.Controllers
                     ? Unauthorized("Un Authorize")
                     : Unauthorized("إنتهت صلاحية الجلسة");
 
-            var response = await _mediator.Send(new GetEmailMessageByIdQuery()
+            var response = await _Mediator.Send(new GetEmailMessageByIdQuery()
             {
                 Id = Id,
                 lang = Language!,
@@ -139,7 +147,7 @@ namespace SharijhaAward.Api.Controllers
                     ? Unauthorized("Un Authorize")
                     : Unauthorized("إنتهت صلاحية الجلسة");
 
-            var response = await _mediator.Send(new GetMsgByIdForAwardTeamQuery()
+            var response = await _Mediator.Send(new GetMsgByIdForAwardTeamQuery()
             {
                 Id = Id,
                 lang = Language!,
@@ -167,7 +175,7 @@ namespace SharijhaAward.Api.Controllers
                     ? Unauthorized("Un Authorize")
                     : Unauthorized("إنتهت صلاحية الجلسة");
 
-            var response = await _mediator.Send(new GetAllMsgForAwardTeamQuery()
+            var response = await _Mediator.Send(new GetAllMsgForAwardTeamQuery()
             {
                 token = token!,
                 page = page,
@@ -193,7 +201,7 @@ namespace SharijhaAward.Api.Controllers
             query.token = token!;
             query.lang = language!;
 
-            var response = await _mediator.Send(query);
+            var response = await _Mediator.Send(query);
 
             return response.statusCode switch
             {
@@ -216,7 +224,7 @@ namespace SharijhaAward.Api.Controllers
                     ? Unauthorized("Un Authorize")
                     : Unauthorized("إنتهت صلاحية الجلسة");
 
-            var response = await _mediator.Send(new ClosingEmailMessageQuery()
+            var response = await _Mediator.Send(new ClosingEmailMessageQuery()
             {
                 token = token!,
                 Id = Id,
@@ -230,6 +238,62 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(response)
             };
         }
+        [HttpPost("ResponseForWebsite")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult>
+            ResponseForWebsite([FromForm] ResponseForWebsiteCommand ResponseForWebsiteCommand)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 
+            ResponseForWebsiteCommand.lang = !string.IsNullOrEmpty(HeaderValue)
+                ? HeaderValue
+                : "en";
+
+            ResponseForWebsiteCommand.token = HttpContext.Request.Headers.Authorization!;
+            ResponseForWebsiteCommand.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
+
+            BaseResponse<int> Response = await _Mediator.Send(ResponseForWebsiteCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllWebsiteResponsesForMessage/{MessageId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllWebsiteResponsesForMessage(int MessageId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllWebsiteResponsesForMessageListVM>> Response = await _Mediator.Send(new GetAllWebsiteResponsesForMessageQuery()
+            {
+                MessageId = MessageId,
+                lang = HeaderValue
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
     }
 }

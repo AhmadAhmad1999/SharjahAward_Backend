@@ -74,8 +74,13 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
             if (Request.page != 0 && Request.perPage != -1)
             {
-                List<GetAllNotificationsByFCM_Token_MobileListVM> UserNotificationEntitites = await _UserNotificationRepository
+                Response = _UserNotificationRepository
                     .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .AsEnumerable()
+                    .Skip((Request.page - 1) * Request.perPage)
+                    .Take(Request.perPage)
+                    .AsEnumerable()
                     .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                         ? new GetAllNotificationsByFCM_Token_MobileListVM()
                         {
@@ -83,24 +88,22 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                             isReaded = x.isReaded,
                             Title = x.Notification!.EnglishTitle,
                             Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
-                            CreatedAt = x.CreatedAt
+                            CreatedAt = x.CreatedAt,
+                            Action = x.Action
                         } : new GetAllNotificationsByFCM_Token_MobileListVM()
                         {
                             Id = x.NotificationId,
                             isReaded = x.isReaded,
                             Title = x.Notification!.ArabicTitle,
                             Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
-                            CreatedAt = x.CreatedAt
+                            CreatedAt = x.CreatedAt,
+                            Action = x.Action
                         })
-                    .ToListAsync();
-
-                TotalCount = UserNotificationEntitites.Count();
-
-                Response = UserNotificationEntitites
-                    .OrderByDescending(x => x.CreatedAt)
-                    .Skip((Request.page - 1) * Request.perPage)
-                    .Take(Request.perPage)
                     .ToList();
+
+                TotalCount = await _UserNotificationRepository
+                    .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
+                    .CountAsync();
             }
             else
             {
@@ -113,14 +116,16 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                             isReaded = x.isReaded,
                             Title = x.Notification!.EnglishTitle,
                             Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
-                            CreatedAt = x.CreatedAt
+                            CreatedAt = x.CreatedAt,
+                            Action = x.Action
                         } : new GetAllNotificationsByFCM_Token_MobileListVM()
                         {
                             Id = x.NotificationId,
                             isReaded = x.isReaded,
                             Title = x.Notification!.ArabicTitle,
                             Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
-                            CreatedAt = x.CreatedAt
+                            CreatedAt = x.CreatedAt,
+                            Action = x.Action
                         })
                     .OrderByDescending(x => x.CreatedAt)
                     .ToListAsync();

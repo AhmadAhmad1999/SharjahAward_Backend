@@ -48,28 +48,31 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
 
                 if (Request.page != 0 && Request.perPage != -1)
                 {
-                    var xx = await _UserNotificationRepository
+                    Notifications = _UserNotificationRepository
                         .Where(x => x.UserId == CheckUserTokenIfExist.UserId)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .AsEnumerable()
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .AsEnumerable()
                         .Select(x => CheckUserTokenIfExist.AppLanguage == "en"
                             ? new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
-                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
+                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.ArabicTitle,
-                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
+                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             })
-                        .ToListAsync();
-
-                    Notifications = xx
-                        .OrderByDescending(x => x.CreatedAt)
-                        .Skip((Request.page - 1) * Request.perPage)
-                        .Take(Request.perPage)
                         .ToList();
                 }
                 else
@@ -82,15 +85,18 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
-                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
+                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
+                                Action= x.Action,
+                                CreatedAt = x.CreatedAt
                             } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.ArabicTitle,
-                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
+                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
+                                Action= x.Action,
+                                CreatedAt = x.CreatedAt
                             })
-                        .OrderByDescending(x => x.Id)
                         .OrderByDescending(x => x.CreatedAt)
                         .ToListAsync();
                 }
@@ -101,14 +107,9 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     UnReadedNotifications = Notifications.Where(n => !n.isReaded).ToList()
                 };
 
-                var UnRead = _UserNotificationRepository.Where(n => !n.isReaded).ToList();
-
-                foreach (var notification in UnRead)
-                {
-                    notification.isReaded = true;
-                }
-
-                await _UserNotificationRepository.UpdateListAsync(UnRead);
+                await _UserNotificationRepository
+                    .Where(x => !x.isReaded)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.isReaded, true));
 
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 
@@ -146,13 +147,17 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
-                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
+                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.ArabicTitle,
-                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
+                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             })
                         .OrderByDescending(x => x.Id)
                         .Skip((Request.page - 1) * Request.perPage)
@@ -169,18 +174,21 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.EnglishTitle,
-                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email)
+                                Body = x.Notification!.EnglishBody.Replace("$Email$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             } : new GetAllNotificationsListVM()
                             {
                                 Id = x.NotificationId,
                                 isReaded = x.isReaded,
                                 Title = x.Notification!.ArabicTitle,
-                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email)
+                                Body = x.Notification!.ArabicBody.Replace("$البريد الإلكتروني$", x.User!.Email),
+                                Action = x.Action,
+                                CreatedAt = x.CreatedAt
                             })
                         .OrderByDescending(x => x.Id)
                         .ToListAsync();
                 }
-              
 
                 var UserNotifications = new GetAllNotificationsByFCM_TokenListVM()
                 {
@@ -188,14 +196,9 @@ namespace SharijhaAward.Application.Features.NotificationFeatures.Queries.GetAll
                     UnReadedNotifications = Notifications.Where(n => !n.isReaded).OrderByDescending(n => n.CreatedAt).ToList()
                 };
 
-                var UnRead = _UserNotificationRepository.Where(n => !n.isReaded).ToList();
-
-                foreach (var notification in UnRead)
-                {
-                    notification.isReaded = true;
-                }
-
-                await _UserNotificationRepository.UpdateListAsync(UnRead);
+                await _UserNotificationRepository
+                    .Where(x => !x.isReaded)
+                    .ExecuteUpdateAsync(x => x.SetProperty(y => y.isReaded, true));
 
                 int TotalCount = await _UserNotificationRepository.GetCountAsync(x => x.UserId == CheckUserTokenIfExist.UserId);
 

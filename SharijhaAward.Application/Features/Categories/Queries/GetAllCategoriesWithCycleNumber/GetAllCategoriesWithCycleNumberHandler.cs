@@ -26,7 +26,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllCategories
                         ? x.EnglishName
                         : x.ArabicName,
                     Id = x.Id,
-                    CycleNumber = x.Cycle!.CycleNumber
+                    CycleNumber = x.Cycle!.CycleNumber,
+                    ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                    ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                    FinalArbitrationEndDate = x.FinalArbitrationEndDate,
+                    FinalArbitrationStartDate = x.FinalArbitrationStartDate,
+                    InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                    InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                    SortingFormsEndDate = x.SortingFormsEndDate,
+                    SortingFormsStartDate = x.SortingFormsStartDate,
+                    MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                 }).ToListAsync();
 
             return new BaseResponse<List<GetAllCategoriesWithCycleNumberListVM>>(string.Empty, true, 200, CategoriesEntities);

@@ -38,7 +38,16 @@ namespace SharijhaAward.Application.Features.Categories.Queries.GetAllSubCategor
                     Id = x.Id,
                     CategoryName = Request.lang == "en"
                         ? x.EnglishName
-                        : x.ArabicName
+                        : x.ArabicName,
+                    SortingFormsStartDate = x.SortingFormsStartDate,
+                    SortingFormsEndDate = x.SortingFormsEndDate,
+                    InitialArbitrationStartDate = x.InitialArbitrationStartDate,
+                    InitialArbitrationEndDate = x.InitialArbitrationEndDate,
+                    FinalArbitrationStartDate= x.FinalArbitrationStartDate,
+                    FinalArbitrationEndDate= x.FinalArbitrationEndDate,
+                    ArbitrationAuditStartDate = x.ArbitrationAuditStartDate,
+                    ArbitrationAuditEndDate = x.ArbitrationAuditEndDate,
+                    MarginOfDifferenceBetweenArbitrators = x.MarginOfDifferenceBetweenArbitrators
                 }).ToListAsync();
 
             return new BaseResponse<List<GetAllSubCategoriesListVM>>(string.Empty, true, 200, CategoriesEntities);

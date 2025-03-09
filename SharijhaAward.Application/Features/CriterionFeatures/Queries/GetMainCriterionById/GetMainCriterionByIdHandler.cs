@@ -12,15 +12,21 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCr
     {
         private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
         private readonly IMapper _Mapper;
 
-        public GetMainCriterionByIdHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IMapper Mapper)
+        public GetMainCriterionByIdHandler(IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository,
+            IMapper _Mapper)
         {
-            _CriterionRepository = CriterionRepository;
-            _CriterionItemRepository = CriterionItemRepository;
-            _Mapper = Mapper;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
+            this._Mapper = _Mapper;
         }
         public async Task<BaseResponse<GetMainCriterionByIdDto>> Handle(GetMainCriterionByIdQuery Request, CancellationToken cancellationToken)
         {
@@ -40,16 +46,55 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Queries.GetMainCr
 
             GetMainCriterionByIdDto GetMainCriterionByIdDto = _Mapper.Map<GetMainCriterionByIdDto>(CriterionEntity);
 
-            GetMainCriterionByIdDto.SubCriterions = _Mapper.Map<List<SubCriterionListDto>>(await _CriterionRepository
+            List<Criterion> CriterionEntities = await _CriterionRepository
                 .Where(x => x.ParentId == Request.Id)
-                .ToListAsync());
+                .ToListAsync();
 
-            foreach (SubCriterionListDto SubCriterion in GetMainCriterionByIdDto.SubCriterions)
-            {
-                SubCriterion.CriterionItems = _Mapper.Map<List<CriterionItemListDto>>(await _CriterionItemRepository
-                    .Where(x => x.CriterionId == SubCriterion.Id)
-                    .ToListAsync());
-            }
+            List<CriterionAttachmentType> CriterionAttachmentTypeEntities = _CriterionAttachmentTypeRepository
+                .Where(x => CriterionEntities.Select(y => y.Id).Contains(x.CriterionId) &&
+                    x.AttachmentType != null)
+                .ToList();
+
+            List<CriterionItem> CriterionItemEntities = await _CriterionItemRepository
+                .Where(x => CriterionEntities.Select(y => y.Id).Contains(x.CriterionId))
+                .ToListAsync();
+
+            List<CriterionItemAttachmentType> CriterionItemAttachmentTypeEntities = _CriterionItemAttachmentTypeRepository
+                .Where(x => CriterionItemEntities.Select(y => y.Id).Contains(x.CriterionItemId))
+                .ToList();
+
+            GetMainCriterionByIdDto.SubCriterions = CriterionEntities
+                .Select(x => new SubCriterionListDto()
+                {
+                    Id = x.Id,
+                    ArabicTitle = x.ArabicTitle,
+                    AttachFilesOnSubCriterion = x.AttachFilesOnSubCriterion != null
+                        ? x.AttachFilesOnSubCriterion.Value
+                        : false,
+                    EnglishTitle = x.EnglishTitle,
+                    MaxAttachmentNumber = x.MaxAttachmentNumber,
+                    Score = x.Score,
+                    SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
+                    AttachmentType = CriterionAttachmentTypeEntities
+                        .Where(y => y.CriterionId == x.Id)
+                        .Select(y => y.AttachmentType!.Value)
+                        .ToList(),
+                    CriterionItems = CriterionItemEntities
+                        .Where(y => y.CriterionId == x.Id)
+                        .Select(y => new CriterionItemListDto()
+                        {
+                            Id = y.Id,
+                            ArabicName = y.ArabicName,
+                            EnglishName = y.EnglishName,
+                            MaxAttachmentNumber = y.MaxAttachmentNumber,
+                            Score = y.Score,
+                            SizeOfAttachmentInKB= y.SizeOfAttachmentInKB,
+                            AttachmentType = CriterionItemAttachmentTypeEntities
+                                .Where(z => z.CriterionItemId == y.Id)
+                                .Select(z => z.AttachmentType)
+                                .ToList()
+                        }).ToList()
+                }).ToList();
 
             return new BaseResponse<GetMainCriterionByIdDto>(ResponseMessage, true, 200, GetMainCriterionByIdDto);
         }

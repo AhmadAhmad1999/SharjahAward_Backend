@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -99,7 +100,7 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.CreateUser
 
                     Transaction.Complete();
 
-                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                    return new BaseResponse<object>(ResponseMessage, true, 200, NewUserEntity.Id);
                 }
                 catch (Exception)
                 {

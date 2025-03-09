@@ -53,6 +53,18 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
         {
             string ResponseMessage = string.Empty;
 
+            Arbitrator? ArbitratorEntity = await _ArbitratorRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+
+            if (ArbitratorEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitrator is not Found"
+                    : "المحكم غير موجود";
+
+                return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, false, 404);
+            }
+
             Cycle? CheckIfThereIsActiveCycle = await _CycleRepository
                 .FirstOrDefaultAsync(x => x.Status == Domain.Constants.Common.Status.Active);
 
@@ -63,14 +75,43 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
 
             List<int> ArbitratorCategoriesIds = await _CategoryArbitratorRepository
                 .Where(x => x.ArbitratorId == Request.Id &&
-                    x.Category!.CycleId == ActiveCycleId)
+                    x.Category!.CycleId == ActiveCycleId &&
+                    (Request.CategoryId != null
+                        ? x.CategoryId == Request.CategoryId
+                        : true))
                 .Select(x => x.CategoryId)
                 .ToListAsync();
 
             List<Arbitration> AllArbitrationEntities = await _ArbitrationRepository
-                .Where(x => x.ProvidedForm!.PercentCompletion == 100 &&
-                    x.ProvidedForm!.Category!.CycleId == ActiveCycleId)
+                .Where(x => ArbitratorCategoriesIds.Contains(x.ProvidedForm!.categoryId) &&
+                    x.ProvidedForm!.Category!.CycleId == ActiveCycleId &&
+                    (Request.ProvidedFormId != null
+                        ? x.ProvidedFormId == Request.ProvidedFormId
+                        : true) &&
+                    (Request.isAccepted != null
+                        ? x.ProvidedForm!.IsAccepted == Request.isAccepted
+                        : true) &&
+                    (!string.IsNullOrEmpty(Request.ProvidedFormLanguage)
+                        ? x.ProvidedForm!.Formlanguage.ToLower() == Request.ProvidedFormLanguage.ToLower()
+                        : true))
                 .ToListAsync();
+
+            List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
+                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
+                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
+                    (!string.IsNullOrEmpty(Request.SubscriberName)
+                        ? x.Value.ToLower().StartsWith(Request.SubscriberName.ToLower())
+                        : true) &&
+                    (AllArbitrationEntities.Select(y => y.ProvidedFormId).Any(y => y == x.RecordId)) &&
+                    (Request.ProvidedFormId != null
+                        ? x.RecordId == Request.ProvidedFormId
+                        : true))
+                .ToListAsync();
+
+            AllArbitrationEntities = AllArbitrationEntities
+                .Where(x => SubscribersNames.Select(y => y.RecordId).Contains(x.ProvidedFormId))
+                .ToList();
 
             List<Arbitration> AllArbitratorAssingedForms = AllArbitrationEntities
                 .Where(x => x.ArbitratorId == Request.Id)
@@ -78,14 +119,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .ToList();
 
             IEnumerable<Arbitration> AllArbitratorsAssigned = AllArbitrationEntities
-                .Where(x => x.ProvidedForm!.PercentCompletion == 100)
                 .AsEnumerable();
-
-            List<DynamicAttributeValue> SubscribersNames = await _DynamicAttributeValueRepository
-                .Where(x => x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
-                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1 &&
-                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower())
-                .ToListAsync();
 
             List<int> ProvidedFormsInArbitrationResult = await _ArbitrationResultRepository
                 .Where(x => AllArbitrationEntities.Select(y => y.ProvidedFormId).Contains(x.ProvidedFormId))
@@ -114,21 +148,10 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                 .Distinct()
                 .ToListAsync();
 
-            Arbitrator? ArbitratorEntity = await _ArbitratorRepository.FirstOrDefaultAsync(x => x.Id == Request.Id);
-
-            if (ArbitratorEntity is null)
-            {
-                ResponseMessage = Request.lang == "en"
-                    ? "Arbitrator is not Found"
-                    : "المحكم غير موجود";
-
-                return new BaseResponse<GetArbitratrionDataByArbitratorIdDto>(ResponseMessage, false, 404);
-            }
-
             if (Request.GetRemainigForms)
             {
-                int TotalCount = await _ProvidedFormRepository.GetCountAsync(x => x.PercentCompletion == 100 &&
-                    !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id));
+                int TotalCount = await _ProvidedFormRepository
+                    .GetCountAsync(x => !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id));
 
                 Pagination PaginationParameter = new Pagination(Request.page,
                     Request.perPage, TotalCount);
@@ -141,12 +164,19 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                             ? ArbitratorEntity.EnglishName
                             : ArbitratorEntity.ArabicName,
                         NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
-
                         RemainingForms = _ProvidedFormRepository
-                            .Where(x => x.PercentCompletion == 100 &&
-                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
+                            .Where(x => !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
-                                ArbitratorCategoriesIds.Contains(x.categoryId))
+                                ArbitratorCategoriesIds.Contains(x.categoryId) &&
+                                (Request.ProvidedFormId != null
+                                    ? x.Id == Request.ProvidedFormId
+                                    : true) &&
+                                (Request.isAccepted != null
+                                    ? x.IsAccepted == Request.isAccepted
+                                    : true) &&
+                                (!string.IsNullOrEmpty(Request.ProvidedFormLanguage)
+                                    ? x.Formlanguage.ToLower() == Request.ProvidedFormLanguage.ToLower()
+                                    : true))
                             .OrderByDescending(x => x.CreatedAt)
                             .Skip((Request.page - 1) * Request.perPage)
                             .Take(Request.perPage)
@@ -225,10 +255,18 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetArbi
                         NumberOfAssignedForms = AllArbitratorAssingedForms.Count(),
 
                         RemainingForms = _ProvidedFormRepository
-                            .Where(x => x.PercentCompletion == 100 &&
-                                !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
+                            .Where(x => !AllArbitratorAssingedForms.Select(y => y.ProvidedFormId).Contains(x.Id) &&
                                 x.IsAccepted != null &&
-                                ArbitratorCategoriesIds.Contains(x.categoryId))
+                                ArbitratorCategoriesIds.Contains(x.categoryId) &&
+                                (Request.ProvidedFormId != null
+                                    ? x.Id == Request.ProvidedFormId
+                                    : true) &&
+                                (Request.isAccepted != null
+                                    ? x.IsAccepted == Request.isAccepted
+                                    : true) &&
+                                (!string.IsNullOrEmpty(Request.ProvidedFormLanguage)
+                                    ? x.Formlanguage.ToLower() == Request.ProvidedFormLanguage.ToLower()
+                                    : true))
                             .OrderByDescending(x => x.CreatedAt)
                             .AsEnumerable()
                             .Select(x => Request.lang == "en"

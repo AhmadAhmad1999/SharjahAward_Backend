@@ -9,7 +9,9 @@ namespace SharijhaAward.Domain.Entities.StaticNotificationModel
         [Description("Confirm and send the winning forms - تأكيد وإرسال نتائج الفائزين")]
         ConfirmSelectedWinningForms = 2,
         [Description("Send relating request - إرسال طلب ارتباط")]
-        SendRelatingRequest = 3
+        SendRelatingRequest = 3,
+        [Description("Send request for extra attachment - إرسال طلب مرفق جديد")]
+        SendRequestForExtraAttachment = 4,
         //AfterOneWeekWithNoUpdatesOnTheSubscriptionForm = 2,
         //CompleteTheRegistrationStepsOnTheForm = 3,
         //OneOfTheItemsInTheFormWasRejectedByTheCoordinator = 4,

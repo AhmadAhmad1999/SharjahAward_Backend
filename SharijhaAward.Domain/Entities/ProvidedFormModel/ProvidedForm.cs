@@ -1,13 +1,9 @@
 ﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Constants;
 using SharijhaAward.Domain.Constants.ProvidedFromConstants;
-using SharijhaAward.Domain.Entities.ArbitrationModel;
-using SharijhaAward.Domain.Entities.ArbitratorFormModel;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
 using SharijhaAward.Domain.Entities.CategoryModel;
-using SharijhaAward.Domain.Entities.CoordinatorFormModel;
-using SharijhaAward.Domain.Entities.CoordinatorProvidedFormModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -43,7 +39,10 @@ namespace SharijhaAward.Domain.Entities.ProvidedFormModel
         public CategoryEducationalClass? CategoryEducationalClass { get; set; }
         public int? EducationalEntityId { get; set; }
         public EducationalEntity? EducationalEntity { get; set; }
+        public int? EducationalInstitutionId { get; set; }
+        public EducationalInstitution? EducationalInstitution { get; set; }
         public string Formlanguage { get; set; } = string.Empty;
+        public bool EligibileForInterview { get; set; }
         //public List<CoordinatorForm> CoordinatorProvidedForms { get; set; } = null!;
         //public List<ArbitratorForm> ArbitratorProvidedForms { get; set; } = null!;
 

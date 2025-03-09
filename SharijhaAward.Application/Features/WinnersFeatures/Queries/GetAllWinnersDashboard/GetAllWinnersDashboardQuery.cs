@@ -9,6 +9,7 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
         public string? SubscriberName { get; set; }
         public bool GetDataRandomly { get; set; }
         public int? CategoryId { get; set; }
+        public int? CycleId { get; set; }
         public int? CycleNumber { get; set; }
         public string? CycleYear { get; set; }
         public string? lang { get; set; }

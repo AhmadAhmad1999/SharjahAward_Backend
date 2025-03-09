@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.News.Queries.GetNewsById;
 using SharijhaAward.Application.Responses;
@@ -13,97 +12,140 @@ namespace SharijhaAward.Application.Features.News.Queries.GetAllNews
     public class GetAllNewsQueryHandler
         : IRequestHandler<GetAllNewsQuery, BaseResponse<List<NewsListVM>>>
     {
-        private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _newsRepository;
+        private readonly IAsyncRepository<Domain.Entities.NewsModel.News> _NewsRepository;
         private readonly IAsyncRepository<NewsImage> _NewsImageRepository;
-        private readonly IMapper _mapper;
+        private readonly IMapper _Mapper;
 
-        public GetAllNewsQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> newsRepository,
-            IAsyncRepository<NewsImage> NewsImageRepository,
-            IMapper mapper)
+        public GetAllNewsQueryHandler(IAsyncRepository<Domain.Entities.NewsModel.News> _NewsRepository,
+            IAsyncRepository<NewsImage> _NewsImageRepository,
+            IMapper _Mapper)
         {
-            _newsRepository = newsRepository;
-            _NewsImageRepository = NewsImageRepository;
-            _mapper = mapper;
+            this._NewsRepository = _NewsRepository;
+            this._NewsImageRepository = _NewsImageRepository;
+            this._Mapper = _Mapper;
         }
 
-        public async Task<BaseResponse<List<NewsListVM>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<NewsListVM>>> 
+            Handle(GetAllNewsQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            List<Domain.Entities.NewsModel.News> newsList = new List<Domain.Entities.NewsModel.News>();
+            List<Domain.Entities.NewsModel.News> NewsEntities = new List<Domain.Entities.NewsModel.News>();
 
-            if (request.Descending == false)
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-                newsList = await _newsRepository
-                    .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
-                    .ToListAsync();
+                if (Request.Descending)
+                {
+                    NewsEntities = await _NewsRepository
+                        .WhereThenFilter(x => (Request.DateOnlyFilter != null
+                            ? (DateOnly.FromDateTime(x.CreatedAt) == Request.DateOnlyFilter)
+                            : true) && (Request.TimeOnlyFilter != null
+                                ? (TimeOnly.FromDateTime(x.CreatedAt) == Request.TimeOnlyFilter)
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.query) 
+                                ? (x.EnglishTitle.ToLower().Contains(Request.query.ToLower()) ||
+                                    x.ArabicTitle.ToLower().Contains(Request.query.ToLower()))
+                                : true), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .ToListAsync();
+                }
+                else
+                {
+                    NewsEntities = await _NewsRepository
+                        .WhereThenFilter(x => (Request.DateOnlyFilter != null
+                            ? (DateOnly.FromDateTime(x.CreatedAt) == Request.DateOnlyFilter)
+                            : true) && (Request.TimeOnlyFilter != null
+                                ? (TimeOnly.FromDateTime(x.CreatedAt) == Request.TimeOnlyFilter)
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.query)
+                                ? (x.EnglishTitle.ToLower().Contains(Request.query.ToLower()) ||
+                                    x.ArabicTitle.ToLower().Contains(Request.query.ToLower()))
+                                : true), FilterObject)
+                        .OrderBy(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .ToListAsync();
+                }
             }
             else
             {
-                var AllNews = await _newsRepository
-                    .GetFilterThenPagedReponseAsync(filterObject, request.page, request.perPage);
-
-                newsList = AllNews.OrderBy(x => x.CreatedAt)
-                    .Skip((request.page - 1) * request.perPage).Take(request.perPage)
-                    .ToList();
-            }
-
-            int count = _newsRepository.WhereThenFilter(n => !n.IsHidden, filterObject).Count();
-
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
-
-            if (!request.query.IsNullOrEmpty())
-            {
-                newsList = request.Descending == true
-                    ? await _newsRepository
-                        .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
-                        .OrderByDescending(x => x.CreatedAt).ToListAsync()
-
-                    : await _newsRepository
-                        .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
-                        .OrderBy(x => x.CreatedAt).ToListAsync();
-
-                if (newsList.Count() == 0)
+                if (Request.Descending)
                 {
-                    newsList = request.Descending == true
-                        ? await _newsRepository
-                            .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
-                            .OrderByDescending(x => x.CreatedAt).ToListAsync()
-
-                        : await _newsRepository
-                            .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
-                            .OrderBy(x => x.CreatedAt).ToListAsync();
+                    NewsEntities = await _NewsRepository
+                        .WhereThenFilter(x => (Request.DateOnlyFilter != null
+                            ? (DateOnly.FromDateTime(x.CreatedAt) == Request.DateOnlyFilter)
+                            : true) && (Request.TimeOnlyFilter != null
+                                ? (TimeOnly.FromDateTime(x.CreatedAt) == Request.TimeOnlyFilter)
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.query)
+                                ? (x.EnglishTitle.ToLower().Contains(Request.query.ToLower()) ||
+                                    x.ArabicTitle.ToLower().Contains(Request.query.ToLower()))
+                                : true), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToListAsync();
+                }
+                else
+                {
+                    NewsEntities = await _NewsRepository
+                        .WhereThenFilter(x => (Request.DateOnlyFilter != null
+                            ? (DateOnly.FromDateTime(x.CreatedAt) == Request.DateOnlyFilter)
+                            : true) && (Request.TimeOnlyFilter != null
+                                ? (TimeOnly.FromDateTime(x.CreatedAt) == Request.TimeOnlyFilter)
+                                : true) &&
+                            (!string.IsNullOrEmpty(Request.query)
+                                ? (x.EnglishTitle.ToLower().Contains(Request.query.ToLower()) ||
+                                    x.ArabicTitle.ToLower().Contains(Request.query.ToLower()))
+                                : true), FilterObject)
+                        .OrderBy(x => x.CreatedAt)
+                        .ToListAsync();
                 }
             }
 
-            var data = _mapper.Map<List<NewsListVM>>(newsList);
-
-            List<NewsImage> AllNewsImageEntities = await _NewsImageRepository
-                .Where(x => data.Select(y => y.Id).Contains(x.NewsId))
+            List<NewsImage> NewsImageEntities = await _NewsImageRepository
+                .Where(x => NewsEntities.Select(y => y.Id).Contains(x.NewsId))
                 .ToListAsync();
 
-            if (data.Count != 0)
-            {
-                for (int i = 0; i < data.Count; i++)
+            List<NewsListVM> Response = NewsEntities
+                .Select(x => new NewsListVM()
                 {
-                    data[i].Title = request.lang == "en"
-                        ? data[i].EnglishTitle
-                        : data[i].ArabicTitle;
+                    Images = _Mapper.Map<List<NewsImagesDto>>(NewsImageEntities
+                        .Where(y => y.NewsId == x.Id)
+                        .ToList()),
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishTitle = x.EnglishTitle,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    EnglishDescription = x.EnglishDescription,
+                    ArabicDescription = x.ArabicDescription,
+                    CreatedAt = x.CreatedAt,
+                    Id = x.Id,
+                    Image = x.Image,
+                    IsHidden = x.IsHidden,
+                    NewsDate = x.NewsDate
+                }).ToList();
 
-                    data[i].Description = request.lang == "en"
-                        ? data[i].EnglishDescription!
-                        : data[i].ArabicDescription!;
+            int TotalCount = await _NewsRepository
+                .WhereThenFilter(x => (Request.DateOnlyFilter != null
+                    ? (DateOnly.FromDateTime(x.CreatedAt) == Request.DateOnlyFilter)
+                    : true) && (Request.TimeOnlyFilter != null
+                        ? (TimeOnly.FromDateTime(x.CreatedAt) == Request.TimeOnlyFilter)
+                        : true) &&
+                    (!string.IsNullOrEmpty(Request.query)
+                        ? (x.EnglishTitle.ToLower().Contains(Request.query.ToLower()) ||
+                            x.ArabicTitle.ToLower().Contains(Request.query.ToLower()))
+                        : true), FilterObject)
+                    .CountAsync();
 
-                    data[i].Images = _mapper.Map<List<NewsImagesDto>>(AllNewsImageEntities
-                        .Where(x => x.NewsId == data[i].Id)
-                        .ToList());
-                }
-            }
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
 
-            if (!request.query.IsNullOrEmpty())
-                return new BaseResponse<List<NewsListVM>>("", true, 200, data);
-
-            return new BaseResponse<List<NewsListVM>>("", true, 200, data, pagination);
+            return new BaseResponse<List<NewsListVM>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

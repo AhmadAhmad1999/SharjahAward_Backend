@@ -15,13 +15,16 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository;
         private readonly IMapper _Mapper;
-        public GetAllArbitratorsHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
-            IMapper Mapper)
+        private readonly IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository;
+        public GetAllArbitratorsHandler(IAsyncRepository<Arbitrator> _ArbitratorRepository,
+            IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository,
+            IMapper _Mapper,
+            IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository)
         {
-            _ArbitratorRepository = ArbitratorRepository;
-            _CategoryArbitratorRepository = CategoryArbitratorRepository;
-            _Mapper = Mapper;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._CategoryArbitratorRepository = _CategoryArbitratorRepository;
+            this._Mapper = _Mapper;
+            this._SubcommitteeCategoryRepository = _SubcommitteeCategoryRepository;
         }
         public async Task<BaseResponse<List<ArbitratorsListVM>>> Handle(GetAllArbitratorsQuery Request, CancellationToken cancellationToken)
         {
@@ -36,13 +39,17 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();
 
-            if(Request.CategoryId != null)
+            if (Request.CategoryId != null)
             {
                 Arbitrators = _Mapper.Map<List<ArbitratorsListVM>>(await _CategoryArbitratorRepository
-                  .WhereThenFilter(c => c.CategoryId == Request.CategoryId, filterObject)
-                  .Select(c => c.Arbitrator)
-                  .ToListAsync());
+                    .WhereThenFilter(c => c.CategoryId == Request.CategoryId, filterObject)
+                    .Select(c => c.Arbitrator)
+                    .ToListAsync());
             }
+
+            List<SubcommitteeCategory> SubcommitteeCategoryEntities = await _SubcommitteeCategoryRepository
+                .Where(x => Arbitrators.Select(y => y.Id).Contains(x.ArbitratorId))
+                .ToListAsync();
 
             Arbitrators = Arbitrators.Select(x => new ArbitratorsListVM()
             {
@@ -58,7 +65,16 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetAllArbitrato
                         Id = y.CategoryId,
                         ArabicName = y.Category!.ArabicName,
                         EnglishName = y.Category!.EnglishName
-                    }).ToList()
+                    }).ToList(),
+                SubcommitteeOfficerCategories = SubcommitteeCategoryEntities
+                    .Where(y => y.ArbitratorId == x.Id)
+                    .Select(y => new ArbitratorCategoryListVM()
+                    {
+                        Id = y.CategoryId,
+                        ArabicName = y.Category!.ArabicName,
+                        EnglishName = y.Category!.EnglishName
+                    }).ToList(),
+                isSubcommitteeOfficer = x.isSubcommitteeOfficer
             }).ToList();
 
             string ResponseMessage = string.Empty;

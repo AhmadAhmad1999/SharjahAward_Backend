@@ -10,5 +10,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllF
         public string? SubscriberName { get; set; }
         public FormStatus? isAccepted { get; set; }
         public List<int> CategoriesIds { get; set; } = new List<int>();
+        public DateTime? ArbitrationStartDate { get; set; }
+        public DateTime? ArbitrationEndDate { get; set; }
     }
 }

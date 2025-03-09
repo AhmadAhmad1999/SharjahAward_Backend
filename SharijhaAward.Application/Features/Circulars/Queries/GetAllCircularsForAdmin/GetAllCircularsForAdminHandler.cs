@@ -35,13 +35,7 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCircularsFo
                 .OrderByDescending(FilterObject, x => x.Id, Request.page, Request.perPage)
                 .ToListAsync());
 
-            List<bool> AllCircularsEntities = await _CircularRepository
-                .WhereThenFilter(x => true, FilterObject)
-                .Select(x => x.IsRead)
-                .ToListAsync();
-
-            TotalCount = AllCircularsEntities.Count();
-            NumberOfUnRead = AllCircularsEntities.Count(x => !x);
+            TotalCount = await _CircularRepository.WhereThenFilter(x => true, FilterObject).CountAsync();
 
             CircularListVm Response = new CircularListVm()
             {

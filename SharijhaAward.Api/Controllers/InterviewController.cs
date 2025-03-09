@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CancelInterviewInvitee;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.ChangeEligibilityForInterviewForForm;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Commands.CreateRequestForChangingEligibilityStatus;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.DeleteInterviewInvitee;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.ImplementInterviewInvitee;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.SendEmailToUsersInInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Commands.UpdateInterview;
+using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllChangeStatusRequestsByProvidedFormId;
+using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsByItsEligibleStatus;
+using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllFormsThatEligibileForInterview;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetAllInterviewsForInterviewStep;
 using SharijhaAward.Application.Features.InterviewFeatures.Queries.GetInterviewById;
+using SharijhaAward.Application.Features.MeetingFeatures.Commands.CreateMeetingURL;
 using SharijhaAward.Application.Responses;
 
 namespace SharijhaAward.Api.Controllers
@@ -22,12 +28,15 @@ namespace SharijhaAward.Api.Controllers
     {
         private readonly IMediator _Mediator;
         private readonly IWebHostEnvironment _WebHostEnvironment;
+        private readonly IConfiguration _Configuration;
 
-        public InterviewController(IMediator Mediator,
-            IWebHostEnvironment WebHostEnvironment)
+        public InterviewController(IMediator _Mediator,
+            IWebHostEnvironment _WebHostEnvironment,
+            IConfiguration _Configuration)
         {
-            _Mediator = Mediator;
-            _WebHostEnvironment = WebHostEnvironment;
+            this._Mediator = _Mediator;
+            this._WebHostEnvironment = _WebHostEnvironment;
+            this._Configuration = _Configuration;
         }
         [HttpPut("CancelInterviewInvitee")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -71,6 +80,10 @@ namespace SharijhaAward.Api.Controllers
             CreateInterviewCommand.lang = !string.IsNullOrEmpty(HeaderValue)
                 ? HeaderValue
                 : "en";
+
+            CreateInterviewCommand.TenantId = _Configuration["AzureAd:TenantId"];
+            CreateInterviewCommand.ClientId = _Configuration["AzureAd:ClientId"];
+            CreateInterviewCommand.ClientSecret = _Configuration["AzureAd:ClientSecret"];
 
             BaseResponse<object>? Response = await _Mediator.Send(CreateInterviewCommand);
 
@@ -208,6 +221,10 @@ namespace SharijhaAward.Api.Controllers
                 ? HeaderValue
                 : "en";
 
+            UpdateInterviewCommand.TenantId = _Configuration["AzureAd:TenantId"];
+            UpdateInterviewCommand.ClientId = _Configuration["AzureAd:ClientId"];
+            UpdateInterviewCommand.ClientSecret = _Configuration["AzureAd:ClientSecret"];
+
             BaseResponse<object>? Response = await _Mediator.Send(UpdateInterviewCommand);
 
             return Response.statusCode switch
@@ -269,6 +286,142 @@ namespace SharijhaAward.Api.Controllers
                 _ => BadRequest(Response)
             };
         }
-        
+        [HttpPut("ChangeEligibilityForInterviewForForm/{ProvidedFormId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> ChangeEligibilityForInterviewForForm(int ProvidedFormId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new ChangeEligibilityForInterviewForFormCommand()
+            {
+                ProvidedFormId = ProvidedFormId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllFormsByItsEligibleStatus")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllFormsByItsEligibleStatus([FromQuery] GetAllFormsByItsEligibleStatusQuery GetAllFormsByItsEligibleStatusQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllFormsByItsEligibleStatusQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllFormsByItsEligibleStatusListVM>> Response = await _Mediator.Send(GetAllFormsByItsEligibleStatusQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPost("CreateRequestForChangingEligibilityStatus")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> CreateRequestForChangingEligibilityStatus(CreateRequestForChangingEligibilityStatusCommand CreateRequestForChangingEligibilityStatusCommand)
+        {
+            string? Token = HttpContext.Request.Headers.Authorization;
+
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            CreateRequestForChangingEligibilityStatusCommand.lang = HeaderValue;
+            CreateRequestForChangingEligibilityStatusCommand.Token = Token;
+
+            BaseResponse<object> Response = await _Mediator.Send(CreateRequestForChangingEligibilityStatusCommand);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllChangeStatusRequestsByProvidedFormId/{ProvidedFormId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllChangeStatusRequestsByProvidedFormId(int ProvidedFormId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<List<GetAllChangeStatusRequestsByProvidedFormIdListVM>> Response = await _Mediator.Send(new GetAllChangeStatusRequestsByProvidedFormIdQuery()
+            {
+                ProvidedFormId = ProvidedFormId,
+                lang = HeaderValue!
+            });
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpGet("GetAllFormsThatEligibileForInterview")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> GetAllFormsThatEligibileForInterview([FromQuery] GetAllFormsThatEligibileForInterviewQuery GetAllFormsThatEligibileForInterviewQuery)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            GetAllFormsThatEligibileForInterviewQuery.lang = HeaderValue;
+
+            BaseResponse<List<GetAllFormsThatEligibileForInterviewListVM>> Response = await _Mediator.Send(GetAllFormsThatEligibileForInterviewQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
     }
 }

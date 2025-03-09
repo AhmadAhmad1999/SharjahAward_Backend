@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using SharijhaAward.Application.Contract.Persistence;
@@ -23,6 +24,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
         private readonly IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository;
         private readonly IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
         public GetAllFilesByFormIdHandler(IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> _ProvidedFormRepository,
             IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository,
             IAsyncRepository<CycleConditionAttachment> _CycleConditionAttachmentRepository,
@@ -30,7 +32,8 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
             IAsyncRepository<ExtraAttachmentFile> _ExtraAttachmentFileRepository,
             IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository,
             IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._ProvidedFormRepository = _ProvidedFormRepository;
             this._DynamicAttributeValueRepository = _DynamicAttributeValueRepository;
@@ -40,6 +43,7 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
             this._CriterionAttachmentRepository = _CriterionAttachmentRepository;
             this._CriterionItemAttachmentRepository = _CriterionItemAttachmentRepository;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<GetAllFilesByFormIdMainResponse>>> Handle(GetAllFilesByFormIdQuery Request, CancellationToken cancellationToken)
         {
@@ -57,6 +61,12 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                 return new BaseResponse<List<GetAllFilesByFormIdMainResponse>>(ResponseMessage, false, 404);
             }
 
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
             List<GetAllFilesByFormIdMainResponse> Response = new List<GetAllFilesByFormIdMainResponse>();
 
             List<DynamicAttributeValue> DynamicAttributeValueFilesPaths = await _DynamicAttributeValueRepository
@@ -72,7 +82,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                 Files = DynamicAttributeValueFilesPaths
                     .Select(x => new FilesInfoDto()
                     {
-                        FilePath = x.Value.Replace("\\", "/"),
+                        FilePath = x.Value.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.Value.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.Value.Replace("\\", "/"),
                         FileName = string.Empty
                     }).ToList(),
                 SubFolders = new List<GetAllFilesByFormIdMainResponse>()
@@ -89,7 +101,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                 Files = GeneralConditionsFilesPaths
                     .Select(x => new FilesInfoDto()
                     {
-                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FilePath = x.AttachementPath.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.AttachementPath.Replace("\\", "/"),
                         FileName = x.Name
                     }).ToList(),
                 SubFolders = new List<GetAllFilesByFormIdMainResponse>()
@@ -106,7 +120,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                 Files = SpecialConditionsFilesPaths
                     .Select(x => new FilesInfoDto()
                     {
-                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                        FilePath = x.AttachementPath.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.AttachementPath.Replace("\\", "/"),
                         FileName = x.Name
                     }).ToList(),
                 SubFolders = new List<GetAllFilesByFormIdMainResponse>()
@@ -123,7 +139,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                 Files = ExtraAttachmentsFilesPaths
                     .Select(x => new FilesInfoDto()
                     {
-                        FilePath = x.FileUrl.Replace("\\", "/"),
+                        FilePath = x.FileUrl.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.FileUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.FileUrl.Replace("\\", "/"),
                         FileName = x.FileName
                     }).ToList(),
                 SubFolders = new List<GetAllFilesByFormIdMainResponse>()
@@ -222,7 +240,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                                     .ToList()
                                     .Select(x => new FilesInfoDto()
                                     {
-                                        FilePath = x.AttachementPath.Replace("\\", "/"),
+                                        FilePath = x.AttachementPath.Contains("wwwroot")
+                                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                            : x.AttachementPath.Replace("\\", "/"),
                                         FileName = x.Name
                                     }).ToList()
                             }).ToList();
@@ -233,7 +253,9 @@ namespace SharijhaAward.Application.Features.ProvidedForm.Queries.GetAllFilesByF
                             .Where(x => x.CriterionId == SubCriterion.Id)
                             .Select(x => new FilesInfoDto()
                             {
-                                FilePath = x.AttachementPath.Replace("\\", "/"),
+                                FilePath = x.AttachementPath.Contains("wwwroot")
+                                    ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : x.AttachementPath.Replace("\\", "/"),
                                 FileName = x.Name
                             }).ToList();
                     }

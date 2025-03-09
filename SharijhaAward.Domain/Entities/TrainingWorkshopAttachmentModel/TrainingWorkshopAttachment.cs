@@ -1,5 +1,4 @@
 ﻿using SharijhaAward.Domain.Common;
-using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 
 namespace SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel
@@ -11,7 +10,6 @@ namespace SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel
         public string ArabicName { get; set; } = string.Empty;
         public string AttachementPath { get; set; } = string.Empty;
         public int SizeOfAttachmentInKB { get; set; }
-        public AttachmentType AttachmentType { get; set; }
         public int TrainingWorkshopId { get; set; }
         public TrainingWorkshop TrainingWorkshop { get; set; } = null!;
     }

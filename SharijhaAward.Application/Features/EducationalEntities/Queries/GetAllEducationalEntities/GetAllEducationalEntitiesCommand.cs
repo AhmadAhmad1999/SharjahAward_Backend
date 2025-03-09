@@ -7,6 +7,7 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Queries.GetAllE
 {
     public class GetAllEducationalEntitiesCommand :IRequest<BaseResponse<List<EducationalEntitiesListVm>>>
     {
+        public int CycleId { get; set; }
         [ArabicNameValidation]
         public string? ArabicName { get; set; } = string.Empty;
         [EnglishNameValidation]

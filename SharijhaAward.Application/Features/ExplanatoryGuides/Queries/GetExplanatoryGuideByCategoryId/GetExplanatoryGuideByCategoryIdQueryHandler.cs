@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Graph.Models;
 using MimeKit;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -9,6 +11,7 @@ using SharijhaAward.Domain.Entities.ExplanatoryGuideModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,15 +23,21 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
         private readonly IAsyncRepository<ExplanatoryGuide> _explanatoryGuideRepository;
         private readonly IAsyncRepository<Category> _categoryRepository;
         private readonly IFileService _fileService;
-        
+        private readonly HttpClient _HttpClient;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+
         public GetExplanatoryGuideByCategoryIdQueryHandler(
             IAsyncRepository<ExplanatoryGuide> explanatoryGuideRepository,
             IAsyncRepository<Category> categoryRepository,
-            IFileService fileService)
+            IFileService fileService,
+            HttpClient _HttpClient,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _fileService = fileService;
             _categoryRepository = categoryRepository;
             _explanatoryGuideRepository = explanatoryGuideRepository;
+            this._HttpClient = _HttpClient;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<ExplanatoryGuideDto>> Handle(GetExplanatoryGuideByCategoryIdQuery request, CancellationToken cancellationToken)
@@ -42,9 +51,10 @@ namespace SharijhaAward.Application.Features.ExplanatoryGuides.Queries.GetExplan
             byte [] fileContent;
             if (Guide != null)
             {
-                 fileContent = request.lang == "en"
+                fileContent = request.lang == "en"
                ? await _fileService.ReadFileAsync(Guide!.EnglishFilePath, SystemFileType.ExplanatoryGuide)
                : await _fileService.ReadFileAsync(Guide!.ArabicFilePath, SystemFileType.ExplanatoryGuide);
+
             }
             else
             {

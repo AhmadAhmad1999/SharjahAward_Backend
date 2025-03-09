@@ -39,7 +39,7 @@ namespace SharijhaAward.Api.Controllers
             var Language = HttpContext.Request.Headers["lang"];
             command.lang = Language!;
 
-            command.WWWRootFilePath = _WebHostEnvironment.WebRootPath + "/DynamicFiles/";
+            command.WWWRootFilePath = _WebHostEnvironment.WebRootPath;
 
             var response = await _mediator.Send(command);
 
@@ -224,11 +224,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> GetAllCoordinatorsByFormId(int formId, int page = 1, int perPage = 10)
         {
             string token = HttpContext.Request.Headers.Authorization!;
-
-            if (token.IsNullOrEmpty())
-            {
-                return Unauthorized();
-            }
 
             StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
 

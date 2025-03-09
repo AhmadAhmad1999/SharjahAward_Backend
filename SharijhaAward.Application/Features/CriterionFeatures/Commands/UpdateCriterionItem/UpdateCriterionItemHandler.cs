@@ -1,21 +1,24 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterionItem
 {
     public class UpdateCriterionItemHandler : IRequestHandler<UpdateCriterionItemCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
         private readonly IMapper _Mapper;
-        public UpdateCriterionItemHandler(IMapper Mapper,
-            IAsyncRepository<CriterionItem> CriterionItemRepository)
+        private readonly IAsyncRepository<CriterionItem> _CriterionItemRepository;
+        private readonly IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository;
+        public UpdateCriterionItemHandler(IMapper _Mapper,
+            IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<CriterionItemAttachmentType> _CriterionItemAttachmentTypeRepository)
         {
-            _CriterionItemRepository = CriterionItemRepository;
-            _Mapper = Mapper;
+            this._Mapper = _Mapper;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CriterionItemAttachmentTypeRepository = _CriterionItemAttachmentTypeRepository;
         }
 
         public async Task<BaseResponse<object>> Handle(UpdateCriterionItemCommand Request, CancellationToken cancellationToken)
@@ -49,13 +52,48 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
 
             _Mapper.Map(Request, CriterionItemEntityToUpdate, typeof(UpdateCriterionItemCommand), typeof(CriterionItem));
 
-            await _CriterionItemRepository.UpdateAsync(CriterionItemEntityToUpdate);
+            List<CriterionItemAttachmentType> CriterionItemAttachmentTypeEntitiesToDelete = _CriterionItemAttachmentTypeRepository
+                .Where(x => x.CriterionItemId == Request.Id)
+                .ToList();
 
-            ResponseMessage = Request.lang == "en"
-                ? "Criterion item has been updated successfully"
-                : "تم تعديل عنصر المعيار الفرعي بنجاح";
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromSeconds(30)
+            };
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _CriterionItemRepository.UpdateAsync(CriterionItemEntityToUpdate);
+
+                    await _CriterionItemAttachmentTypeRepository.DeleteListAsync(CriterionItemAttachmentTypeEntitiesToDelete);
+
+                    List<CriterionItemAttachmentType> NewCriterionAttachmentTypeEntities = Request.AttachmentType
+                        .Select(x => new CriterionItemAttachmentType()
+                        {
+                            CriterionItemId = Request.Id,
+                            AttachmentType = x
+                        }).ToList();
+
+                    await _CriterionItemAttachmentTypeRepository.AddRangeAsync(NewCriterionAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Criterion item has been updated successfully"
+                        : "تم تعديل عنصر المعيار الفرعي بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

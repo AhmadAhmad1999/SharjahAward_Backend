@@ -2,12 +2,6 @@
 using SharijhaAward.Application.Helpers.EmailValidationHelper;
 using SharijhaAward.Application.Helpers.EnglishNameValidationAttributeHelper;
 using SharijhaAward.Application.Helpers.PhoneNumberValidationAttributeHelper;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel
 {
@@ -23,5 +17,6 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.ExportToExcel
         [EmailValidation]
         public string Email { get; set; } = null!;
         public bool isChairman { get; set; } = false;
+        public bool isSubcommitteeOfficer { get; set; } = false;
     }
 }

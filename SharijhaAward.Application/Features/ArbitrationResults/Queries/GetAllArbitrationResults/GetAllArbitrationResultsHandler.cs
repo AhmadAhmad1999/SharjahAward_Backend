@@ -44,6 +44,38 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
         public async Task<BaseResponse<List<GetAllArbitrationResultsListVM>>> 
             Handle(GetAllArbitrationResultsQuery Request, CancellationToken cancellationToken)
         {
+            bool? EligibleForCertification = null;
+            bool? EligibleForAStatement1 = null;
+            bool? EligibleForAStatement2 = null;
+
+            if (Request.EligableFilter is not null)
+            {
+                if (Request.EligableFilter == EligableFilter.EligibleForCertification)
+                {
+                    EligibleForCertification = true;
+                }
+                else if (Request.EligableFilter == EligableFilter.NotEligibleForCertification)
+                {
+                    EligibleForCertification = false;
+                }
+                else if(Request.EligableFilter == EligableFilter.EligibleForAStatement1)
+                {
+                    EligibleForAStatement1 = true;
+                }
+                else if (Request.EligableFilter == EligableFilter.NotEligibleForAStatement1)
+                {
+                    EligibleForAStatement1 = false;
+                }
+                else if(Request.EligableFilter == EligableFilter.EligibleForAStatement2)
+                {
+                    EligibleForAStatement2 = true;
+                }
+                else if (Request.EligableFilter == EligableFilter.NotEligibleForAStatement2)
+                {
+                    EligibleForAStatement2 = false;
+                }
+            }
+
             FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
             string ResponseMessage = string.Empty;
@@ -80,6 +112,15 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             : true) &&
                         (Request.EligibleToWin != null
                             ? x.EligibleToWin == Request.EligibleToWin
+                            : true) &&
+                        (Request.EligableFilter != null
+                            ? (EligibleForCertification != null
+                                ? (x.EligibleForCertification == EligibleForCertification)
+                                : (EligibleForAStatement1 != null
+                                    ? (EligibleForAStatement1.Value
+                                        ? x.FinalArbitrationId == null
+                                        : x.FinalArbitrationId != null)
+                                    : (x.EligibleForAStatement == EligibleForAStatement2)))
                             : true), FilterObject)
                     .AsEnumerable()
                     .DistinctBy(x => x.ProvidedFormId)
@@ -103,6 +144,15 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                                 : true) &&
                             (Request.EligibleToWin != null
                                 ? x.EligibleToWin == Request.EligibleToWin
+                                : true) &&
+                            (Request.EligableFilter != null
+                                ? (EligibleForCertification != null
+                                    ? (x.EligibleForCertification == EligibleForCertification)
+                                    : (EligibleForAStatement1 != null
+                                        ? (EligibleForAStatement1.Value
+                                            ? x.FinalArbitrationId == null
+                                            : x.FinalArbitrationId != null)
+                                        : (x.EligibleForAStatement == EligibleForAStatement2)))
                                 : true), FilterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .AsEnumerable()
@@ -129,6 +179,15 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                                 : true) &&
                             (Request.EligibleToWin != null
                                 ? x.EligibleToWin == Request.EligibleToWin
+                                : true) &&
+                            (Request.EligableFilter != null
+                                ? (EligibleForCertification != null
+                                    ? (x.EligibleForCertification == EligibleForCertification)
+                                    : (EligibleForAStatement1 != null
+                                        ? (EligibleForAStatement1.Value
+                                            ? x.FinalArbitrationId == null
+                                            : x.FinalArbitrationId != null)
+                                        : (x.EligibleForAStatement == EligibleForAStatement2)))
                                 : true), FilterObject)
                         .OrderByDescending(x => x.CreatedAt)
                         .AsEnumerable()
@@ -176,8 +235,9 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                        CategoryContainStatement = (x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                            x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null)
+                        CategoryContainStatement1 = x.ProvidedForm!.Category!.ContainStatment1,
+                        CategoryContainStatement2 = (x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 == null ||
+                            x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 == null)
                                 ? false : true,
                         CategoryContainCertificate = (x.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate == null ||
                             x.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate == null)
@@ -195,7 +255,10 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
                                 ?.FinalScore ?? 0,
                         EligibleForCertification = x.EligibleForCertification,
-                        EligibleForAStatement = x.EligibleForAStatement,
+                        EligibleForAStatement1 = FinalArbitrationEntities
+                            .Any(y => y.ProvidedFormId == x.ProvidedFormId)
+                                ? false : true,
+                        EligibleForAStatement2 = x.EligibleForAStatement,
                         EligibleToWin = x.EligibleToWin,
                         GotCertification = x.GotCertification,
                         GotStatement1 = x.GotStatement1,
@@ -252,7 +315,16 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         (Request.EligibleToWin != null
                             ? x.EligibleToWin == Request.EligibleToWin
                             : true) &&
-                        x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId, FilterObject)
+                        x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId &&
+                        (Request.EligableFilter != null
+                            ? (EligibleForCertification != null
+                                ? (x.EligibleForCertification == EligibleForCertification)
+                                : (EligibleForAStatement1 != null
+                                    ? (EligibleForAStatement1.Value
+                                        ? x.FinalArbitrationId == null
+                                        : x.FinalArbitrationId != null)
+                                    : (x.EligibleForAStatement == EligibleForAStatement2)))
+                            : true), FilterObject)
                     .AsEnumerable()
                     .DistinctBy(x => x.ProvidedFormId)
                     .AsEnumerable()
@@ -276,7 +348,16 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             (Request.EligibleToWin != null
                                 ? x.EligibleToWin == Request.EligibleToWin
                                 : true) &&
-                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId)
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId &&
+                            (Request.EligableFilter != null
+                                ? (EligibleForCertification != null
+                                    ? (x.EligibleForCertification == EligibleForCertification)
+                                    : (EligibleForAStatement1 != null
+                                        ? (EligibleForAStatement1.Value
+                                            ? x.FinalArbitrationId == null
+                                            : x.FinalArbitrationId != null)
+                                        : (x.EligibleForAStatement == EligibleForAStatement2)))
+                                : true))
                         .OrderByDescending(x => x.CreatedAt)
                         .AsEnumerable()
                         .DistinctBy(x => x.ProvidedFormId)
@@ -303,7 +384,16 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             (Request.EligibleToWin != null
                                 ? x.EligibleToWin == Request.EligibleToWin
                                 : true) &&
-                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId)
+                            x.ProvidedForm!.Category!.CycleId == ActiveCycleEntityId &&
+                            (Request.EligableFilter != null
+                                ? (EligibleForCertification != null
+                                    ? (x.EligibleForCertification == EligibleForCertification)
+                                    : (EligibleForAStatement1 != null
+                                        ? (EligibleForAStatement1.Value
+                                            ? x.FinalArbitrationId == null
+                                            : x.FinalArbitrationId != null)
+                                        : (x.EligibleForAStatement == EligibleForAStatement2)))
+                                : true))
                         .OrderByDescending(x => x.CreatedAt)
                         .AsEnumerable()
                         .DistinctBy(x => x.ProvidedFormId)
@@ -354,8 +444,9 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                         CategoryName = Request.lang == "en"
                             ? x.ProvidedForm!.Category!.EnglishName
                             : x.ProvidedForm!.Category!.ArabicName,
-                        CategoryContainStatement = (x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement == null ||
-                            x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement == null)
+                        CategoryContainStatement1 = x.ProvidedForm!.Category!.ContainStatment1,
+                        CategoryContainStatement2 = (x.ProvidedForm!.Category!.MinimumAmountToObtainAStatement2 == null ||
+                            x.ProvidedForm!.Category!.MaximumAmountToObtainAStatement2 == null)
                                 ? false : true,
                         CategoryContainCertificate = (x.ProvidedForm!.Category!.MinimumRequirementToObtainACertificate == null ||
                             x.ProvidedForm!.Category!.MaximumRequirementToObtainACertificate == null)
@@ -371,13 +462,14 @@ namespace SharijhaAward.Application.Features.ArbitrationResults.Queries.GetAllAr
                             .Sum(y => y.ArbitrationScore),
                         FinalArbitrationScore = FinalArbitrationEntities.Any() 
                             ? (FinalArbitrationEntities
-                                .FirstOrDefault(y => y.ProvidedFormId != null
-                                    ? y.ProvidedFormId == x.ProvidedFormId
-                                    : false)
+                                .FirstOrDefault(y => y.ProvidedFormId == x.ProvidedFormId)
                                 ?.FinalScore ?? 0)
                             : 0,
                         EligibleForCertification = x.EligibleForCertification,
-                        EligibleForAStatement = x.EligibleForAStatement,
+                        EligibleForAStatement1 = FinalArbitrationEntities
+                            .Any(y => y.ProvidedFormId == x.ProvidedFormId)
+                                ? false : true,
+                        EligibleForAStatement2 = x.EligibleForAStatement,
                         EligibleToWin = x.EligibleToWin,
                         GotCertification = x.GotCertification,
                         GotStatement1 = x.GotStatement1,

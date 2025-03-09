@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.AdvancedFormBuilderFeatures.Commands.OpenAdvancedFormForAdd;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.CreateAdvancedFormBuilderSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.DeleteAdvancedFormBuilderSection;
 using SharijhaAward.Application.Features.AdvancedFormBuilderSectionsFeatures.Commands.ReorderAdvancedFormBuildersInsideTheSections;
@@ -201,6 +202,34 @@ namespace SharijhaAward.Api.Controllers
             GetAllAdvancedFormBuilderSectionsForViewQuery.lang = HeaderValue;
 
             BaseResponse<List<AdvancedFormBuilderSectionListVM>> Response = await _Mediator.Send(GetAllAdvancedFormBuilderSectionsForViewQuery);
+
+            return Response.statusCode switch
+            {
+                404 => NotFound(Response),
+                200 => Ok(Response),
+                _ => BadRequest(Response)
+            };
+        }
+        [HttpPut("OpenAdvancedFormForAdd")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesDefaultResponseType]
+        public async Task<IActionResult> OpenAdvancedFormForAdd(int VirtualTableForSectionId)
+        {
+            StringValues? HeaderValue = HttpContext.Request.Headers["lang"];
+
+            if (string.IsNullOrEmpty(HeaderValue))
+                HeaderValue = "en";
+
+            BaseResponse<object> Response = await _Mediator.Send(new OpenAdvancedFormForAddCommand()
+            {
+                VirtualTableForSectionId = VirtualTableForSectionId,
+                lang = HeaderValue
+            });
 
             return Response.statusCode switch
             {

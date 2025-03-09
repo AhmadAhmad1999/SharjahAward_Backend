@@ -22,6 +22,8 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
         private readonly IAsyncRepository<CircularCoordinator> _CircularCoordinatorRepository;
         private readonly IAsyncRepository<CircularChairman> _CircularChairmanRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<CircularUser> _CircularUserRepository;
+        private readonly IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository;
         private readonly IJwtProvider _JwtProvider;
         private readonly IMapper _Mapper;
 
@@ -33,7 +35,9 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
             IAsyncRepository<CircularCoordinator> CircularCoordinatorRepository,
             IAsyncRepository<CircularChairman> CircularChairmanRepository,
             IJwtProvider JwtProvider,
-            IMapper Mapper)
+            IMapper Mapper,
+            IAsyncRepository<CircularUser> _CircularUserRepository,
+            IAsyncRepository<CiruclarSubcommitteeOfficer> _CiruclarSubcommitteeOfficerRepository)
         {
             _CircularRepository = CircularRepository;
             _RoleRepository = RoleRepository;
@@ -44,6 +48,8 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
             _UserRoleRepository = UserRoleRepository;
             _JwtProvider = JwtProvider;
             _Mapper = Mapper;
+            this._CircularUserRepository = _CircularUserRepository;
+            this._CiruclarSubcommitteeOfficerRepository = _CiruclarSubcommitteeOfficerRepository;
         }
 
         public async Task<BaseResponse<CircularListVm>> Handle(GetAllCircularsQuery Request, CancellationToken cancellationToken)
@@ -58,90 +64,80 @@ namespace SharijhaAward.Application.Features.Circulars.Queries.GetAllCirculars
                 .Where(x => x.UserId == UserId)
                 .ToListAsync();
 
-            List<CircularDto> AllCirculars = new List<CircularDto>();
+            List<CircularArbitrator> CircularArbitratorEntities = await _CircularArbitratorRepository
+                .Where(x => x.ArbitratorId == UserId)
+                .ToListAsync();
 
-            int TotalCount = 0;
-            int NumberOfUnRead = 0;
+            List<CircularChairman> CircularChairmanEntities = await _CircularChairmanRepository
+                .Where(x => x.ChairmanId == UserId)
+                .ToListAsync();
 
-            if (UserRoleEntities.Any(x => x.Role!.HaveFullAccess))
+            List<CircularCoordinator> CircularCoordinatorEntities = await _CircularCoordinatorRepository
+                .Where(x => x.CoordinatorId == UserId)
+                .ToListAsync();
+
+            List<CiruclarSubcommitteeOfficer> CiruclarSubcommitteeOfficerEntities = await _CiruclarSubcommitteeOfficerRepository
+                .Where(x => x.SubcommitteeOfficerId == UserId)
+                .ToListAsync();
+
+            List<CircularUser> CircularUserEntitites = await _CircularUserRepository
+                .Where(x => x.UserRole!.UserId == UserId)
+                .ToListAsync();
+
+            List<int> AllCircularIds =
+            [
+                .. CircularArbitratorEntities.Select(x => x.CircularId),
+                .. CircularChairmanEntities.Select(x => x.CircularId),
+                .. CircularCoordinatorEntities.Select(x => x.CircularId),
+                .. CiruclarSubcommitteeOfficerEntities.Select(x => x.CircularId),
+                .. CircularUserEntitites.Select(x => x.CircularId)
+            ];
+
+            int TotalCount = AllCircularIds
+                .Distinct()
+                .Count();
+            
+            if (Request.page != 0 &&
+                Request.perPage != -1)
             {
-                AllCirculars = _Mapper.Map<List<CircularDto>>(await _CircularRepository
-                    .OrderByDescending(FilterObject, x => x.Id, Request.page, Request.perPage)
-                    .ToListAsync());
-
-                List<bool> AllCircularsEntities = await _CircularRepository
-                    .WhereThenFilter(x => true, FilterObject)
-                    .Select(x => x.IsRead)
-                    .ToListAsync();
-
-                TotalCount = AllCircularsEntities.Count();
-                NumberOfUnRead = AllCircularsEntities.Count(x => !x);
-            }
-            else if (UserRoleEntities.Any(x => x.Role!.EnglishName == "Coordinator" && x.Role!.ArabicName == "منسق"))
-            {
-                AllCirculars = _Mapper.Map<List<CircularDto>>(await _CircularCoordinatorRepository
-                    .WhereThenFilter(c => c.CoordinatorId == UserId, FilterObject)
-                    .Select(x => x.Circular)
-                    .ToListAsync());
-
-                TotalCount = AllCirculars.Count();
-                NumberOfUnRead = AllCirculars.Where(x => !x.IsRead).Count();
-
-                AllCirculars = AllCirculars
-                    .OrderByDescending(x => x.Id)
+                AllCircularIds = AllCircularIds
+                    .Distinct()
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
                     .ToList();
             }
-            else if (UserRoleEntities.Any(x => x.Role!.EnglishName == "Arbitrator" && x.Role!.ArabicName == "محكم"))
-            {
-                Arbitrator? ArbitratorEntity = await _ArbitratorRepository
-                    .FirstOrDefaultAsync(x => x.Id ==  UserId);
 
-                if (ArbitratorEntity is not null)
+            int NumberOfUnRead = CircularArbitratorEntities.Count(x => !x.IsRead) +
+                CircularChairmanEntities.Count(x => !x.IsRead) +
+                CircularCoordinatorEntities.Count(x => !x.IsRead) +
+                CiruclarSubcommitteeOfficerEntities.Count(x => !x.IsRead) +
+                CircularUserEntitites.Count(x => !x.IsRead);
+
+            CircularArbitratorEntities = CircularArbitratorEntities
+                .Where(x => AllCircularIds.Contains(x.CircularId))
+                .ToList();
+
+            List<CircularDto> AllCirculars = await _CircularRepository
+                .Where(x => AllCircularIds.Contains(x.Id))
+                .Select(x => new CircularDto()
                 {
-                    if (ArbitratorEntity.isChairman)
-                    {
-                        List<Circular> CircularArbitratorEntities = await _CircularArbitratorRepository
-                            .WhereThenFilter(c => c.ArbitratorId == UserId, FilterObject)
-                            .Select(x => x.Circular)
-                            .ToListAsync();
-
-                        List<Circular> CircularChairmanEntities = await _CircularChairmanRepository
-                            .WhereThenFilter(c => c.ChairmanId == UserId, FilterObject)
-                            .Select(x => x.Circular)
-                            .ToListAsync();
-
-                        AllCirculars = _Mapper.Map<List<CircularDto>>(CircularArbitratorEntities
-                            .Concat(CircularChairmanEntities));
-
-                        TotalCount = AllCirculars.Count();
-                        NumberOfUnRead = AllCirculars.Where(x => !x.IsRead).Count();
-
-                        AllCirculars = AllCirculars
-                            .OrderByDescending(x => x.Id)
-                            .Skip((Request.page - 1) * Request.perPage)
-                            .Take(Request.perPage)
-                            .ToList();
-                    }
-                    else
-                    {
-                        AllCirculars = _Mapper.Map<List<CircularDto>>(await _CircularArbitratorRepository
-                            .WhereThenFilter(c => c.ArbitratorId == UserId, FilterObject)
-                            .Select(x => x.Circular)
-                            .ToListAsync());
-
-                        TotalCount = AllCirculars.Count();
-                        NumberOfUnRead = AllCirculars.Where(x => !x.IsRead).Count();
-
-                        AllCirculars = AllCirculars
-                            .OrderByDescending(x => x.Id)
-                            .Skip((Request.page - 1) * Request.perPage)
-                            .Take(Request.perPage)
-                            .ToList();
-                    }
-                }
-            }
+                    Id = x.Id,
+                    Title = x.Title,
+                    IsRead = CircularArbitratorEntities.Any(y => y.CircularId == x.Id)
+                        ? CircularArbitratorEntities.FirstOrDefault(y => y.CircularId == x.Id)!.IsRead
+                        : (CircularChairmanEntities.Any(y => y.CircularId == x.Id)
+                            ? CircularChairmanEntities.FirstOrDefault(y => y.CircularId == x.Id)!.IsRead
+                            : (CircularCoordinatorEntities.Any(y => y.CircularId == x.Id)
+                                ? CircularCoordinatorEntities.FirstOrDefault(y => y.CircularId == x.Id)!.IsRead
+                                : (CiruclarSubcommitteeOfficerEntities.Any(y => y.CircularId == x.Id)
+                                    ? CiruclarSubcommitteeOfficerEntities.FirstOrDefault(y => y.CircularId == x.Id)!.IsRead
+                                    : (CircularUserEntitites.Any(y => y.CircularId == x.Id)
+                                        ? CircularUserEntitites.FirstOrDefault(y => y.CircularId == x.Id)!.IsRead
+                                        : false)))),
+                    CircularText = x.CircularText,
+                    CreatedAt = x.CreatedAt,
+                    CreatedBy = x.CreatedBy
+                }).ToListAsync();
 
             CircularListVm Response = new CircularListVm()
             {

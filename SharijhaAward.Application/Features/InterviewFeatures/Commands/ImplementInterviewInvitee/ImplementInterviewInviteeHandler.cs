@@ -64,12 +64,6 @@ namespace SharijhaAward.Application.Features.InterviewFeatures.Commands.Implemen
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
-
                         InterviewInviteeAttachment NewInterviewInviteeAttachmentEntity = new InterviewInviteeAttachment()
                         {
                             AttachementPath = FilePathToSaveIntoDataBase,

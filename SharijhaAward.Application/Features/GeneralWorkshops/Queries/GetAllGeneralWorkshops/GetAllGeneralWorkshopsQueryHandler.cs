@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.News.Queries.GetAllNews;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
@@ -13,58 +13,114 @@ namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetAllGene
     public class GetAllGeneralWorkshopsQueryHandler
         : IRequestHandler<GetAllGeneralWorkshopsQuery, BaseResponse<List<GeneralWorkshopsListVM>>>
     {
-        private readonly IAsyncRepository<GeneralWorkshop> _generalWorkshopRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<GeneralWorkshop> _GeneralWorkshopRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetAllGeneralWorkshopsQueryHandler(IAsyncRepository<GeneralWorkshop> generalWorkshopRepository, IMapper mapper)
+        public GetAllGeneralWorkshopsQueryHandler(IAsyncRepository<GeneralWorkshop> _GeneralWorkshopRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _generalWorkshopRepository = generalWorkshopRepository;
-            _mapper = mapper;
+            this._GeneralWorkshopRepository = _GeneralWorkshopRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<List<GeneralWorkshopsListVM>>> Handle(GetAllGeneralWorkshopsQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<GeneralWorkshopsListVM>>> 
+            Handle(GetAllGeneralWorkshopsQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
 
-            var generalWorkshops = await _generalWorkshopRepository
-                .OrderByDescending(filterObject, x => x.CreatedAt, request.page, request.perPage)
-                .ToListAsync();
-           
-            if (!request.query.IsNullOrEmpty())
+            List<GeneralWorkshop> GeneralWorkshopEntities = new List<GeneralWorkshop>();
+
+            int TotalCount = 0;
+
+            if (!string.IsNullOrEmpty(Request.query))
             {
-                generalWorkshops = await _generalWorkshopRepository
-                    .Where(n => n.EnglishTitle.ToLower().Contains(request.query!.ToLower()))
-                    .OrderByDescending(x => x.CreatedAt).ToListAsync();
-
-                if (generalWorkshops.Count() == 0)
+                if (Request.page != 0 &&
+                    Request.perPage != -1)
                 {
-                    generalWorkshops = await _generalWorkshopRepository
-                        .Where(n => n.ArabicTitle.ToLower().Contains(request.query!.ToLower()))
-                        .OrderByDescending(x => x.CreatedAt).ToListAsync();
+                    GeneralWorkshopEntities = await _GeneralWorkshopRepository
+                        .WhereThenFilter(x => x.EnglishTitle.ToLower().Contains(Request.query!.ToLower()) ||
+                            x.ArabicTitle.ToLower().Contains(Request.query!.ToLower()), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .Skip((Request.page - 1) * Request.perPage)
+                        .Take(Request.perPage)
+                        .ToListAsync();
+
+                    TotalCount = await _GeneralWorkshopRepository
+                        .WhereThenFilter(x => x.EnglishTitle.ToLower().Contains(Request.query!.ToLower()) ||
+                            x.ArabicTitle.ToLower().Contains(Request.query!.ToLower()), FilterObject)
+                        .CountAsync();
+                }
+                else
+                {
+                    GeneralWorkshopEntities = await _GeneralWorkshopRepository
+                        .WhereThenFilter(x => x.EnglishTitle.ToLower().Contains(Request.query!.ToLower()) ||
+                            x.ArabicTitle.ToLower().Contains(Request.query!.ToLower()), FilterObject)
+                        .OrderByDescending(x => x.CreatedAt)
+                        .ToListAsync();
+
+                    TotalCount = GeneralWorkshopEntities.Count();
                 }
             }
-
-            var data = _mapper.Map<List<GeneralWorkshopsListVM>>(generalWorkshops);
-            if (generalWorkshops.Count() > 0)
+            else
             {
-                
+                GeneralWorkshopEntities = await _GeneralWorkshopRepository
+                    .OrderByDescending(FilterObject, x => x.CreatedAt, Request.page, Request.perPage)
+                    .ToListAsync();
 
-                for(int i = 0; i < data.Count(); i++)
-                {
-                    data[i].Title = request.lang == "en"
-                        ? data[i].EnglishTitle
-                        : data[i].ArabicTitle;
-
-                    data[i].Description = request.lang == "en"
-                        ? data[i].EnglishDescription
-                        : data[i].ArabicDescription;
-                }
+                TotalCount = await _GeneralWorkshopRepository
+                    .WhereThenFilter(x => true, FilterObject)
+                    .CountAsync();
             }
-            int count = await _generalWorkshopRepository.WhereThenFilter(g => true, filterObject).CountAsync();
 
-            Pagination pagination = new Pagination(request.page, request.perPage, count);
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
-            return new BaseResponse<List<GeneralWorkshopsListVM>>("", true, 200, data, pagination);
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<GeneralWorkshopsListVM> Response = GeneralWorkshopEntities
+                .Select(x => new GeneralWorkshopsListVM()
+                {
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    Description = Request.lang == "en"
+                        ? x.EnglishDescription
+                        : x.ArabicDescription,
+                    AgendaImage = (!string.IsNullOrEmpty(x.AgendaImage)
+                        ? (x.AgendaImage.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.AgendaImage.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.AgendaImage.Replace("\\", "/"))
+                        : null),
+                    ArabicDescription = x.ArabicDescription,
+                    ArabicTitle = x.ArabicTitle,
+                    DateOfWorkShop = x.DateOfWorkShop,
+                    DayName = x.DayName,
+                    EnglishDescription = x.EnglishDescription,
+                    EnglishTitle = x.EnglishTitle,
+                    Id = x.Id,
+                    RegistrationUrl = (!string.IsNullOrEmpty(x.RegistrationUrl)
+                        ? (x.RegistrationUrl.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.RegistrationUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.RegistrationUrl.Replace("\\", "/"))
+                        : null),
+                    Thumbnale = (x.Thumbnale.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.Thumbnale.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.Thumbnale.Replace("\\", "/")),
+                    Time = x.Time,
+                    Video = (!string.IsNullOrEmpty(x.Video)
+                        ? (x.Video.Contains("wwwroot")
+                            ? (WWWRootFilePath + x.Video.Split("wwwroot")[1]).Replace("\\", "/")
+                            : x.Video.Replace("\\", "/"))
+                        : null)
+                }).ToList();
+
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
+
+            return new BaseResponse<List<GeneralWorkshopsListVM>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

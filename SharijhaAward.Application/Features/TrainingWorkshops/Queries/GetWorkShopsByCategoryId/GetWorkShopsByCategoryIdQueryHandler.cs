@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
@@ -15,76 +14,105 @@ namespace SharijhaAward.Application.Features.TrainingWorkshops.Queries.GetWorkSh
     public class GetWorkShopsByCategoryIdQueryHandler
         : IRequestHandler<GetWorkShopsByCategoryIdQuery, BaseResponse<List<TrainingWorkshopListVm>>>
     {
-        private readonly IAsyncRepository<TrainingWorkshop> _workShopRepository;
+        private readonly IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository;
         private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAsyncRepository<Category> _categoryRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<Category> _CategoryRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository;
 
-        public GetWorkShopsByCategoryIdQueryHandler(
-            IAsyncRepository<TrainingWorkshop> workShopRepository,
-            IAsyncRepository<TrainingWorkshopAttachment> TrainingWorkshopAttachmentRepository,
-            IAsyncRepository<Category> categoryRepository, 
-            IMapper mapper,
-            IHttpContextAccessor httpContextAccessor
-            )
+        public GetWorkShopsByCategoryIdQueryHandler(IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository,
+            IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository,
+            IAsyncRepository<Category> _CategoryRepository, 
+            IHttpContextAccessor _HttpContextAccessor,
+            IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository)
         {
-            _workShopRepository = workShopRepository;
-            _TrainingWorkshopAttachmentRepository = TrainingWorkshopAttachmentRepository;
-            _categoryRepository = categoryRepository;
-            _httpContextAccessor = httpContextAccessor;
-            _mapper = mapper;
+            this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
+            this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._TrainingWorkshopAttachmentTypeRepository = _TrainingWorkshopAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetWorkShopsByCategoryIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<List<TrainingWorkshopListVm>>> Handle(GetWorkShopsByCategoryIdQuery Request, CancellationToken cancellationToken)
         {
-            FilterObject filterObject = new FilterObject() { Filters = request.filters };
+            string ResponseMessage = string.Empty;
 
-            var category = await _categoryRepository.IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == request.CategoryId);
-            if (category != null)
+            FilterObject FilterObject = new FilterObject() { Filters = Request.filters };
+
+            Category? CategoryEntity = await _CategoryRepository
+                .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.CategoryId);
+
+            if (CategoryEntity is null) 
             {
-                var WorkShops = _workShopRepository.WhereThenInclude(
-                    w => w.CategoryId == request.CategoryId, filterObject)
-                    .Skip((request.page - 1) * request.perPage)
-                    .Take(request.perPage)
-                    .ToList();
+                ResponseMessage = Request.lang == "en"
+                    ? "Category is not found"
+                    : "الفئة غير موجودة";
 
-                var data = _mapper.Map<List<TrainingWorkshopListVm>>(WorkShops);
-
-                List<TrainingWorkshopAttachment> AllTrainingWrokshopeAttachmentEntitites = await _TrainingWorkshopAttachmentRepository
-                    .Where(x => data.Select(y => y.Id).Contains(x.TrainingWorkshopId))
-                    .ToListAsync();
-
-                for (int i = 0; i < data.Count; i++)
-                {
-                    data[i].Attachments = AllTrainingWrokshopeAttachmentEntitites
-                        .Where(x => x.TrainingWorkshopId == data[i].Id)
-                        .Select(x => new WorkshopAttachmentListVM()
-                        {
-                            Id = x.Id,
-                            ArabicName = x.ArabicName,
-                            AttachementURl = x.AttachementPath,
-                            AttachmentType = x.AttachmentType,
-                            EnglishName = x.EnglishName,
-                            SizeOfAttachmentInKB = x.SizeOfAttachmentInKB,
-                            Name = request.lang == "en"
-                                ? x.EnglishName
-                                : x.ArabicName
-                        }).ToList();
-                    
-                    data[i].Title = request.lang == "en" ? data[i].EnglishTitle : data[i].ArabicTitle;
-                }
-
-                data = data.OrderByDescending(t => t.CreatedAt).ToList();
-
-                var count = await _workShopRepository.GetCountAsync(w => w.CategoryId == category.Id);
-                
-                Pagination pagination = new Pagination(request.page, request.perPage, count);
-               
-                return new BaseResponse<List<TrainingWorkshopListVm>>("", true, 200, data,pagination);
+                return new BaseResponse<List<TrainingWorkshopListVm>>(ResponseMessage, false, 404);
             }
 
-            return new BaseResponse<List<TrainingWorkshopListVm>>("", false, 404);
+            List<TrainingWorkshop> TrainingWorkshopEntities = await _TrainingWorkshopRepository
+                .WhereThenInclude(x => x.CategoryId == Request.CategoryId, FilterObject)
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((Request.page - 1) * Request.perPage)
+                .Take(Request.perPage)
+                .ToListAsync();
+
+            List<TrainingWorkshopAttachment> TrainingWorkshopAttachmentEntities = await _TrainingWorkshopAttachmentRepository
+                .Where(x => TrainingWorkshopEntities.Select(y => y.Id).Contains(x.TrainingWorkshopId))
+                .ToListAsync();
+
+            List<TrainingWorkshopAttachmentType> TrainingWorkshopAttachmentTypeEntities = _TrainingWorkshopAttachmentTypeRepository
+                .Where(x => TrainingWorkshopAttachmentEntities.Select(y => y.Id).Contains(x.TrainingWorkshopAttachmentId))
+                .ToList();
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<TrainingWorkshopListVm> Response = TrainingWorkshopEntities
+                .Select(x => new TrainingWorkshopListVm()
+                {
+                    Id = x.Id,
+                    Title = Request.lang == "en"
+                        ? x.EnglishTitle
+                        : x.ArabicTitle,
+                    Thumbnail = x.Thumbnail.Contains("wwwroot")
+                        ? (WWWRootFilePath + x.Thumbnail.Split("wwwroot")[1]).Replace("\\", "/")
+                        : x.Thumbnail.Replace("\\", "/"),
+                    ArabicTitle = x.ArabicTitle,
+                    EnglishTitle = x.EnglishTitle,
+                    CreatedAt = x.CreatedAt,
+                    Attachments = TrainingWorkshopAttachmentEntities
+                        .Where(y => y.TrainingWorkshopId == x.Id)
+                        .Select(y => new WorkshopAttachmentListVM()
+                        {
+                            Id = y.Id,
+                            ArabicName = y.ArabicName,
+                            EnglishName = y.EnglishName,
+                            Name = Request.lang == "en"
+                                ? y.EnglishName
+                                : y.ArabicName,
+                            AttachementURl = y.AttachementPath.Contains("wwwroot")
+                                ? (WWWRootFilePath + y.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                : y.AttachementPath.Replace("\\", "/"),
+                            AttachmentType = TrainingWorkshopAttachmentTypeEntities
+                                .Where(z => z.TrainingWorkshopAttachmentId == y.Id)
+                                .Select(z => z.AttachmentType)
+                                .ToList(),
+                            SizeOfAttachmentInKB = y.SizeOfAttachmentInKB
+                        }).ToList()
+                }).ToList();
+
+            int TotalCount = await _TrainingWorkshopRepository
+                .WhereThenInclude(x => x.CategoryId == Request.CategoryId, FilterObject)
+                .CountAsync();
+                
+            Pagination Pagination = new Pagination(Request.page, Request.perPage, TotalCount);
+               
+            return new BaseResponse<List<TrainingWorkshopListVm>>(string.Empty, true, 200, Response, Pagination);
         }
     }
 }

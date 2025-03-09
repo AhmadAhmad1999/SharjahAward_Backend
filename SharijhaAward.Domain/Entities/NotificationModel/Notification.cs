@@ -9,6 +9,6 @@ namespace SharijhaAward.Domain.Entities.NotificationModel
         public string EnglishTitle { get; set; } = null!;
         public string ArabicBody { get; set; } = null!;
         public string EnglishBody { get; set; } = null!;
-        // public NotificationReceiver Receiver { get; set; }
+        public bool isStaticNotification { get; set; } = false;
     }
 }

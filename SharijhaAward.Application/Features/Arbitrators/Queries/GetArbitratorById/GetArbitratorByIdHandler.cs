@@ -27,27 +27,31 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
         private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository;
-        public GetArbitratorByIdHandler(IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<ResponsibilityUser> userRepository,
-            IAsyncRepository<CategoryArbitrator> CategoryArbitratorRepository,
-            IMapper Mapper,
-            IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
-            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
-            IAsyncRepository<AttributeDataType> AttributeDataTypeRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<ArbitratorClass> ArbitratorClassRepository)
+        private readonly IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository;
+
+        public GetArbitratorByIdHandler(IAsyncRepository<Arbitrator> _ArbitratorRepository,
+            IAsyncRepository<ResponsibilityUser> _userRepository,
+            IAsyncRepository<CategoryArbitrator> _CategoryArbitratorRepository,
+            IMapper _Mapper,
+            IAsyncRepository<DynamicAttributeSection> _DynamicAttributeSectionRepository,
+            IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository,
+            IAsyncRepository<AttributeDataType> _AttributeDataTypeRepository,
+            IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository,
+            IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository,
+            IAsyncRepository<ArbitratorClass> _ArbitratorClassRepository,
+            IAsyncRepository<SubcommitteeCategory> _SubcommitteeCategoryRepository)
         {
-            _userRepository = userRepository;
-            _ArbitratorRepository = ArbitratorRepository;
-            _CategoryArbitratorRepository = CategoryArbitratorRepository;
-            _Mapper = Mapper;
-            _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
-            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
-            _AttributeDataTypeRepository = AttributeDataTypeRepository;
-            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _DynamicAttributeRepository = DynamicAttributeRepository;
-            _ArbitratorClassRepository = ArbitratorClassRepository;
+            this._userRepository = _userRepository;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._CategoryArbitratorRepository = _CategoryArbitratorRepository;
+            this._Mapper = _Mapper;
+            this._DynamicAttributeSectionRepository = _DynamicAttributeSectionRepository;
+            this._DynamicAttributeListValueRepository = _DynamicAttributeListValueRepository;
+            this._AttributeDataTypeRepository = _AttributeDataTypeRepository;
+            this._DynamicAttributeValueRepository = _DynamicAttributeValueRepository;
+            this._DynamicAttributeRepository = _DynamicAttributeRepository;
+            this._ArbitratorClassRepository = _ArbitratorClassRepository;
+            this._SubcommitteeCategoryRepository = _SubcommitteeCategoryRepository;
         }
         public async Task<BaseResponse<GetArbitratorByIdResponse>> Handle(GetArbitratorByIdQuery Request, CancellationToken cancellationToken)
         {
@@ -82,6 +86,30 @@ namespace SharijhaAward.Application.Features.Arbitrators.Queries.GetArbitratorBy
                     CategoryName = Request.lang == "en"
                         ? x.Category!.EnglishName
                         : x.Category!.ArabicName,
+                    RelatedToClasses = x.Category!.RelatedToClasses != null
+                        ? x.Category!.RelatedToClasses.Value : false,
+                    Classes = ArbitratorClasses
+                        .Where(y => y.CategoryEducationalClass!.CategoryId == x.CategoryId)
+                        .AsEnumerable()
+                        .Select(y => new CategoryClassesDto()
+                        {
+                            Id = y.CategoryEducationalClassId,
+                            ClassName = Request.lang == "en"
+                                ? y.CategoryEducationalClass!.EducationalClass!.EnglishName
+                                : y.CategoryEducationalClass!.EducationalClass!.ArabicName
+                        }).ToList()
+                }).ToListAsync();
+
+            ArbitratorDto.SubcommitteeOfficerCategories = await _SubcommitteeCategoryRepository
+                .Where(x => x.ArbitratorId == Request.ArbitratorId)
+                .Select(x => new ArbitratorCategoryDto()
+                {
+                    ArabicName = x.Category!.ArabicName,
+                    CategoryName = Request.lang == "en"
+                        ? x.Category!.EnglishName
+                        : x.Category!.ArabicName,
+                    EnglishName = x.Category!.EnglishName,
+                    Id = x.Category!.Id,
                     RelatedToClasses = x.Category!.RelatedToClasses != null
                         ? x.Category!.RelatedToClasses.Value : false,
                     Classes = ArbitratorClasses

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
@@ -22,18 +23,21 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         private readonly IAsyncRepository<PageCard> _PageCardRepository;
         private readonly IAsyncRepository<ImageCard> _ImageCardRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetPageBySlugQueryHandler(IAsyncRepository<PageStructure> _PageStructureRepository,
             IAsyncRepository<PageStructureImages> _PageStructureImagesRepository,
             IAsyncRepository<PageCard> _PageCardRepository,
             IAsyncRepository<ImageCard> _ImageCardRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._PageStructureRepository = _PageStructureRepository;
             this._PageStructureImagesRepository = _PageStructureImagesRepository;
             this._PageCardRepository = _PageCardRepository;
             this._ImageCardRepository = _ImageCardRepository;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<PageDto>> Handle(GetPageBySlugQuery Request, CancellationToken cancellationToken)
@@ -83,6 +87,12 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                     Goals = null
                 }).ToList();
 
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
             List<Component> ParagraphCardsList = AllPageCardEntities
                 .Where(x => x.CardType == CardType.ParagraphCard)
                 .Select(x => new Component()
@@ -105,7 +115,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                             : x.ArabicTitle,
                         CardType = CardType.ParagraphCard,
                         ImageInStart = x.ImageInStart,
-                        ImageUrl = x.ImageUrl,
+                        ImageUrl = (!string.IsNullOrEmpty(x.ImageUrl)
+                            ? (x.ImageUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.ImageUrl).Replace("\\", "/")
+                            : null),
                         IsHide = x.IsHide,
                         orderId = x.orderId,
                         PageId = x.PageId
@@ -139,7 +153,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                             {
                                 Id = y.Id,
                                 ImageId = y.ImageCardId,
-                                ImageUrl = y.ImageUrl
+                                ImageUrl = (y.ImageUrl.Contains("wwwroot")
+                                    ? (WWWRootFilePath + y.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : y.ImageUrl).Replace("\\", "/"),
                             }).ToList(),
                     },
                     Goals = null
@@ -169,6 +185,12 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 }).ToList();
 
             PageDto Response = _Mapper.Map<PageDto>(PageStructureEntity);
+
+            Response.IconUrl = !string.IsNullOrEmpty(Response.IconUrl)
+                ? (Response.IconUrl.Contains("wwwroot")
+                    ? (WWWRootFilePath + Response.IconUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                    : Response.IconUrl.Replace("\\", "/"))
+                : null;
 
             if (Request.lang == "en")
             {

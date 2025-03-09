@@ -1,21 +1,24 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CriterionModel;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCriterion
 {
     public class UpdateCriterionHandler : IRequestHandler<UpdateCriterionCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<Criterion> _CriterionRepository;
         private readonly IMapper _Mapper;
-        public UpdateCriterionHandler(IMapper Mapper,
-            IAsyncRepository<Criterion> CriterionRepository)
+        private readonly IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository;
+        private readonly IAsyncRepository<Criterion> _CriterionRepository;
+        public UpdateCriterionHandler(IMapper _Mapper,
+            IAsyncRepository<CriterionAttachmentType> _CriterionAttachmentTypeRepository,
+            IAsyncRepository<Criterion> _CriterionRepository)
         {
-            _CriterionRepository = CriterionRepository;
-            _Mapper = Mapper;
+            this._Mapper = _Mapper;
+            this._CriterionAttachmentTypeRepository = _CriterionAttachmentTypeRepository;
+            this._CriterionRepository = _CriterionRepository;
         }
         public async Task<BaseResponse<object>> Handle(UpdateCriterionCommand Request, CancellationToken cancellationToken)
         {
@@ -24,7 +27,7 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
             Criterion? CriterionEntityToUpdate = await _CriterionRepository
                 .IncludeThenFirstOrDefaultAsync(x => x.Parent!, x => x.Id == Request.Id);
 
-            if (CriterionEntityToUpdate == null)
+            if (CriterionEntityToUpdate is null)
             {
                 ResponseMessage = Request.lang == "en"
                     ? "Criterion is not found"
@@ -65,13 +68,48 @@ namespace SharijhaAward.Application.Features.CriterionFeatures.Commands.UpdateCr
 
             _Mapper.Map(Request, CriterionEntityToUpdate, typeof(UpdateCriterionCommand), typeof(Criterion));
 
-            await _CriterionRepository.UpdateAsync(CriterionEntityToUpdate);
+            List<CriterionAttachmentType> CriterionAttachmentTypeEntitiesToDelete = _CriterionAttachmentTypeRepository
+                .Where(x => x.CriterionId == Request.Id)
+                .ToList();
 
-            ResponseMessage = Request.lang == "en"
-                ? "Criterion has been updated successfully"
-                : "تم تعديل المعيار بنجاح";
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromSeconds(30)
+            };
 
-            return new BaseResponse<object>(ResponseMessage, true, 200);
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _CriterionRepository.UpdateAsync(CriterionEntityToUpdate);
+                    
+                    await _CriterionAttachmentTypeRepository.DeleteListAsync(CriterionAttachmentTypeEntitiesToDelete);
+
+                    List<CriterionAttachmentType> NewCriterionAttachmentTypeEntities = Request.AttachmentType
+                        .Select(x => new CriterionAttachmentType()
+                        {
+                            CriterionId = Request.Id,
+                            AttachmentType = x
+                        }).ToList();
+
+                    await _CriterionAttachmentTypeRepository.AddRangeAsync(NewCriterionAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                        ? "Criterion has been updated successfully"
+                        : "تم تعديل المعيار بنجاح";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
         }
     }
 }

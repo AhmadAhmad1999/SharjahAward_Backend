@@ -5,6 +5,7 @@ using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryModel;
+using SharijhaAward.Domain.Entities.CycleModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
 using System.Transactions;
@@ -14,27 +15,42 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
     public class CreateEducationalEntityCommandHandler :
         IRequestHandler<CreateEducationalEntityCommand, BaseResponse<int>>
     {
+        private readonly IAsyncRepository<Cycle> _CycleRepository;
         private readonly IAsyncRepository<EducationalEntity> _EducationalEntityRepository;
         private readonly IAsyncRepository<Category> _CategoryRepository;
         private readonly IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository;
         private readonly IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository;
         private readonly IMapper _Mapper;
 
-        public CreateEducationalEntityCommandHandler(IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IAsyncRepository<Category> CategoryRepository,
-            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IMapper Mapper)
+        public CreateEducationalEntityCommandHandler(IAsyncRepository<Cycle> _CycleRepository,
+            IAsyncRepository<EducationalEntity> _EducationalEntityRepository,
+            IAsyncRepository<Category> _CategoryRepository,
+            IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository,
+            IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository,
+            IMapper _Mapper)
         {
-            _EducationalEntityRepository = EducationalEntityRepository;
-            _CategoryRepository = CategoryRepository;
-            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
-            _DynamicAttributeRepository = DynamicAttributeRepository;
-            _Mapper = Mapper;
+            this._CycleRepository = _CycleRepository;
+            this._EducationalEntityRepository = _EducationalEntityRepository;
+            this._CategoryRepository = _CategoryRepository;
+            this._DynamicAttributeListValueRepository = _DynamicAttributeListValueRepository;
+            this._DynamicAttributeRepository = _DynamicAttributeRepository;
+            this._Mapper = _Mapper;
         }
         public async Task<BaseResponse<int>> Handle(CreateEducationalEntityCommand Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            Cycle? CycleEntity = await _CycleRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.CycleId);
+
+            if (CycleEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Cycle is not found"
+                    : "الدورة غير موجودة";
+
+                return new BaseResponse<int>(ResponseMessage, true, 404);
+            }
 
             EducationalEntity? CheckIfNameIsAlreadyUsed = await _EducationalEntityRepository
                 .FirstOrDefaultAsync(x => x.ArabicName == Request.ArabicName &&
@@ -62,7 +78,8 @@ namespace SharijhaAward.Application.Features.EducationalEntities.Command.CreateE
 
             List<Category> AllCategoryEntitiesRelatedToEducationalEntitites = await _CategoryRepository
                 .Where(x => x.RelatedToEducationalEntities &&
-                    x.ParentId != null)
+                    x.ParentId != null &&
+                    x.CycleId == CycleEntity.Id)
                 .ToListAsync();
 
             List<DynamicAttributeListValue> NewDynamicAttributeListValueEntities = await _DynamicAttributeRepository

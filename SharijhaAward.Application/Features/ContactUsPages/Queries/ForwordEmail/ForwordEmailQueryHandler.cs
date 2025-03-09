@@ -38,7 +38,7 @@ namespace SharijhaAward.Application.Features.ContactUsPages.Queries.ForwordEmail
 
             EmailMessageEntity.From = UserEntity.Email;
 
-            if (!Request.To.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(Request.To))
             {
                 Domain.Entities.IdentityModels.User? UserAssignEntity = await _UserRepository
                     .FirstOrDefaultAsync(x => x.Email.ToLower() == Request.To!.ToLower() &&

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.PageStructures.DarkCards.Queries.GetAllDarkCardsByPageId;
@@ -21,18 +22,21 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
         private readonly IAsyncRepository<PageCard> _PageCardRepository;
         private readonly IAsyncRepository<ImageCard> _ImageCardRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetPageByIdQueryHandler(IAsyncRepository<PageStructure> _PageStructureRepository,
             IAsyncRepository<PageStructureImages> _PageStructureImagesRepository,
             IAsyncRepository<PageCard> _PageCardRepository,
             IAsyncRepository<ImageCard> _ImageCardRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._PageStructureRepository = _PageStructureRepository;
             this._PageStructureImagesRepository = _PageStructureImagesRepository;
             this._PageCardRepository = _PageCardRepository;
             this._ImageCardRepository = _ImageCardRepository;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<PageDto>> Handle(GetPageByIdQuery Request, CancellationToken cancellationToken)
         {
@@ -50,9 +54,18 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 return new BaseResponse<PageDto>(ResponseMessage, false, 404);
             }
 
-            List<PageCard> AllPageCardEntities = await _PageCardRepository
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            List<PageCard> AllPageCardEntities = _PageCardRepository
                 .Where(x => x.PageId == PageStructureEntity.Id)
-                .ToListAsync();
+                .AsEnumerable()
+                .DistinctBy(x => x.Id)
+                .AsEnumerable()
+                .ToList();
 
             List<Component> DarkCardsList = AllPageCardEntities
                 .Where(x => x.CardType == CardType.DarkCard)
@@ -103,7 +116,11 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                             : x.ArabicTitle,
                         CardType = CardType.ParagraphCard,
                         ImageInStart = x.ImageInStart,
-                        ImageUrl = x.ImageUrl,
+                        ImageUrl = (!string.IsNullOrEmpty(x.ImageUrl)
+                            ? (x.ImageUrl.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.ImageUrl.Replace("\\", "/"))
+                            : null),
                         IsHide = x.IsHide,
                         orderId = x.orderId,
                         PageId = x.PageId
@@ -111,13 +128,19 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                     Goals = null
                 }).ToList();
 
-            List<ImageCard> ImageCardEntities = await _ImageCardRepository
+            List<ImageCard> ImageCardEntities = _ImageCardRepository
                 .Where(x => x.PageId == PageStructureEntity.Id)
-                .ToListAsync();
+                .AsEnumerable()
+                .DistinctBy(x => x.Id)
+                .AsEnumerable()
+                .ToList();
 
-            IEnumerable<PageStructureImages> PageStructureImagesEntities = await _PageStructureImagesRepository
+            IEnumerable<PageStructureImages> PageStructureImagesEntities = _PageStructureImagesRepository
                 .Where(x => ImageCardEntities.Select(y => y.Id).Contains(x.ImageCardId))
-                .ToListAsync();
+                .AsEnumerable()
+                .DistinctBy(x => x.Id)
+                .AsEnumerable()
+                .ToList();
 
             List<Component> ImageCardsList = ImageCardEntities
                 .Where(x => x.PageId == PageStructureEntity.Id)
@@ -137,7 +160,9 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                             {
                                 Id = y.Id,
                                 ImageId = y.ImageCardId,
-                                ImageUrl = y.ImageUrl
+                                ImageUrl = y.ImageUrl.Contains("wwwroot")
+                                    ? (WWWRootFilePath + y.ImageUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                                    : y.ImageUrl.Replace("\\", "/")
                             }).ToList(),
                     },
                     Goals = null
@@ -179,6 +204,13 @@ namespace SharijhaAward.Application.Features.PageStructures.Pages.Queries.GetPag
                 Response.Title = Response.ArabicTitle;
                 Response.SubTitle = Response.ArabicSubTitle;
                 Response.Content = Response.ArabicContent;
+            }
+
+            if (!string.IsNullOrEmpty(PageStructureEntity.IconUrl))
+            {
+                PageStructureEntity.IconUrl = PageStructureEntity.IconUrl.Contains("wwwroot")
+                    ? (WWWRootFilePath + PageStructureEntity.IconUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                    : PageStructureEntity.IconUrl.Replace("\\", "/");
             }
 
             Response.numberOfSubPages = await _PageStructureRepository

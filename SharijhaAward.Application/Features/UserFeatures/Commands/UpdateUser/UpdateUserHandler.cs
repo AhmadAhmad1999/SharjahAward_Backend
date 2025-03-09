@@ -116,6 +116,8 @@ namespace SharijhaAward.Application.Features.UserFeatures.Commands.UpdateUser
 
                     _Mapper.Map(Request, UserEntityToUpdate, typeof(UpdateUserCommand2), typeof(Domain.Entities.IdentityModels.User));
 
+                    await _UserRepository.UpdateAsync(UserEntityToUpdate);
+
                     ResponseMessage = Request.lang == "en"
                        ? "User has been updated successfully"
                        : "تم تعديل المستخدم بنجاح";

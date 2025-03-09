@@ -1,5 +1,6 @@
 ﻿using EnumsNET;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
@@ -14,12 +15,15 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
     {
         private readonly IAsyncRepository<RelatedAccountRequest> _RelatedAccountRequestRepository;
         private readonly IJwtProvider _JWTProvider;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetallSendedRequestsQueryHandler(IAsyncRepository<RelatedAccountRequest> RelatedAccountRequestRepository,
-            IJwtProvider JWTProvider)
+            IJwtProvider JWTProvider,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _RelatedAccountRequestRepository = RelatedAccountRequestRepository;
             _JWTProvider = JWTProvider;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<GetAllReceivedRequestsListVM>>> Handle(GetallSendedRequestsQuery Request, CancellationToken cancellationToken)
         {
@@ -27,10 +31,17 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
 
             int UserId = int.Parse(_JWTProvider.GetUserIdFromToken(Request.token!));
 
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
             List<GetAllReceivedRequestsListVM> ReceivedRequests = (Request.perPage == -1 || Request.page == 0)
-                ? await _RelatedAccountRequestRepository
+                ? _RelatedAccountRequestRepository
                     .Where(x => x.SenderId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
+                    .ToList()
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
@@ -39,14 +50,19 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
                         Name = Request.lang == "en"
                             ? x.Receiver!.EnglishName
                             : x.Receiver!.ArabicName,
-                        ImageURL = x.Receiver!.ImageURL,
+                        ImageURL = !string.IsNullOrEmpty(x.Receiver!.ImageURL)
+                            ? (x.Receiver!.ImageURL.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.Receiver!.ImageURL!.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.Receiver!.ImageURL.Replace("\\", "/"))
+                            : null,
                         Status = x.Status.GetName()!
-                    }).ToListAsync()
-                : await _RelatedAccountRequestRepository
+                    }).ToList()
+                : _RelatedAccountRequestRepository
                     .Where(x => x.SenderId == UserId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip((Request.page - 1) * Request.perPage)
                     .Take(Request.perPage)
+                    .ToList()
                     .Select(x => new GetAllReceivedRequestsListVM()
                     {
                         Id = x.Id,
@@ -55,9 +71,13 @@ namespace SharijhaAward.Application.Features.RelatedAccountFeatures.Queries.Geta
                         Name = Request.lang == "en"
                             ? x.Receiver!.EnglishName
                             : x.Receiver!.ArabicName,
-                        ImageURL = x.Receiver!.ImageURL,
+                        ImageURL = !string.IsNullOrEmpty(x.Receiver!.ImageURL)
+                            ? (x.Receiver!.ImageURL.Contains("wwwroot")
+                                ? (WWWRootFilePath + x.Receiver!.ImageURL!.Split("wwwroot")[1]).Replace("\\", "/")
+                                : x.Receiver!.ImageURL.Replace("\\", "/"))
+                            : null,
                         Status = x.Status.GetName()!
-                    }).ToListAsync();
+                    }).ToList();
 
             int TotalCount = await _RelatedAccountRequestRepository
                 .GetCountAsync(x => x.ReceiverId == UserId);

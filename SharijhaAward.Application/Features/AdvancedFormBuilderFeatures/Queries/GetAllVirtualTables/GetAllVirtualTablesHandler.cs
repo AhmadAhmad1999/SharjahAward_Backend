@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.Classes.Queries.GetAllClasses;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Common;
 using SharijhaAward.Domain.Entities.AdvancedFormBuilderModel;

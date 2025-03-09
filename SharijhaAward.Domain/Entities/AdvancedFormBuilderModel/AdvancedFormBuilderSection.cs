@@ -1,4 +1,5 @@
-﻿using SharijhaAward.Domain.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using SharijhaAward.Domain.Common;
 
 namespace SharijhaAward.Domain.Entities.AdvancedFormBuilderModel
 {

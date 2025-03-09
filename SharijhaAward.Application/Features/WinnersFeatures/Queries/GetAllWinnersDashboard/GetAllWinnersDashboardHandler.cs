@@ -54,6 +54,9 @@ namespace SharijhaAward.Application.Features.WinnersFeatures.Queries.GetAllWinne
                     (Request.CycleNumber != null
                         ? x.ProvidedForm!.CycleNumber == Request.CycleNumber
                         : true) &&
+                    (Request.CycleId != null
+                        ? x.ProvidedForm!.Category!.CycleId == Request.CycleId
+                        : true) &&
                     (DynamicAttributeValueEntities.Select(y => y.RecordId).Any(y => y == x.ProvidedFormId)))
                 .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync();

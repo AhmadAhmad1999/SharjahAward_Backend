@@ -7,10 +7,12 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
     {
         public enum DatabaseRelations
         {
-            [Description("Categories/CycleId Agendas/CycleId AwardStatistics/CycleId CycleCondition/CycleId")] // Done
+            [Description("Categories/CycleId Agendas/CycleId AwardStatistics/CycleId CycleCondition/CycleId " +
+                "EducationalEntities/CycleId")] // Done
             Cycle,
 
-            [Description("Categories/CycleId Agendas/CycleId AwardStatistics/CycleId CycleCondition/CycleId")] // Done
+            [Description("Categories/CycleId Agendas/CycleId AwardStatistics/CycleId CycleCondition/CycleId " +
+                "EducationalEntities/CycleId")] // Done
             Cycles,
 
             [Description("")] // Done
@@ -23,14 +25,16 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "MeetingCategories/CategoryId InterviewCategories/CategoryId FrequentlyAskedQuestions/CategoryId " + // Done
                 "ExplanatoryGuides/CategoryId Criterions/CategoryId CategoryFAQs/CategoryId CategoryEducationalEntities/CategoryId " + // Done
                 "CategoryEducationalClasses/CategoryId CategoryCommittees/CategoryId CategoriesArbitrators/CategoryId " + // Done
-                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation")] // Done
+                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation " +
+                "SubcommitteeCategories/CategoryId UserCategories/CategoryId")] // Done
             Category,
 
             [Description("TrainingWorkshops/CategoryId TermsAndConditions/CategoryId Rewards/CategoryId ProvidedForms/categoryId " + // Done
                 "MeetingCategories/CategoryId InterviewCategories/CategoryId FrequentlyAskedQuestions/CategoryId " + // Done
                 "ExplanatoryGuides/CategoryId Criterions/CategoryId CategoryFAQs/CategoryId CategoryEducationalEntities/CategoryId " + // Done
                 "CategoryEducationalClasses/CategoryId CategoryCommittees/CategoryId CategoriesArbitrators/CategoryId " + // Done
-                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation")] // Done
+                "Categories/ParentId ArbitrationScales/CategoryId DynamicAttributeSections/RecordIdOnRelation " +
+                "SubcommitteeCategories/CategoryId UserCategories/CategoryId")] // Done
             Categories,
 
             [Description("")] // Done
@@ -39,7 +43,7 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             AwardStatistics,
 
-            [Description("CycleConditionsProvidedForms/CycleConditionId")] // Done
+            [Description("CycleConditionsProvidedForms/CycleConditionId CycleConditionAttachmentType/CycleConditionId")] // Done
             CycleCondition,
 
             [Description("TrainingWorkshopAttachments/TrainingWorkshopId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
@@ -48,10 +52,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("TrainingWorkshopAttachments/TrainingWorkshopId TrainingWorkshopSubscriber/TrainingWorkshopsId")] // Done
             TrainingWorkshops,
 
-            [Description("ConditionsProvidedForms/TermAndConditionId")] // Done
+            [Description("ConditionsProvidedForms/TermAndConditionId TermAndConditionAttachmentTypes/TermAndConditionId")] // Done
             TermAndCondition,
 
-            [Description("ConditionsProvidedForms/TermAndConditionId")] // Done
+            [Description("ConditionsProvidedForms/TermAndConditionId TermAndConditionAttachmentTypes/TermAndConditionId")] // Done
             TermsAndConditions,
 
             [Description("")] // Done
@@ -64,14 +68,16 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
                 "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
-                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId")] // Done
+                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId UserNoteOnFormForArbitrations/ProvidedFormId " +
+                "RequestForChangeInterviewEligibilityStatuses/ProvidedFormId")] // Done
             ProvidedForm,
 
             [Description("Arbitrations/ProvidedFormId ArbitrationAudits/ProvidedFormId ArbitrationResults/ProvidedFormId " + // Done
                 "ArbitratorForms/ProvidedFormId ConditionsProvidedForms/ProvidedFormId CoordinatorForms/ProvidedFormId " + // Done
                 "FinalArbitrations/ProvidedFormId ExtraAttachments/ProvidedFormId CycleConditionsProvidedForms/ProvidedFormId " + // Done
                 "CriterionItemAttachments/ProvidedFormId CriterionAttachments/ProvidedFormId DynamicAttributeValues/RecordId/ProvidedForm " +
-                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId")] // Done
+                "SwitchArbitrations/ProvidedFormId SavedCertificate/ProvidedFormId UserNoteOnFormForArbitrations/ProvidedFormId " +
+                "RequestForChangeInterviewEligibilityStatuses/ProvidedFormId")] // Done
             ProvidedForms,
 
             [Description("")] // Done
@@ -93,11 +99,13 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             ExplanatoryGuides,
             
             [Description("InitialArbitrations/CriterionId FinalArbitrationScores/CriterionId CriterionItems/CriterionId " + // Done
-                "CriterionAttachments/CriterionId Criterions/ParentId ArbitrationScalesCriterions/CriterionId ArbitrationAudits/CriterionId")] // Done
+                "CriterionAttachments/CriterionId Criterions/ParentId ArbitrationScalesCriterions/CriterionId ArbitrationAudits/CriterionId " +
+                "CriterionAttachmentTypes/CriterionId")] // Done
             Criterion,
 
             [Description("InitialArbitrations/CriterionId FinalArbitrationScores/CriterionId CriterionItems/CriterionId " + // Done
-                "CriterionAttachments/CriterionId Criterions/ParentId ArbitrationScalesCriterions/CriterionId ArbitrationAudits/CriterionId")] // Done
+                "CriterionAttachments/CriterionId Criterions/ParentId ArbitrationScalesCriterions/CriterionId ArbitrationAudits/CriterionId " +
+                "CriterionAttachmentTypes/CriterionId")] // Done
             Criterions,
 
             [Description("")] // Done
@@ -136,10 +144,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("CycleConditionAttachments/CycleConditionsProvidedFormId")] // Done
             CycleConditionsProvidedForms,
 
-            [Description("")] // Done
+            [Description("TrainingWorkshopAttachmentTypes/TrainingWorkshopAttachmentId")] // Done
             TrainingWorkshopAttachment,
 
-            [Description("")] // Done
+            [Description("TrainingWorkshopAttachmentTypes/TrainingWorkshopAttachmentId")] // Done
             TrainingWorkshopAttachments,
 
             [Description("")] // Done
@@ -187,10 +195,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("FinalArbitrationScores/FinalArbitrationId ArbitrationResults/FinalArbitrationId")] // Done
             FinalArbitrations,
 
-            [Description("ExtraAttachmentsProvidedForms/ExtraAttachmentId")] // Done
+            [Description("ExtraAttachmentsProvidedForms/ExtraAttachmentId ExtraAttachmentAttachmentTypes/ExtraAttachmentId")] // Done
             ExtraAttachment,
 
-            [Description("ExtraAttachmentsProvidedForms/ExtraAttachmentId")] // Done
+            [Description("ExtraAttachmentsProvidedForms/ExtraAttachmentId ExtraAttachmentAttachmentTypes/ExtraAttachmentId")] // Done
             ExtraAttachments,
 
             [Description("")] // Done
@@ -218,11 +226,11 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             FinalArbitrationScores,
 
             [Description("ArbitrationAudits/CriterionItemId InitialArbitrations/CriterionItemId FinalArbitrationScores/CriterionItemId " + // Done
-                "CriterionItemAttachments/CriterionItemId ArbitrationScalesCriterions/CriterionItemId")] // Done
+                "CriterionItemAttachments/CriterionItemId ArbitrationScalesCriterions/CriterionItemId CriterionItemAttachmentTypes/CriterionItemId")] // Done
             CriterionItem,
 
             [Description("ArbitrationAudits/CriterionItemId InitialArbitrations/CriterionItemId FinalArbitrationScores/CriterionItemId " + // Done
-                "CriterionItemAttachments/CriterionItemId ArbitrationScalesCriterions/CriterionItemId")] // Done
+                "CriterionItemAttachments/CriterionItemId ArbitrationScalesCriterions/CriterionItemId CriterionItemAttachmentTypes/CriterionItemId")] // Done
             CriterionItems,
 
             [Description("")] // Done
@@ -324,10 +332,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("UserNotifications/NotificationId")] // Done
             Notifications,
 
-            [Description("")] // Done
+            [Description("UserCategories/UserRoleId CircularUsers/UserRoleId")] // Done
             UserRole,
 
-            [Description("")] // Done
+            [Description("UserCategories/UserRoleId CircularUsers/UserRoleId")] // Done
             UsersRoles,
 
             [Description("")] // Done
@@ -348,10 +356,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             ArbitratorClasses,
 
-            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId")] // Done
+            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId ComitteeOfficers/CommitteeId")] // Done
             Committee,
 
-            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId")] // Done
+            [Description("ComitteesArbitrators/CommitteeId CategoryCommittees/CommitteeId ComitteeOfficers/CommitteeId")] // Done
             Committees,
 
             [Description("")] // Done
@@ -369,13 +377,15 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
                 "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
-                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId")] // Done
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId " +
+                "SubcommitteeCategories/ArbitratorId ComitteeOfficers/ArbitratorId CiruclarSubcommitteeOfficers/SubcommitteeOfficerId")] // Done
             Arbitrator,
 
             [Description("FinalArbitrations/ArbitratorId Committees/ChairmanId ComitteesArbitrators/ArbitratorId CircularChairmans/ChairmanId " +
                 "CircularArbitrators/ArbitratorId CategoriesArbitrators/ArbitratorId ArbitratorForms/ArbitratorId " +
                 "ArbitratorClasses/ArbitratorId Arbitrations/ArbitratorId Users/Id DynamicAttributeValues/RecordId/Arbitrator " +
-                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId")] // Done
+                "SwitchArbitrations/OldArbitratorId SwitchArbitrations/NewArbitratorId InterviewInviteeParticipants/ArbitratorId " +
+                "SubcommitteeCategories/ArbitratorId ComitteeOfficers/ArbitratorId CiruclarSubcommitteeOfficers/SubcommitteeOfficerId")] // Done
             Arbitrators,
 
             [Description("")] // Done
@@ -420,7 +430,8 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
                 "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
-                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId")] // Done
+                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId WebSiteResponses/UserId " +
+                "UserNoteOnFormForArbitrations/ChairmanId RequestForChangeInterviewEligibilityStatuses/RequestedById")] // Done
             User,
 
             [Description("Arbitrators/Id Coordinators/Id UserTokens/UserId UsersRoles/UserId UserNotifications/UserId " + // Done
@@ -429,7 +440,8 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ProvidedForms/userId FinalArbitrations/DoneArbitrationUserId EmailMessages/UserId " + // Done
                 "Arbitrations/DoneArbitrationUserId Achievements/UserId ChairmanNotesOnInitialArbitrations/ChairmanId " +
                 "ChairmanNotesOnArbitrationAudits/ChairmanId ChairmanNotesOnFinalArbitrationScores/ChairmanId " +
-                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId")] // Done
+                "DigitalSignatures/UserId InterviewInviteeParticipants/SubscriberId WebSiteResponses/UserId " +
+                "UserNoteOnFormForArbitrations/ChairmanId RequestForChangeInterviewEligibilityStatuses/RequestedById")] // Done
             Users,
 
             [Description("UsersRoles/RoleId RolePermissions/RoleId RoleMessageTypes/RoleId Responsibilities/RoleId")] // Done
@@ -530,10 +542,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
                 "ProvidedForms/EducationalEntityId")] // Done
             EducationalEntities,
 
-            [Description("")] // Done
+            [Description("ProvidedForms/EducationalInstitutionId")] // Done
             EducationalInstitution,
 
-            [Description("")] // Done
+            [Description("ProvidedForms/EducationalInstitutionId")] // Done
             EducationalInstitutions,
 
             [Description("")] // Done
@@ -563,10 +575,10 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             [Description("")] // Done
             Achievements,
 
-            [Description("EmailMessages/MessageId EmailAttachments/MessageId")] // Done
+            [Description("EmailMessages/MessageId EmailAttachments/MessageId WebSiteResponses/EmailMessageId")] // Done
             EmailMessage,
 
-            [Description("EmailMessages/MessageId EmailAttachments/MessageId")] // Done
+            [Description("EmailMessages/MessageId EmailAttachments/MessageId WebSiteResponses/EmailMessageId")] // Done
             EmailMessages,
 
             [Description("")] // Done
@@ -588,11 +600,11 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             MessageTypes,
 
             [Description("CircularCoordinators/CircularId CircularChairmans/CircularId CircularAttachments/CircularId " + // Done
-                "CircularArbitrators/CircularId")] // Done
+                "CircularArbitrators/CircularId CircularUsers/CircularId CiruclarSubcommitteeOfficers/CircularId")] // Done
             Circular,
 
             [Description("CircularCoordinators/CircularId CircularChairmans/CircularId CircularAttachments/CircularId " + // Done
-                "CircularArbitrators/CircularId")] // Done
+                "CircularArbitrators/CircularId CircularUsers/CircularId CiruclarSubcommitteeOfficers/CircularId")] // Done
             Circulars,
 
             [Description("")] // Done
@@ -890,7 +902,109 @@ namespace SharijhaAward.Application.Helpers.DatabaseRelationsHelper
             SavedCertificate,
 
             [Description("")] // Done
-            SavedCertificates
+            SavedCertificates,
+
+            [Description("WebSiteResponseAttachments/WebSiteResponseId")] // Done
+            WebSiteResponse,
+
+            [Description("WebSiteResponseAttachments/WebSiteResponseId")] // Done
+            WebSiteResponses,
+
+            [Description("")] // Done
+            WebSiteResponseAttachment,
+
+            [Description("")] // Done
+            WebSiteResponseAttachments,
+
+            [Description("")] // Done
+            VirtualTableForSection,
+
+            [Description("")] // Done
+            VirtualTableForSections,
+
+            [Description("")] // Done
+            EduEntitiesCoordinator,
+
+            [Description("")] // Done
+            EduEntitiesCoordinators,
+
+            [Description("")] // Done
+            CycleConditionAttachmentType,
+
+            [Description("")] // Done
+            CycleConditionAttachmentTypes,
+
+            [Description("")] // Done
+            TermAndConditionAttachmentType,
+
+            [Description("")] // Done
+            TermAndConditionAttachmentTypes,
+
+            [Description("")] // Done
+            CriterionAttachmentType,
+
+            [Description("")] // Done
+            CriterionAttachmentTypes,
+
+            [Description("")] // Done
+            CriterionItemAttachmentType,
+
+            [Description("")] // Done
+            CriterionItemAttachmentTypes,
+
+            [Description("")] // Done
+            TrainingWorkshopAttachmentType,
+
+            [Description("")] // Done
+            TrainingWorkshopAttachmentTypes,
+
+            [Description("")] // Done
+            ExtraAttachmentAttachmentType,
+
+            [Description("")] // Done
+            ExtraAttachmentAttachmentTypes,
+
+            [Description("")] // Done
+            SubcommitteeCategory,
+
+            [Description("")] // Done
+            SubcommitteeCategories,
+
+            [Description("")] // Done
+            ComitteeOfficer,
+
+            [Description("")] // Done
+            ComitteeOfficers,
+
+            [Description("")] // Done
+            UserCategory,
+
+            [Description("")] // Done
+            UserCategories,
+
+            [Description("")] // Done
+            UserNoteOnFormForArbitration,
+
+            [Description("")] // Done
+            UserNoteOnFormForArbitrations,
+
+            [Description("")] // Done
+            RequestForChangeInterviewEligibilityStatus,
+
+            [Description("")] // Done
+            RequestForChangeInterviewEligibilityStatuses,
+
+            [Description("")] // Done
+            CircularUser,
+
+            [Description("")] // Done
+            CircularUsers,
+
+            [Description("")] // Done
+            CiruclarSubcommitteeOfficer,
+
+            [Description("")] // Done
+            CiruclarSubcommitteeOfficers
         }
         public static string GetEnumDescription(Enum value)
         {

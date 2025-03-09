@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
@@ -13,14 +14,17 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
         private readonly IAsyncRepository<AboutAwardPage> _AboutAwardPageRepository;
         private readonly IAsyncRepository<OurGoal> _OurGoalRepository;
         private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAboutPageQueryHandler(IAsyncRepository<AboutAwardPage> _AboutAwardPageRepository,
             IAsyncRepository<OurGoal> _OurGoalRepository,
-            IMapper _Mapper)
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             this._AboutAwardPageRepository = _AboutAwardPageRepository;
             this._OurGoalRepository = _OurGoalRepository;
             this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
         public async Task<BaseResponse<AboutPageDto>> Handle(GetAboutPageQuery Request, CancellationToken cancellationToken)
@@ -60,6 +64,20 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
                 AboutPageDto.OurGoalTitle = AboutAwardPageEntity.EnglishOurGoalTitle;
                 AboutPageDto.OurGoals = OurGoalsDto;
 
+                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                string WWWRootFilePath = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                AboutPageDto.AboutImage = AboutAwardPageEntity.AboutImage.Contains("wwwroot")
+                    ? AboutAwardPageEntity.AboutImage
+                    : AboutAwardPageEntity.AboutImage;
+
+                AboutPageDto.OurVisionImage = AboutAwardPageEntity.AboutImage.Contains("wwwroot")
+                    ? AboutAwardPageEntity.OurVisionImage
+                    : AboutAwardPageEntity.OurVisionImage;
+
                 return new BaseResponse<AboutPageDto>(ResponseMessage, true, 200, AboutPageDto);
             }
             else
@@ -83,6 +101,20 @@ namespace SharijhaAward.Application.Features.AboutAwardPages.Queries.GetAboutPag
                 AboutPageDto.OurVisionDescription = AboutAwardPageEntity.ArabicOurVisionDescription;
                 AboutPageDto.OurGoalTitle = AboutAwardPageEntity.ArabicOurGoalTitle;
                 AboutPageDto.OurGoals = OurGoalsDto;
+
+                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                string WWWRootFilePath = isHttps
+                    ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                    : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                AboutPageDto.AboutImage = AboutAwardPageEntity.AboutImage.Contains("wwwroot")
+                    ? AboutAwardPageEntity.AboutImage
+                    : AboutAwardPageEntity.AboutImage;
+
+                AboutPageDto.OurVisionImage = AboutAwardPageEntity.AboutImage.Contains("wwwroot")
+                    ? AboutAwardPageEntity.OurVisionImage
+                    : AboutAwardPageEntity.OurVisionImage;
 
                 return new BaseResponse<AboutPageDto>(ResponseMessage, true, 200, AboutPageDto);
             }

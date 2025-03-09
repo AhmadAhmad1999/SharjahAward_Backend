@@ -1,48 +1,83 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.GeneralWorkshopsModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharijhaAward.Application.Features.GeneralWorkshops.Queries.GetGeneralWorkshopById
 {
     public class GetGeneralWorkshopByIdQueryHandler
         : IRequestHandler<GetGeneralWorkshopByIdQuery, BaseResponse<GeneralWorkshopDto>>
     {
-        private readonly IAsyncRepository<GeneralWorkshop> _generalWorkshopRepository;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<GeneralWorkshop> _GeneralWorkshopRepository;
+        private readonly IMapper _Mapper;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetGeneralWorkshopByIdQueryHandler(IAsyncRepository<GeneralWorkshop> generalWorkshopRepository, IMapper mapper)
+        public GetGeneralWorkshopByIdQueryHandler(IAsyncRepository<GeneralWorkshop> _GeneralWorkshopRepository,
+            IMapper _Mapper,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _generalWorkshopRepository = generalWorkshopRepository;
-            _mapper = mapper;
+            this._GeneralWorkshopRepository = _GeneralWorkshopRepository;
+            this._Mapper = _Mapper;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
 
-        public async Task<BaseResponse<GeneralWorkshopDto>> Handle(GetGeneralWorkshopByIdQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<GeneralWorkshopDto>> Handle(GetGeneralWorkshopByIdQuery Request, CancellationToken cancellationToken)
         {
-            var WorkShop = await _generalWorkshopRepository.GetByIdAsync(request.Id);
+            string ResponseMessage = string.Empty;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+            GeneralWorkshop? GeneralWorkshopEntity = await _GeneralWorkshopRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
           
-            if (WorkShop == null)
+            if (GeneralWorkshopEntity is null)
             {
-                return new BaseResponse<GeneralWorkshopDto>("", false, 404);
+                ResponseMessage = Request.lang == "en"
+                    ? "General workshop is not found"
+                    : "الورشة التدريبية غير موجودة";
+
+                return new BaseResponse<GeneralWorkshopDto>(ResponseMessage, false, 404);
             }
 
-            var data = _mapper.Map<GeneralWorkshopDto>(WorkShop);
+            GeneralWorkshopDto Response = _Mapper.Map<GeneralWorkshopDto>(GeneralWorkshopEntity);
 
-            data.Title = request.lang == "en"
-                ? data.EnglishTitle
-                : data.ArabicTitle;
+            Response.Title = Request.lang == "en"
+                ? Response.EnglishTitle
+                : Response.ArabicTitle;
 
-            data.Description = request.lang == "en"
-                ? data.EnglishDescription
-                : data.ArabicDescription;
+            Response.Description = Request.lang == "en"
+                ? Response.EnglishDescription
+                : Response.ArabicDescription;
 
-            return new BaseResponse<GeneralWorkshopDto>("", true, 200, data);
+            Response.AgendaImage = !string.IsNullOrEmpty(Response.AgendaImage)
+                ? (Response.AgendaImage.Contains("wwwroot")
+                    ? (WWWRootFilePath + Response.AgendaImage.Split("wwwroot")[1]).Replace("\\", "/")
+                    : Response.AgendaImage.Replace("\\", "/"))
+                : null;
+
+            Response.RegistrationUrl = !string.IsNullOrEmpty(Response.RegistrationUrl)
+                ? (Response.RegistrationUrl.Contains("wwwroot")
+                    ? (WWWRootFilePath + Response.RegistrationUrl.Split("wwwroot")[1]).Replace("\\", "/")
+                    : Response.RegistrationUrl.Replace("\\", "/"))
+                : null;
+
+            Response.Thumbnale = Response.Thumbnale.Contains("wwwroot")
+                ? (WWWRootFilePath + Response.Thumbnale.Split("wwwroot")[1]).Replace("\\", "/")
+                : Response.Thumbnale.Replace("\\", "/");
+
+            Response.Video = !string.IsNullOrEmpty(Response.Video)
+                ? (Response.Video.Contains("wwwroot")
+                    ? (WWWRootFilePath + Response.Video.Split("wwwroot")[1]).Replace("\\", "/")
+                    : Response.Video.Replace("\\", "/"))
+                : null;
+
+            return new BaseResponse<GeneralWorkshopDto>(ResponseMessage, true, 200, Response);
         }
     }
 }

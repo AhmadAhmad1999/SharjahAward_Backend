@@ -5,6 +5,7 @@
         ProvidedForm = 1,
         Coordinator = 2,
         Arbitrator = 3,
-        Event = 4
+        Event = 4,
+        Roles = 5
     }
 }

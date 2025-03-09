@@ -6,59 +6,103 @@ using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Constants.AttachmentConstant;
 using SharijhaAward.Domain.Entities.TrainingWorkshopModel;
 using SharijhaAward.Domain.Entities.TrainingWorkshopAttachmentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Transactions;
 
 namespace SharijhaAward.Application.Features.TrainingWorkshops.Attacments.Commands.UpdateWorkshopAttachment
 {
     public class UpdateWorkshopAttachmentCommandHandler
         : IRequestHandler<UpdateWorkshopAttachmentCommand, BaseResponse<object>>
     {
-        private readonly IAsyncRepository<TrainingWorkshop> _workshopRepository;
-        private readonly IAsyncRepository<TrainingWorkshopAttachment> _attachmentRepository;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
+        private readonly IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository;
+        private readonly IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository;
+        private readonly IFileService _FileService;
+        private readonly IMapper _Mapper;
+        private readonly IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository;
 
-        public UpdateWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> workshopRepository, IAsyncRepository<TrainingWorkshopAttachment> attachmentRepository, IFileService fileService, IMapper mapper)
+        public UpdateWorkshopAttachmentCommandHandler(IAsyncRepository<TrainingWorkshop> _TrainingWorkshopRepository, 
+            IAsyncRepository<TrainingWorkshopAttachment> _TrainingWorkshopAttachmentRepository, 
+            IFileService _FileService, 
+            IMapper _Mapper,
+            IAsyncRepository<TrainingWorkshopAttachmentType> _TrainingWorkshopAttachmentTypeRepository)
         {
-            _workshopRepository = workshopRepository;
-            _attachmentRepository = attachmentRepository;
-            _fileService = fileService;
-            _mapper = mapper;
+            this._TrainingWorkshopRepository = _TrainingWorkshopRepository;
+            this._TrainingWorkshopAttachmentRepository = _TrainingWorkshopAttachmentRepository;
+            this._FileService = _FileService;
+            this._Mapper = _Mapper;
+            this._TrainingWorkshopAttachmentTypeRepository = _TrainingWorkshopAttachmentTypeRepository;
         }
 
-        public async Task<BaseResponse<object>> Handle(UpdateWorkshopAttachmentCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<object>> Handle(UpdateWorkshopAttachmentCommand Request, CancellationToken cancellationToken)
         {
-            string msg = request.lang == "en"
-               ? "Attachment has been Updated"
-               : "تم تعديل الملف";
+            string ResponseMessage = string.Empty;
 
-            var attachmentToUpdate = await _attachmentRepository.GetByIdAsync(request.Id);
-            if (attachmentToUpdate == null)
+            TrainingWorkshopAttachment? TrainingWorkshopAttachmentEntity = await _TrainingWorkshopAttachmentRepository
+                .FirstOrDefaultAsync(x => x.Id == Request.Id);
+            
+            if (TrainingWorkshopAttachmentEntity is null)
             {
-                 msg = request.lang == "en"
-               ? "The Attachment Not Found"
-               : "الملف المطلوب غير موجود";
+                ResponseMessage = Request.lang == "en"
+                   ? "Training workshop attachment is not found"
+                   : "الملف المطلوب غير موجود";
 
-                return new BaseResponse<object>(msg, false, 404);
+                return new BaseResponse<object>(ResponseMessage, false, 404);
             }
-            var attachment = attachmentToUpdate.AttachementPath;
 
-            _mapper.Map(request, attachmentToUpdate, typeof(UpdateWorkshopAttachmentCommand), typeof(TrainingWorkshopAttachment));
+            string AttachementPath = TrainingWorkshopAttachmentEntity.AttachementPath;
+
+            _Mapper.Map(Request, TrainingWorkshopAttachmentEntity, typeof(UpdateWorkshopAttachmentCommand), typeof(TrainingWorkshopAttachment));
     
-            if (request.EditOnAttachment)
-                attachmentToUpdate.AttachementPath = await _fileService.SaveFileAsync(request.attachment, SystemFileType.Pdf);
+            if (Request.EditOnAttachment && Request.attachment is not null)
+                TrainingWorkshopAttachmentEntity.AttachementPath = await _FileService.SaveFileAsync(Request.attachment, SystemFileType.Pdf);
+
             else
-                attachmentToUpdate.AttachementPath = attachment;
+                TrainingWorkshopAttachmentEntity.AttachementPath = AttachementPath;
 
-            await _attachmentRepository.UpdateAsync(attachmentToUpdate);
+            List<TrainingWorkshopAttachmentType> TrainingWorkshopAttachmentTypeEntitiesToDelete = _TrainingWorkshopAttachmentTypeRepository
+                .Where(x => x.TrainingWorkshopAttachmentId == Request.Id)
+                .ToList();
 
-           
+            List<TrainingWorkshopAttachmentType> NewTrainingWorkshopAttachmentTypeEntities = Request.AttachmentType
+                .Select(x => new TrainingWorkshopAttachmentType()
+                {
+                    AttachmentType = x,
+                    TrainingWorkshopAttachmentId = Request.Id
+                }).ToList();
 
-            return new BaseResponse<object>(msg, true, 200);
+            TransactionOptions TransactionOptions = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                Timeout = TimeSpan.FromMinutes(5)
+            };
+
+            using (TransactionScope Transaction = new TransactionScope(TransactionScopeOption.Required,
+                TransactionOptions, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                try
+                {
+                    await _TrainingWorkshopAttachmentRepository.UpdateAsync(TrainingWorkshopAttachmentEntity);
+
+                    if (TrainingWorkshopAttachmentTypeEntitiesToDelete.Any())
+                        await _TrainingWorkshopAttachmentTypeRepository.DeleteListAsync(TrainingWorkshopAttachmentTypeEntitiesToDelete);
+
+                    if (NewTrainingWorkshopAttachmentTypeEntities.Any())
+                        await _TrainingWorkshopAttachmentTypeRepository.AddRangeAsync(NewTrainingWorkshopAttachmentTypeEntities);
+
+                    ResponseMessage = Request.lang == "en"
+                         ? "Attachment has been updated"
+                         : "تم تعديل الملف";
+
+                    Transaction.Complete();
+
+                    return new BaseResponse<object>(ResponseMessage, true, 200);
+                }
+                catch (Exception)
+                {
+                    Transaction.Dispose();
+                    throw;
+                }
+            }
+                
         }
     }
 }

@@ -74,16 +74,24 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                 return new BaseResponse<GetCoordinatorByIdResponse>(ResponseMessage, false, 404);
             }
 
-            CoordinatorDto data = _Mapper.Map<CoordinatorDto>(CoordinatorEntity);
+            CoordinatorDto CoordinatorDto = _Mapper.Map<CoordinatorDto>(CoordinatorEntity);
             
-            data.Name = Request.lang == "en"
-                ? data.EnglishName
-                : data.ArabicName;
+            CoordinatorDto.Name = Request.lang == "en"
+                ? CoordinatorDto.EnglishName
+                : CoordinatorDto.ArabicName;
 
-            data.EntityCoordinator = _EduEntitiesCoordinatorRepository
+            List<EduEntitiesCoordinator> EduEntitiesCoordinatorEntities = _EduEntitiesCoordinatorRepository
                 .Where(x => x.CoordinatorId == CoordinatorEntity.Id)
                 .AsEnumerable()
                 .DistinctBy(x => x.EducationalEntityId)
+                .AsEnumerable()
+                .ToList();
+
+            List<EducationalInstitution> EducationalInstitutionEntities = await _EducationalInstitutionRepository
+                .Where(x => EduEntitiesCoordinatorEntities.Select(y => y.EducationalEntityId).Contains(x.EducationalEntityId))
+                .ToListAsync();
+
+            CoordinatorDto.EntityCoordinator = EduEntitiesCoordinatorEntities
                 .Select(x => new EduEntityCoordinatorDto()
                 {
                     Id = x.EducationalEntity!.Id,
@@ -91,15 +99,11 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
                     EnglishName = x.EducationalEntity!.EnglishName,
                     Name = Request.lang == "en"
                         ? x.EducationalEntity!.EnglishName
-                        : x.EducationalEntity!.ArabicName
+                        : x.EducationalEntity!.ArabicName,
+                    EducationalInstitutions = _Mapper.Map<List<EducationalInstitutionListVM>>(EducationalInstitutionEntities
+                        .Where(y => y.EducationalEntityId == x.EducationalEntityId)
+                        .ToList())
                 }).ToList();
-
-            foreach (var EntityCoordinator in data.EntityCoordinator)
-            {
-                EntityCoordinator.EducationalInstitutions = _Mapper.Map<List<EducationalInstitutionListVM>>(await _EducationalInstitutionRepository
-                    .Where(x => x.EducationalEntityId == EntityCoordinator.EducationalEntityId)
-                    .ToListAsync());
-            }
 
             //
             // Dynamic Fields..
@@ -189,7 +193,7 @@ namespace SharijhaAward.Application.Features.Coordinators.Queries.GetCoordinator
 
             GetCoordinatorByIdResponse Response = new GetCoordinatorByIdResponse()
             {
-                CoordinatorDto = data,
+                CoordinatorDto = CoordinatorDto,
                 DynamicAttributesSections = DynamicAttributeSections,
                 ResponsibilityUsers = _Mapper.Map<List<ResponsibilityUserDto>>(ResponsibilitiesUser)
             };

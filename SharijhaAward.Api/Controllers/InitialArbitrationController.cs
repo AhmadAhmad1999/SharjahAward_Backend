@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using SharijhaAward.Api.Logger;
+using SharijhaAward.Application.Features.ArbitrationFeatures.Queries.GetAllFormsForSortingProcess;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.ChangeArbitrationStatus;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateChairmanNotesOnInitialArbitration;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Commands.CreateInitialArbitration;
@@ -145,8 +146,7 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetAllFromsForInitialArbitration(ArbitrationType? ArbitrationType,
-            bool? asChairman, bool AsFullAccess, List<Filter>? filters, int Page = 1, int PerPage = 10)
+        public async Task<IActionResult> GetAllFromsForInitialArbitration([FromQuery] GetAllFromsForInitialArbitrationQuery GetAllFromsForInitialArbitrationQuery)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -158,17 +158,10 @@ namespace SharijhaAward.Api.Controllers
             if (string.IsNullOrEmpty(HeaderValue))
                 HeaderValue = "en";
 
-            BaseResponse<GetAllFromsForInitialArbitrationFullResponse> Response = await _Mediator.Send(new GetAllFromsForInitialArbitrationQuery()
-            {
-                lang = HeaderValue!,
-                page = Page,
-                perPage = PerPage,
-                Token = Token,
-                ArbitrationType = ArbitrationType,
-                asChairman = asChairman,
-                AsFullAccess = AsFullAccess,
-                filters = filters
-            });
+            GetAllFromsForInitialArbitrationQuery.Token = Token;
+            GetAllFromsForInitialArbitrationQuery.lang = HeaderValue;
+
+            BaseResponse<GetAllFromsForInitialArbitrationFullResponse> Response = await _Mediator.Send(GetAllFromsForInitialArbitrationQuery);
 
             return Response.statusCode switch
             {
@@ -185,7 +178,8 @@ namespace SharijhaAward.Api.Controllers
         [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> GetInitialArbitrationByArbitrationId(int ArbitrationId)
+        public async Task<IActionResult> GetInitialArbitrationByArbitrationId(int ArbitrationId, bool asExpert,
+            bool asChairmanOfCommittees, bool asQuality, bool asChairman, bool AsFullAccess, bool asNormalArbitrator, bool asSubcommitteeOfficer)
         {
             StringValues? Token = HttpContext.Request.Headers.Authorization;
 
@@ -201,7 +195,14 @@ namespace SharijhaAward.Api.Controllers
             {
                 lang = HeaderValue!,
                 ArbitrationId = ArbitrationId,
-                Token = Token
+                Token = Token,
+                asExpert = asExpert,
+                asChairmanOfCommittees = asChairmanOfCommittees,
+                asQuality = asQuality,
+                asChairman = asChairman,
+                AsFullAccess = AsFullAccess,
+                asNormalArbitrator = asNormalArbitrator,
+                asSubcommitteeOfficer = asSubcommitteeOfficer
             });
 
             return Response.statusCode switch
@@ -222,9 +223,6 @@ namespace SharijhaAward.Api.Controllers
         public async Task<IActionResult> ChangeArbitrationStatus([FromBody] ChangeArbitrationStatusMainCommand ChangeArbitrationStatusMainCommand)
         {
             string Token = HttpContext.Request.Headers.Authorization!;
-
-            if (Token.IsNullOrEmpty())
-                return Unauthorized();
 
             ChangeArbitrationStatusMainCommand.Token = Token;
 

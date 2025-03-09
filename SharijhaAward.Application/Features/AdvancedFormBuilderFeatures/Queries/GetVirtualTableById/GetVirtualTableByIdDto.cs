@@ -6,5 +6,6 @@
         public string ArabicTitle { get; set; } = null!;
         public string EnglishTitle { get; set; } = null!;
         public string Title { get; set; } = null!;
+        public bool isOpen { get; set; }
     }
 }

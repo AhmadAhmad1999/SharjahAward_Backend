@@ -1,11 +1,14 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Persistence;
 using SharijhaAward.Application.Features.DynamicAttributeFeatures.Queries.GetDynamicAttributeById;
 using SharijhaAward.Application.Helpers.Constants;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EventModel;
+using SharijhaAward.Domain.Entities.IdentityModels;
 
 namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Queries.GetAllDynamicAttributeSectionsForAdd
 {
@@ -23,6 +26,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
         private readonly IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository;
         private readonly IAsyncRepository<PersonalInviteeVirtualTable> _PersonalInviteeVirtualTableRepository;
         private readonly IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository;
+        private readonly IAsyncRepository<Role> _RoleRepository;
+        private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         public GetAllDynamicAttributeSectionsForAddHandler(IAsyncRepository<DynamicAttributeSection> DynamicAttributeSectionRepository,
             IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
@@ -34,7 +40,10 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             IAsyncRepository<Domain.Entities.ProvidedFormModel.ProvidedForm> ProvidedFormRepository,
             IAsyncRepository<Domain.Entities.EventModel.Event> _EventRepository,
             IAsyncRepository<PersonalInviteeVirtualTable> _PersonalInviteeVirtualTableRepository,
-            IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository)
+            IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository,
+            IAsyncRepository<Role> _RoleRepository,
+            IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository,
+            IHttpContextAccessor _HttpContextAccessor)
         {
             _DynamicAttributeSectionRepository = DynamicAttributeSectionRepository;
             _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
@@ -47,6 +56,9 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
             this._EventRepository = _EventRepository;
             this._PersonalInviteeVirtualTableRepository = _PersonalInviteeVirtualTableRepository;
             this._GroupInviteeVirtualTableRepository = _GroupInviteeVirtualTableRepository;
+            this._RoleRepository = _RoleRepository;
+            this._EducationalInstitutionRepository = _EducationalInstitutionRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>>
             Handle(GetAllDynamicAttributeSectionsForAddQuery Request, CancellationToken cancellationToken)
@@ -88,6 +100,91 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                 List<DynamicAttribute> AllDynamicAttributeEntitiesInSections = await _DynamicAttributeRepository
                     .Where(x => DynamicAttributeSections.Select(y => y.Id).Contains(x.DynamicAttributeSectionId))
                     .ToListAsync();
+
+                int? AlreadyInsertedValueForEducationType = null;
+                int? AlreadyInsertedValueForEmirate = null;
+
+                if (ProvidedFormEntity.Category!.RelatedToEducationalEntities)
+                {
+                    GetAllDynamicAttributeSectionsForAddListVM? MainInformationSectionId = DynamicAttributeSections
+                        .FirstOrDefault(x => x.Name.ToLower() == "Main Information".ToLower() ||
+                            x.Name == "المعلومات الأساسية");
+
+                    if (MainInformationSectionId is not null)
+                    {
+                        DynamicAttribute? EducationalInstitutionDynamicAttribute = AllDynamicAttributeEntitiesInSections
+                            .FirstOrDefault(x => x.EnglishTitle.ToLower() == "Educational Institution".ToLower() &&
+                                x.ArabicTitle == "المؤسسة التعليمية" &&
+                                x.DynamicAttributeSectionId == MainInformationSectionId.Id);
+                        
+                        if (EducationalInstitutionDynamicAttribute is not null)
+                        {
+                            DynamicAttributeValue? EducationalInstitutionDynamicAttributeValue = await _DynamicAttributeValueRepository
+                                .FirstOrDefaultAsync(x => x.RecordId == Request.ProvidedFormId &&
+                                    x.DynamicAttributeId == EducationalInstitutionDynamicAttribute.Id);
+
+                            if (EducationalInstitutionDynamicAttributeValue is not null)
+                            {
+                                DynamicAttributeListValue? EducationalInstitutionDynamicAttributeListValue = await _DynamicAttributeListValueRepository
+                                    .FirstOrDefaultAsync(x => x.Id.ToString() == EducationalInstitutionDynamicAttributeValue.Value);
+                                
+                                if (EducationalInstitutionDynamicAttributeListValue is not null)
+                                {
+                                    EducationalInstitution? EducationalInstitutionEntity = await _EducationalInstitutionRepository
+                                        .FirstOrDefaultAsync(x => x.EnglishName.ToLower() == EducationalInstitutionDynamicAttributeListValue.EnglishValue.ToLower() &&
+                                            x.ArabicName == EducationalInstitutionDynamicAttributeListValue.ArabicValue);
+
+                                    if (EducationalInstitutionEntity is not null)
+                                    {
+                                        AlreadyInsertedValueForEducationType = (int)EducationalInstitutionEntity
+                                            .EducationType;
+
+                                        AlreadyInsertedValueForEmirate = (int)EducationalInstitutionEntity
+                                            .Emirates;
+                                    }
+                                }
+                            }
+                        }
+
+                        AttributeDataType? AttributeDataTypeEntity = await _AttributeDataTypeRepository
+                            .FirstOrDefaultAsync(x => x.Id == 8);
+
+                        List<DynamicAttribute> ExtraDynamicAttributes = new List<DynamicAttribute>()
+                        {
+                            new DynamicAttribute()
+                            {
+                                Id = -10,
+                                ArabicLabel = "نوع التعليم",
+                                EnglishLabel = "Education Type",
+                                ArabicPlaceHolder = "نوع التعليم",
+                                EnglishPlaceHolder = "Education Type",
+                                IsRequired = true,
+                                ArabicTitle = "نوع التعليم",
+                                EnglishTitle = "Education Type",
+                                AttributeDataTypeId = 8,
+                                Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                                DynamicAttributeSectionId = MainInformationSectionId.Id,
+                                AttributeDataType = AttributeDataTypeEntity
+                            }, new DynamicAttribute()
+                            {
+                                Id = -11,
+                                ArabicLabel = "الإمارة",
+                                EnglishLabel = "Emirate",
+                                ArabicPlaceHolder = "الإمارة",
+                                EnglishPlaceHolder = "Emirate",
+                                IsRequired = true,
+                                ArabicTitle = "الإمارة",
+                                EnglishTitle = "Emirate",
+                                AttributeDataTypeId = 8,
+                                Status = Domain.Constants.DynamicAttribute.DynamicAttributeStatus.Active,
+                                DynamicAttributeSectionId = MainInformationSectionId.Id,
+                                AttributeDataType = AttributeDataTypeEntity
+                            }
+                        };
+
+                        AllDynamicAttributeEntitiesInSections.AddRange(ExtraDynamicAttributes);
+                    }
+                }
 
                 List<ViewWhenRelation> AllViewWhenRelationEntities = await _ViewWhenRelationRepository
                     .Where(x => AllDynamicAttributeEntitiesInSections.Select(y => y.Id).Any(y => y == x.DynamicAttributeId) ||
@@ -175,7 +272,20 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                     if (CheckIfValueIsAlreadyInserted != null)
                                     {
-                                        DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                        if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                        {
+                                            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                            string WWWRootFilePath = isHttps
+                                                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                            DynamicAttributeInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                        }
+                                        else
+                                        {
+                                            DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                        }
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                         DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
                                             ? null
@@ -203,6 +313,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                     if (CheckIfValueIsAlreadyInserted != null)
                                     {
+                                        if (DynamicAttributeInSection.EnglishTitle.ToLower() == "Educational Institution".ToLower() &&
+                                            DynamicAttributeInSection.ArabicTitle == "المؤسسة التعليمية")
+                                        {
+                                            DynamicAttributeSection.DynamicAttributes
+                                                .FirstOrDefault(x => x.EnglishTitle.ToLower() == "Education Type".ToLower())!.InsertedValueAsString = AlreadyInsertedValueForEducationType.ToString();
+                                            
+                                            DynamicAttributeSection.DynamicAttributes
+                                                .FirstOrDefault(x => x.EnglishTitle.ToLower() == "Emirate".ToLower())!.InsertedValueAsString = AlreadyInsertedValueForEmirate.ToString();
+                                        }
+
                                         DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                         DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
@@ -378,10 +498,24 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                                             DynamicAttributeTableValue? CheckIfValueIsAlreadyInserted = AlreadyInsertedDynamicAttributeTableValues
                                                 .FirstOrDefault(y => y.DynamicAttributeId == DynamicAttributeInSection.Id &&
                                                     y.RowId == DynamicAttributeTableValueEntity.Key);
-
+                                            
                                             if (CheckIfValueIsAlreadyInserted != null)
                                             {
-                                                DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                                if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                                {
+                                                    bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                                    string WWWRootFilePath = isHttps
+                                                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                                    DynamicAttributeInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                                }
+                                                else
+                                                {
+                                                    DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                                }
+
                                                 DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                                 DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                             }
@@ -406,6 +540,16 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                             if (CheckIfValueIsAlreadyInserted != null)
                                             {
+                                                if (DynamicAttributeInSection.EnglishTitle.ToLower() == "Educational Institution".ToLower() &&
+                                                    DynamicAttributeInSection.ArabicTitle == "المؤسسة التعليمية")
+                                                {
+                                                    DynamicAttributeSection.DynamicAttributes
+                                                        .FirstOrDefault(x => x.EnglishTitle.ToLower() == "Education Type".ToLower())!.InsertedValueAsString = AlreadyInsertedValueForEducationType.ToString();
+
+                                                    DynamicAttributeSection.DynamicAttributes
+                                                        .FirstOrDefault(x => x.EnglishTitle.ToLower() == "Emirate".ToLower())!.InsertedValueAsString = AlreadyInsertedValueForEmirate.ToString();
+                                                }
+
                                                 DynamicAttributeInSection.InsertedValueAsString = CheckIfValueIsAlreadyInserted.Value;
                                                 DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                                 DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
@@ -438,6 +582,15 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
                         DynamicAttributeSections[0] = MainInformationDynamicSection;
                         DynamicAttributeSections[IndexOfMainInformationSection] = FirstDynamicSection;
                     }
+
+                    MainInformationDynamicSection.DynamicAttributes = MainInformationDynamicSection.DynamicAttributes
+                        .OrderBy(x =>
+                        {
+                            if ((x.EnglishTitle.ToLower() == "Education Type".ToLower() && x.ArabicTitle == "نوع التعليم") ||
+                                (x.EnglishTitle.ToLower() == "Emirate".ToLower() && x.ArabicTitle == "الإمارة")) return 0;  // Highest priority
+                            if (x.EnglishTitle.ToLower() == "Educational Institution".ToLower() && x.ArabicTitle == "المؤسسة التعليمية") return 2;  // Lower priority than "a" and "b"
+                            return 1;  // Default priority
+                        }).ToList();
                 }
 
                 return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, true, 200, DynamicAttributeSections);
@@ -615,7 +768,21 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                     if (CheckIfValueIsAlreadyInserted != null)
                                     {
-                                        DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                        if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                        {
+                                            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                            string WWWRootFilePath = isHttps
+                                                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                            DynamicAttributeInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                        }
+                                        else
+                                        {
+                                            DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                        }
+
                                         DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                         DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.isAccepted == true || CheckIfValueIsAlreadyInserted.isAccepted == null
                                             ? null
@@ -834,7 +1001,21 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                             if (CheckIfValueIsAlreadyInserted != null)
                                             {
-                                                DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                                if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                                {
+                                                    bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                                    string WWWRootFilePath = isHttps
+                                                        ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                                        : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                                    DynamicAttributeInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                                }
+                                                else
+                                                {
+                                                    DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                                }
+
                                                 DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                                 DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                             }
@@ -1016,7 +1197,21 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                                 if (CheckIfValueIsAlreadyInserted != null)
                                 {
-                                    DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                    if (CheckIfValueIsAlreadyInserted.Value.Contains("wwwroot"))
+                                    {
+                                        bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+                                        string WWWRootFilePath = isHttps
+                                            ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                                            : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
+
+                                        DynamicAttributeInSection.InsertedValueAsBinaryFilePath = (WWWRootFilePath + CheckIfValueIsAlreadyInserted.Value.Split("wwwroot")[1]).Replace("\\", "/");
+                                    }
+                                    else
+                                    {
+                                        DynamicAttributeInSection.InsertedValueAsBinaryFilePath = CheckIfValueIsAlreadyInserted.Value;
+                                    }
+
                                     DynamicAttributeInSection.isAccepted = CheckIfValueIsAlreadyInserted.isAccepted;
                                     DynamicAttributeInSection.ReasonForRejecting = CheckIfValueIsAlreadyInserted.ReasonForRejecting;
                                 }
@@ -1051,7 +1246,6 @@ namespace SharijhaAward.Application.Features.DynamicAttributeSectionsFeatures.Qu
 
                 return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>(ResponseMessage, true, 200, DynamicAttributeSections);
             }
-
             return new BaseResponse<List<GetAllDynamicAttributeSectionsForAddListVM>>();
         }
     }

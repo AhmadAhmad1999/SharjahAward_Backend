@@ -1,22 +1,18 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using QRCoder;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.InviteeForm;
 using SharijhaAward.Application.Models;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.CategoryEducationalClassModel;
-using SharijhaAward.Domain.Entities.CategoryModel;
 using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.EducationalClassModel;
 using SharijhaAward.Domain.Entities.EducationalEntityModel;
+using SharijhaAward.Domain.Entities.EducationalInstitutionModel;
 using SharijhaAward.Domain.Entities.EventModel;
-using SharijhaAward.Domain.Entities.InvitationModels;
 using SharijhaAward.Domain.Entities.ProvidedFormModel;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Transactions;
 
@@ -43,47 +39,50 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
         private IEmailSender _EmailSender;
         private IEmailCodesGenerator _QRCodeGenerator;
         private readonly IAsyncRepository<Event> _EventRepository;
+        private readonly IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository;
 
-        public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> EducationalClassRepository,
-            IAsyncRepository<ProvidedForm> ProvidedFormRepository,
-            IAsyncRepository<CategoryEducationalClass> CategoryEducationalClassRepository,
-            IAsyncRepository<DynamicAttribute> DynamicAttributeRepository,
-            IAsyncRepository<Dependency> DependencyRepository,
-            IAsyncRepository<DependencyValidation> DependencyValidationRepository,
-            IAsyncRepository<DynamicAttributeValue> DynamicAttributeValueRepository,
-            IAsyncRepository<GeneralValidation> GeneralValidationRepository,
-            IAsyncRepository<DynamicAttributeTableValue> DynamicAttributeTableValueRepository,
-            IHttpContextAccessor HttpContextAccessor,
-            IAsyncRepository<EducationalEntity> EducationalEntityRepository,
-            IAsyncRepository<ViewWhenRelation> ViewWhenRelationRepository,
-            IAsyncRepository<DynamicAttributeListValue> DynamicAttributeListValueRepository,
+        public AddDynamicAttributeValueHandler(IAsyncRepository<EducationalClass> _EducationalClassRepository,
+            IAsyncRepository<ProvidedForm> _ProvidedFormRepository,
+            IAsyncRepository<CategoryEducationalClass> _CategoryEducationalClassRepository,
+            IAsyncRepository<DynamicAttribute> _DynamicAttributeRepository,
+            IAsyncRepository<Dependency> _DependencyRepository,
+            IAsyncRepository<DependencyValidation> _DependencyValidationRepository,
+            IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository,
+            IAsyncRepository<GeneralValidation> _GeneralValidationRepository,
+            IAsyncRepository<DynamicAttributeTableValue> _DynamicAttributeTableValueRepository,
+            IHttpContextAccessor _HttpContextAccessor,
+            IAsyncRepository<EducationalEntity> _EducationalEntityRepository,
+            IAsyncRepository<ViewWhenRelation> _ViewWhenRelationRepository,
+            IAsyncRepository<DynamicAttributeListValue> _DynamicAttributeListValueRepository,
             IAsyncRepository<PersonalInviteeVirtualTable> _PersonalInviteeVirtualTableRepository,
             IAsyncRepository<GroupInviteeVirtualTable> _GroupInviteeVirtualTableRepository,
             IEmailSender _EmailSender,
             IEmailCodesGenerator _QRCodeGenerator,
-            IAsyncRepository<Event> _EventRepository)
+            IAsyncRepository<Event> _EventRepository,
+            IAsyncRepository<EducationalInstitution> _EducationalInstitutionRepository)
         {
-            _EducationalClassRepository = EducationalClassRepository;
-            _ProvidedFormRepository = ProvidedFormRepository;
-            _CategoryEducationalClassRepository = CategoryEducationalClassRepository;
-            _DynamicAttributeRepository = DynamicAttributeRepository;
-            _DependencyRepository = DependencyRepository;
-            _DependencyValidationRepository = DependencyValidationRepository;
-            _DynamicAttributeValueRepository = DynamicAttributeValueRepository;
-            _GeneralValidationRepository = GeneralValidationRepository;
-            _DynamicAttributeTableValueRepository = DynamicAttributeTableValueRepository;
-            _HttpContextAccessor = HttpContextAccessor;
-            _EducationalEntityRepository = EducationalEntityRepository;
-            _ViewWhenRelationRepository = ViewWhenRelationRepository;
-            _DynamicAttributeListValueRepository = DynamicAttributeListValueRepository;
+            this._EducationalClassRepository = _EducationalClassRepository;
+            this._ProvidedFormRepository = _ProvidedFormRepository;
+            this._CategoryEducationalClassRepository = _CategoryEducationalClassRepository;
+            this._DynamicAttributeRepository = _DynamicAttributeRepository;
+            this._DependencyRepository = _DependencyRepository;
+            this._DependencyValidationRepository = _DependencyValidationRepository;
+            this._DynamicAttributeValueRepository = _DynamicAttributeValueRepository;
+            this._GeneralValidationRepository = _GeneralValidationRepository;
+            this._DynamicAttributeTableValueRepository = _DynamicAttributeTableValueRepository;
+            this._HttpContextAccessor = _HttpContextAccessor;
+            this._EducationalEntityRepository = _EducationalEntityRepository;
+            this._ViewWhenRelationRepository = _ViewWhenRelationRepository;
+            this._DynamicAttributeListValueRepository = _DynamicAttributeListValueRepository;
             this._PersonalInviteeVirtualTableRepository = _PersonalInviteeVirtualTableRepository;
             this._GroupInviteeVirtualTableRepository = _GroupInviteeVirtualTableRepository;
             this._EmailSender = _EmailSender;
             this._QRCodeGenerator = _QRCodeGenerator;
             this._EventRepository = _EventRepository;
+            this._EducationalInstitutionRepository = _EducationalInstitutionRepository;
         }
-        public async Task<BaseResponse<AddDynamicAttributeValueResponse>> Handle(AddDynamicAttributeValueCommand Request, 
-            CancellationToken cancellationToken)
+        public async Task<BaseResponse<AddDynamicAttributeValueResponse>> 
+            Handle(AddDynamicAttributeValueCommand Request, CancellationToken cancellationToken)
         {
             int AttributeTableNameId = 0;
             int NumberOfExpectedAttendance = 0;
@@ -3080,12 +3079,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = Path.Combine(FolderPathToCreate, FileName);
 
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
-
                         using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {
                             DynamicAttributeAsFile.ValueAsBinaryFile.CopyTo(FileStream);
@@ -3147,12 +3140,6 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
 
                         string? FolderPathToCreate = Request.WWWRootFilePath!;
                         string? FilePathToSaveToCreate = FolderPathToCreate + $"{FileName}";
-
-                        while (File.Exists(FilePathToSaveIntoDataBase))
-                        {
-                            FilePathToSaveIntoDataBase = FilePathToSaveIntoDataBase + "x";
-                            FilePathToSaveToCreate = FilePathToSaveToCreate + "x";
-                        }
 
                         using (FileStream FileStream = new FileStream(FilePathToSaveToCreate, FileMode.Create))
                         {
@@ -3253,23 +3240,23 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                     }
                                 }
 
-                                DynamicAttribute? EducationalEntityDynamicAttribute = await _DynamicAttributeRepository
-                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues.Select(y => y.DynamicAttributeId)
-                                        .Contains(x.Id) && x.EnglishTitle.ToLower() == "Educational Entity".ToLower());
+                                DynamicAttributeListValue? EducationalInstitutionDynamicAttribute = await _DynamicAttributeListValueRepository
+                                    .FirstOrDefaultAsync(x => Request.DynamicAttributesWithValues
+                                        .Select(y => y.DynamicAttributeId)
+                                        .Contains(x.DynamicAttributeId) && 
+                                            x.DynamicAttribute!.EnglishTitle.ToLower() == "Educational Institution".ToLower());
 
-                                if (EducationalEntityDynamicAttribute is not null)
+                                if (EducationalInstitutionDynamicAttribute is not null)
                                 {
-                                    string? StringValueForEducatiolaEntity = Request.DynamicAttributesWithValues.FirstOrDefault(x => x.DynamicAttributeId == EducationalEntityDynamicAttribute.Id)!
-                                        .ValueAsString;
-
-                                    EducationalEntity? EducationalEntity = await _EducationalEntityRepository
+                                    EducationalInstitution? EducationalInstitutionEntity = await _EducationalInstitutionRepository
                                         .FirstOrDefaultAsync(x => Request.lang == "en"
-                                            ? x.EnglishName.ToLower() == StringValueForEducatiolaEntity!.ToLower()
-                                            : x.ArabicName.ToLower() == StringValueForEducatiolaEntity!.ToLower());
+                                            ? x.EnglishName.ToLower() == EducationalInstitutionDynamicAttribute.EnglishValue.ToLower()
+                                            : x.ArabicName.ToLower() == EducationalInstitutionDynamicAttribute.ArabicValue.ToLower());
 
-                                    if (EducationalEntity is not null)
+                                    if (EducationalInstitutionEntity is not null)
                                     {
-                                        ProvidedFormEntity.EducationalEntityId = EducationalEntity.Id;
+                                        ProvidedFormEntity.EducationalInstitutionId = EducationalInstitutionEntity.Id;
+                                        ProvidedFormEntity.EducationalEntityId = EducationalInstitutionEntity.EducationalEntityId;
                                     }
                                 }
 
@@ -3294,11 +3281,11 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
 
                                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_ar.html");
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath!.Replace("/DynamicFiles", "") + "/QREmail_ar.html");
 
                                 CultureInfo ArabicCulture = new CultureInfo("ar-SY");
 
-                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+                                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
                                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
 
@@ -3384,9 +3371,9 @@ namespace SharijhaAward.Application.Helpers.AddDynamicAttributeValue
                                 string BarCodeImagePath = _QRCodeGenerator.GenerateBarCode(DataToSendIntoBarCode, Request.WWWRootFilePath!);
 
                                 // After Generating The QR Code Image, We Have To Send It With The HTML File in (QREmail) Folder..
-                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath.Replace("/DynamicFiles", "") + "/QREmail_en.html");
+                                string HTMLContent = await File.ReadAllTextAsync(Request.WWWRootFilePath!.Replace("/DynamicFiles", "") + "/QREmail_en.html");
 
-                                bool isHttps = _HttpContextAccessor.HttpContext.Request.IsHttps;
+                                bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
 
                                 string DownloadedHTMLFileName = Guid.NewGuid().ToString() + ".html";
 

@@ -41,6 +41,14 @@ namespace SharijhaAward.Persistence.Seeders
                         ArabicBody = "لديك طلب إرتباط جديد",
                         EnglishBody = "You have a new Related Account Request",
                         isActive = true
+                    }, new StaticNotification()
+                    {
+                        StaticNotificationType = StaticNotificationTypes.SendRequestForExtraAttachment,
+                        ArabicTitle = "طلب مرفق جديد",
+                        EnglishTitle = "Extra Attachment Request",
+                        ArabicBody = "لديك طلب مرفق جديد للاستمارة ذات المعرف: ProvidedFormId",
+                        EnglishBody = "You have a new Extra Attachment Request For The Form With Id: ProvidedFormId",
+                        isActive = true
                     }
                 });
 

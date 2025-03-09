@@ -1,14 +1,16 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SharijhaAward.Application.Contract.Infrastructure;
 using SharijhaAward.Application.Contract.Persistence;
-using SharijhaAward.Application.Features.ArbitrationAuditFeatures.Queries.GetArbitrationAuditByArbitrationId;
 using SharijhaAward.Application.Features.InitialArbitrationFeatures.Queries.GetInitialArbitrationByArbitrationId;
 using SharijhaAward.Application.Responses;
 using SharijhaAward.Domain.Entities.ArbitrationModel;
 using SharijhaAward.Domain.Entities.ArbitratorModel;
+using SharijhaAward.Domain.Entities.ComitteeArbitratorModel;
 using SharijhaAward.Domain.Entities.CriterionItemModel;
 using SharijhaAward.Domain.Entities.CriterionModel;
+using SharijhaAward.Domain.Entities.DynamicAttributeModel;
 using SharijhaAward.Domain.Entities.FinalArbitrationModel;
 using SharijhaAward.Domain.Entities.IdentityModels;
 
@@ -27,36 +29,60 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
         private readonly IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository;
         private readonly IAsyncRepository<Arbitrator> _ArbitratorRepository;
         private readonly IAsyncRepository<UserRole> _UserRoleRepository;
+        private readonly IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository;
+        private readonly IAsyncRepository<UserNoteOnFormForArbitration> _UserNoteOnFormForArbitrationRepository;
+        private readonly IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository;
+        private readonly IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository;
+        private readonly IAsyncRepository<UserCategory> _UserCategoryRepository;
         private readonly IJwtProvider _JwtProvider;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
-        public GetFinalArbitrationByIdHandler(IAsyncRepository<Criterion> CriterionRepository,
-            IAsyncRepository<CriterionAttachment> CriterionAttachmentRepository,
-            IAsyncRepository<FinalArbitrationScore> FinalArbitrationScoreRepository,
-            IAsyncRepository<FinalArbitration> FinalArbitrationRepository,
-            IAsyncRepository<CriterionItem> CriterionItemRepository,
-            IAsyncRepository<CriterionItemAttachment> CriterionItemAttachmentRepository,
-            IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> ChairmanNotesOnFinalArbitrationScoreRepository,
-            IAsyncRepository<ChairmanNotesOnInitialArbitration> ChairmanNotesOnInitialArbitrationRepository,
-            IAsyncRepository<Arbitrator> ArbitratorRepository,
-            IAsyncRepository<UserRole> UserRoleRepository,
-            IJwtProvider JwtProvider)
+        public GetFinalArbitrationByIdHandler(IAsyncRepository<Criterion> _CriterionRepository,
+            IAsyncRepository<CriterionAttachment> _CriterionAttachmentRepository,
+            IAsyncRepository<FinalArbitrationScore> _FinalArbitrationScoreRepository,
+            IAsyncRepository<FinalArbitration> _FinalArbitrationRepository,
+            IAsyncRepository<CriterionItem> _CriterionItemRepository,
+            IAsyncRepository<CriterionItemAttachment> _CriterionItemAttachmentRepository,
+            IAsyncRepository<ChairmanNotesOnFinalArbitrationScore> _ChairmanNotesOnFinalArbitrationScoreRepository,
+            IAsyncRepository<ChairmanNotesOnInitialArbitration> _ChairmanNotesOnInitialArbitrationRepository,
+            IAsyncRepository<Arbitrator> _ArbitratorRepository,
+            IAsyncRepository<UserRole> _UserRoleRepository,
+            IAsyncRepository<DynamicAttributeValue> _DynamicAttributeValueRepository,
+            IAsyncRepository<UserNoteOnFormForArbitration> _UserNoteOnFormForArbitrationRepository,
+            IAsyncRepository<ComitteeArbitrator> _ComitteeArbitratorRepository,
+            IAsyncRepository<ComitteeOfficer> _ComitteeOfficerRepository,
+            IAsyncRepository<UserCategory> _UserCategoryRepository,
+            IJwtProvider _JwtProvider,
+            IHttpContextAccessor _HttpContextAccessor)
         {
-            _CriterionRepository = CriterionRepository;
-            _CriterionAttachmentRepository = CriterionAttachmentRepository;
-            _FinalArbitrationScoreRepository = FinalArbitrationScoreRepository;
-            _FinalArbitrationRepository = FinalArbitrationRepository;
-            _CriterionItemRepository = CriterionItemRepository;
-            _CriterionItemAttachmentRepository = CriterionItemAttachmentRepository;
-            _ChairmanNotesOnFinalArbitrationScoreRepository = ChairmanNotesOnFinalArbitrationScoreRepository;
-            _ChairmanNotesOnInitialArbitrationRepository = ChairmanNotesOnInitialArbitrationRepository;
-            _ArbitratorRepository = ArbitratorRepository;
-            _UserRoleRepository = UserRoleRepository;
-            _JwtProvider = JwtProvider;
+            this._CriterionRepository = _CriterionRepository;
+            this._CriterionAttachmentRepository = _CriterionAttachmentRepository;
+            this._FinalArbitrationScoreRepository = _FinalArbitrationScoreRepository;
+            this._FinalArbitrationRepository = _FinalArbitrationRepository;
+            this._CriterionItemRepository = _CriterionItemRepository;
+            this._CriterionItemAttachmentRepository = _CriterionItemAttachmentRepository;
+            this._ChairmanNotesOnFinalArbitrationScoreRepository = _ChairmanNotesOnFinalArbitrationScoreRepository;
+            this._ChairmanNotesOnInitialArbitrationRepository = _ChairmanNotesOnInitialArbitrationRepository;
+            this._ArbitratorRepository = _ArbitratorRepository;
+            this._UserRoleRepository = _UserRoleRepository;
+            this._DynamicAttributeValueRepository = _DynamicAttributeValueRepository;
+            this._UserNoteOnFormForArbitrationRepository = _UserNoteOnFormForArbitrationRepository;
+            this._ComitteeArbitratorRepository = _ComitteeArbitratorRepository;
+            this._ComitteeOfficerRepository = _ComitteeOfficerRepository;
+            this._UserCategoryRepository = _UserCategoryRepository;
+            this._JwtProvider = _JwtProvider;
+            this._HttpContextAccessor = _HttpContextAccessor;
         }
         public async Task<BaseResponse<GetFinalArbitrationByIdMainDto>> 
             Handle(GetFinalArbitrationByIdQuery Request, CancellationToken cancellationToken)
         {
             string ResponseMessage = string.Empty;
+
+            bool isHttps = _HttpContextAccessor.HttpContext!.Request.IsHttps;
+
+            string WWWRootFilePath = isHttps
+                ? $"https://{_HttpContextAccessor.HttpContext?.Request.Host.Value}"
+                : $"http://{_HttpContextAccessor.HttpContext?.Request.Host.Value}";
 
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
@@ -136,6 +162,28 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
 
             List<MainCriterionForFinalArbitrationScoreDto> FullResponse = new List<MainCriterionForFinalArbitrationScoreDto>();
 
+            List<ComitteeArbitrator> ArbitratorCommitteesIds = new List<ComitteeArbitrator>();
+            List<int> ComitteeOfficerEntities = new List<int>();
+
+            if (Request.asNormalArbitrator)
+            {
+                ArbitratorCommitteesIds = await _ComitteeArbitratorRepository
+                    .Where(x => x.ArbitratorId == ArbitratorEntity!.Id)
+                    .ToListAsync();
+
+                ComitteeOfficerEntities = await _ComitteeOfficerRepository
+                    .Where(x => ArbitratorCommitteesIds.Select(y => y.CommitteeId).Contains(x.CommitteeId))
+                    .Select(x => x.ArbitratorId)
+                    .ToListAsync();
+            }
+            else if (Request.asSubcommitteeOfficer)
+            {
+                ComitteeOfficerEntities = await _ComitteeOfficerRepository
+                    .Where(x => x.ArbitratorId == ArbitratorEntity!.Id)
+                    .Select(x => x.Committee!.ChairmanId)
+                    .ToListAsync();
+            }
+
             foreach (Criterion MainCriterionEntity in MainCriterionEntities)
             {
                 MainCriterionForFinalArbitrationScoreDto MainCriterionForFinalArbitrationScoreDto = new MainCriterionForFinalArbitrationScoreDto()
@@ -182,20 +230,93 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             SubCriterionDto.ArbitrationScore = 0;
                             SubCriterionDto.FinalArbitrationScoreId = 0;
 
-                            SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
-                                .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
-                                .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                            if (Request.asNormalArbitrator &&
+                                ArbitratorCommitteesIds.Any())
+                            {
+                                if (ComitteeOfficerEntities.Any())
                                 {
-                                    Id = x.Id,
-                                    Note = x.Note,
-                                    isFromArbitrationAudit = true,
-                                    CreatedAt = x.CreatedAt,
-                                    ChairmanId = x.ChairmanId,
-                                    ChairmanName = Request.lang == "en"
-                                        ? x.Chairman!.EnglishName
-                                        : x.Chairman!.ArabicName,
-                                    ChairmanEmail = x.Chairman!.Email
-                                }).ToList();
+                                    SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                            ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                                else
+                                {
+                                    List<int> ChairmanIdsForArbitratorCommittees = ArbitratorCommitteesIds
+                                        .Select(x => x.Committee!.ChairmanId)
+                                        .ToList();
+
+                                    SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                            ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                            }
+                            else if (Request.asSubcommitteeOfficer &&
+                                ComitteeOfficerEntities.Any())
+                            {
+                                SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                    .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                        (ComitteeOfficerEntities.Contains(x.ChairmanId) ||
+                                        x.ChairmanId == ArbitratorEntity!.Id))
+                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                    {
+                                        Id = x.Id,
+                                        Note = x.Note,
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
+                                    })
+                                    .OrderBy(x => x.Id)
+                                    .ToList();
+                            }
+                            else if (Request.asChairman != null
+                                ? Request.asChairman.Value
+                                : false)
+                            {
+                                SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                    .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
+                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                    {
+                                        Id = x.Id,
+                                        Note = x.Note,
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
+                                    })
+                                    .OrderBy(x => x.Id)
+                                    .ToList();
+                            }
 
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
                                 .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
@@ -205,7 +326,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                     Id = x.Id,
                                     Name = x.Name,
                                     Description = x.Description,
-                                    AttachementPath = x.AttachementPath
+                                    AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                        ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                        : x.AttachementPath.Replace("\\", "/")
                                 }).ToList();
                         }
                         else
@@ -215,34 +338,150 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                             SubCriterionDto.ArbitrationScore = FinalArbitrationScoreEntitiesForThisSubCriterion.ArbitrationScore;
                             SubCriterionDto.FinalArbitrationScoreId = FinalArbitrationScoreEntitiesForThisSubCriterion.Id;
 
-                            SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
-                                .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisSubCriterion.Id)
-                                .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                            if (Request.asNormalArbitrator &&
+                                ArbitratorCommitteesIds.Any())
+                            {
+                                if (ComitteeOfficerEntities.Any())
                                 {
-                                    Id = x.Id,
-                                    Note = x.Note,
-                                    isFromArbitrationAudit = false,
-                                    CreatedAt = x.CreatedAt,
-                                    ChairmanId = x.ChairmanId,
-                                    ChairmanName = Request.lang == "en"
-                                        ? x.Chairman!.EnglishName
-                                        : x.Chairman!.ArabicName,
-                                    ChairmanEmail = x.Chairman!.Email
-                                }).Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                    SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                            ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                                ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                isFromArbitrationAudit = true,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })).OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                                else
+                                {
+                                    List<int> ChairmanIdsForArbitratorCommittees = ArbitratorCommitteesIds
+                                        .Select(x => x.Committee!.ChairmanId)
+                                        .ToList();
+
+                                    SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                            ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                                ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                isFromArbitrationAudit = true,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })).OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                            }
+                            else if (Request.asSubcommitteeOfficer &&
+                                ComitteeOfficerEntities.Any())
+                            {
+                                SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                    .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                        (ComitteeOfficerEntities.Contains(x.ChairmanId) ||
+                                        x.ChairmanId == ArbitratorEntity!.Id))
+                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                    {
+                                        Id = x.Id,
+                                        Note = x.Note,
+                                        CreatedAt = x.CreatedAt,
+                                        ChairmanId = x.ChairmanId,
+                                        ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                        ChairmanEmail = x.Chairman!.Email
+                                    })
+                                    .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
+                                            (ComitteeOfficerEntities.Contains(x.ChairmanId) ||
+                                            x.ChairmanId == ArbitratorEntity!.Id))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            isFromArbitrationAudit = true,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })).OrderBy(x => x.Id)
+                                    .ToList();
+                            }
+                            else if (Request.asChairman != null
+                                ? Request.asChairman.Value
+                                : false)
+                            {
+                                SubCriterionDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
                                     .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
                                     .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
                                     {
                                         Id = x.Id,
                                         Note = x.Note,
-                                        isFromArbitrationAudit = true,
                                         CreatedAt = x.CreatedAt,
                                         ChairmanId = x.ChairmanId,
                                         ChairmanName = Request.lang == "en"
-                                        ? x.Chairman!.EnglishName
-                                        : x.Chairman!.ArabicName,
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
                                         ChairmanEmail = x.Chairman!.Email
-                                    })).ToList();
-
+                                    })
+                                    .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id)
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            isFromArbitrationAudit = true,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                            ? x.Chairman!.EnglishName
+                                            : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })).OrderBy(x => x.Id)
+                                    .ToList();
+                            }
+                            
                             SubCriterionDto.SubCriterionAttachmanetsDto = CriterionAttachmentEntities
                                 .Where(x => x.CriterionId == SubCriterionEntityForThisMainCriterion.Id &&
                                     x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId)
@@ -251,7 +490,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                     Id = x.Id,
                                     Name = x.Name,
                                     Description = x.Description,
-                                    AttachementPath = x.AttachementPath
+                                    AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                        ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                        : x.AttachementPath.Replace("\\", "/")
                                 }).ToList();
                         }
 
@@ -287,20 +528,91 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                 CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
                                 CriterionItemDto.FinalArbitrationScoreId = 0;
 
-                                CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
-                                    .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
-                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                if (Request.asNormalArbitrator &&
+                                    ArbitratorCommitteesIds.Any())
+                                {
+                                    if (ComitteeOfficerEntities.Any())
                                     {
-                                        Id = x.Id,
-                                        Note = x.Note,
-                                        isFromArbitrationAudit = true,
-                                        CreatedAt = x.CreatedAt,
-                                        ChairmanId = x.ChairmanId,
-                                        ChairmanName = Request.lang == "en"
-                                            ? x.Chairman!.EnglishName
-                                            : x.Chairman!.ArabicName,
-                                        ChairmanEmail = x.Chairman!.Email
-                                    }).ToList();
+                                        CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                                ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })
+                                            .OrderBy(x => x.Id)
+                                            .ToList();
+                                    }
+                                    else
+                                    {
+                                        List<int> ChairmanIdsForArbitratorCommittees = ArbitratorCommitteesIds
+                                            .Select(x => x.Committee!.ChairmanId)
+                                            .ToList();
+
+                                        CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                                ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })
+                                            .OrderBy(x => x.Id)
+                                            .ToList();
+                                    }
+                                }
+                                else if (Request.asSubcommitteeOfficer)
+                                {
+                                    CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                            ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                                else if (Request.asChairman != null
+                                    ? Request.asChairman.Value
+                                    : false)
+                                {
+                                    CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnInitialArbitrationEnttities
+                                        .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .OrderBy(x => x.Id)
+                                        .ToList();
+                                }
 
                                 CriterionItemDto.CriterionItemAttachmanetsDto = CriterionItemAttachmentEntities
                                     .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
@@ -310,7 +622,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                         Id = x.Id,
                                         Name = x.Name,
                                         Description = x.Description,
-                                        AttachementPath = x.AttachementPath
+                                        AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                            : x.AttachementPath.Replace("\\", "/")
                                     }).ToList();
                             }
                             else
@@ -328,36 +642,151 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                                         Id = x.Id,
                                         Name = x.Name,
                                         Description = x.Description,
-                                        AttachementPath = x.AttachementPath
+                                        AttachementPath = x.AttachementPath.Contains("wwwroot")
+                                            ? (WWWRootFilePath + x.AttachementPath.Split("wwwroot")[1]).Replace("\\", "/")
+                                            : x.AttachementPath.Replace("\\", "/")
                                     }).ToList();
 
-                                CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
-                                    .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisCriterionItem.Id)
-                                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                if (Request.asNormalArbitrator &&
+                                    ArbitratorCommitteesIds.Any())
+                                {
+                                    if (ComitteeOfficerEntities.Any())
                                     {
-                                        Id = x.Id,
-                                        Note = x.Note,
-                                        isFromArbitrationAudit = false,
-                                        CreatedAt = x.CreatedAt,
-                                        ChairmanId = x.ChairmanId,
-                                        ChairmanName = Request.lang == "en"
-                                            ? x.Chairman!.EnglishName
-                                            : x.Chairman!.ArabicName,
-                                        ChairmanEmail = x.Chairman!.Email
-                                    }).Concat(ChairmanNotesOnInitialArbitrationEnttities
-                                        .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                        CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
+                                            .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisCriterionItem.Id &&
+                                                ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })
+                                            .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                                .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                                    ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                                .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                                {
+                                                    Id = x.Id,
+                                                    Note = x.Note,
+                                                    isFromArbitrationAudit = true,
+                                                    CreatedAt = x.CreatedAt,
+                                                    ChairmanId = x.ChairmanId,
+                                                    ChairmanName = Request.lang == "en"
+                                                        ? x.Chairman!.EnglishName
+                                                        : x.Chairman!.ArabicName,
+                                                    ChairmanEmail = x.Chairman!.Email
+                                                })).OrderBy(x => x.Id)
+                                            .ToList();
+                                    }
+                                    else
+                                    {
+                                        List<int> ChairmanIdsForArbitratorCommittees = ArbitratorCommitteesIds
+                                            .Select(x => x.Committee!.ChairmanId)
+                                            .ToList();
+
+                                        CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
+                                            .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisCriterionItem.Id &&
+                                                ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })
+                                            .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                                .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                                    ChairmanIdsForArbitratorCommittees.Contains(x.ChairmanId))
+                                                .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                                {
+                                                    Id = x.Id,
+                                                    Note = x.Note,
+                                                    isFromArbitrationAudit = true,
+                                                    CreatedAt = x.CreatedAt,
+                                                    ChairmanId = x.ChairmanId,
+                                                    ChairmanName = Request.lang == "en"
+                                                        ? x.Chairman!.EnglishName
+                                                        : x.Chairman!.ArabicName,
+                                                    ChairmanEmail = x.Chairman!.Email
+                                                })).OrderBy(x => x.Id)
+                                            .ToList();
+                                    }
+                                }
+                                else if (Request.asSubcommitteeOfficer)
+                                {
+                                    CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
+                                        .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisCriterionItem.Id &&
+                                            ComitteeOfficerEntities.Contains(x.ChairmanId))
                                         .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
                                         {
                                             Id = x.Id,
                                             Note = x.Note,
-                                            isFromArbitrationAudit = true,
                                             CreatedAt = x.CreatedAt,
                                             ChairmanId = x.ChairmanId,
                                             ChairmanName = Request.lang == "en"
                                                 ? x.Chairman!.EnglishName
                                                 : x.Chairman!.ArabicName,
                                             ChairmanEmail = x.Chairman!.Email
-                                        })).ToList();
+                                        })
+                                        .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id &&
+                                                ComitteeOfficerEntities.Contains(x.ChairmanId))
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                isFromArbitrationAudit = true,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })).OrderBy(x => x.Id)
+                                        .ToList();
+                                }
+                                else if (Request.asChairman != null
+                                    ? Request.asChairman.Value
+                                    : false)
+                                {
+                                    CriterionItemDto.ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreEntities
+                                        .Where(x => x.FinalArbitrationScoreId == FinalArbitrationScoreEntitiesForThisCriterionItem.Id)
+                                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                        {
+                                            Id = x.Id,
+                                            Note = x.Note,
+                                            CreatedAt = x.CreatedAt,
+                                            ChairmanId = x.ChairmanId,
+                                            ChairmanName = Request.lang == "en"
+                                                ? x.Chairman!.EnglishName
+                                                : x.Chairman!.ArabicName,
+                                            ChairmanEmail = x.Chairman!.Email
+                                        })
+                                        .Concat(ChairmanNotesOnInitialArbitrationEnttities
+                                            .Where(x => x.CriterionItemId == CriterionItemEntityForThisSubCriterion.Id)
+                                            .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                                            {
+                                                Id = x.Id,
+                                                Note = x.Note,
+                                                isFromArbitrationAudit = true,
+                                                CreatedAt = x.CreatedAt,
+                                                ChairmanId = x.ChairmanId,
+                                                ChairmanName = Request.lang == "en"
+                                                    ? x.Chairman!.EnglishName
+                                                    : x.Chairman!.ArabicName,
+                                                ChairmanEmail = x.Chairman!.Email
+                                            })).OrderBy(x => x.Id)
+                                        .ToList();
+                                }
                             }
 
                             SubCriterionDto.SubCriterionItemForFinalArbitrationScoreDtos!.Add(CriterionItemDto);
@@ -368,6 +797,93 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                 }
 
                 FullResponse.Add(MainCriterionForFinalArbitrationScoreDto);
+            }
+
+            DynamicAttributeValue? SubscriberName = await _DynamicAttributeValueRepository
+                .FirstOrDefaultAsync(x => x.RecordId == FinalArbitrationEntity.ProvidedFormId &&
+                    x.DynamicAttribute!.DynamicAttributeSection!.EnglishName.ToLower() == "Main Information".ToLower() &&
+                    x.DynamicAttribute!.EnglishTitle.ToLower() == "Full name (identical to Emirates ID)".ToLower() &&
+                    x.DynamicAttribute!.DynamicAttributeSection!.AttributeTableNameId == 1);
+
+            List<ChairmanNotesOnFinalArbitrationScoreDto> ChairmanNotesOnFinalArbitrationScoreDtos = new List<ChairmanNotesOnFinalArbitrationScoreDto>();
+
+            if (Request.asChairman != null
+                ? Request.asChairman.Value
+                : false)
+            {
+                List<int> ChairmanOfCommitteesIds = await _UserCategoryRepository
+                    .Where(x => x.CategoryId == FinalArbitrationEntity.ProvidedForm!.categoryId &&
+                        x.UserRole!.Role!.EnglishName.ToLower() == "Chairman of Committees".ToLower() &&
+                        x.UserRole!.Role!.ArabicName == "رئيس اللجان")
+                    .Select(x => x.UserRole!.UserId)
+                    .ToListAsync();
+
+                if (ChairmanOfCommitteesIds.Any())
+                {
+                    ChairmanNotesOnFinalArbitrationScoreDtos = await _UserNoteOnFormForArbitrationRepository
+                        .Where(x => x.ArbitrationStep == ArbitrationStep.FinalArbitration &&
+                            x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
+                            (ChairmanOfCommitteesIds.Contains(x.ChairmanId) ||
+                                x.ChairmanId == ArbitratorEntity!.Id))
+                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                        {
+                            Id = x.Id,
+                            Note = x.Note,
+                            ChairmanId = x.ChairmanId,
+                            CreatedAt = x.CreatedAt,
+                            ChairmanEmail = x.Chairman!.Email,
+                            ChairmanName = Request.lang == "en"
+                                ? x.Chairman!.EnglishName
+                                : x.Chairman!.ArabicName
+                        }).ToListAsync();
+                }
+            }
+            else if (Request.asChairmanOfCommittees)
+            {
+                List<int> ChairmanOfCommitteesIds = await _UserCategoryRepository
+                    .Where(x => x.CategoryId == FinalArbitrationEntity.ProvidedForm!.categoryId &&
+                        x.UserRole!.Role!.EnglishName.ToLower() == "Expert".ToLower() &&
+                        x.UserRole!.Role!.ArabicName == "خبير")
+                    .Select(x => x.UserRole!.UserId)
+                    .ToListAsync();
+
+                if (ChairmanOfCommitteesIds.Any())
+                {
+                    ChairmanNotesOnFinalArbitrationScoreDtos = await _UserNoteOnFormForArbitrationRepository
+                        .Where(x => x.ArbitrationStep == ArbitrationStep.FinalArbitration &&
+                            x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
+                            (ChairmanOfCommitteesIds.Contains(x.ChairmanId) ||
+                                x.ChairmanId == ArbitratorEntity!.Id))
+                        .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                        {
+                            Id = x.Id,
+                            Note = x.Note,
+                            ChairmanId = x.ChairmanId,
+                            CreatedAt = x.CreatedAt,
+                            ChairmanEmail = x.Chairman!.Email,
+                            ChairmanName = Request.lang == "en"
+                                ? x.Chairman!.EnglishName
+                                : x.Chairman!.ArabicName
+                        }).ToListAsync();
+                }
+            }
+            else if (Request.asExpert)
+            {
+                ChairmanNotesOnFinalArbitrationScoreDtos = await _UserNoteOnFormForArbitrationRepository
+                    .Where(x => x.ArbitrationStep == ArbitrationStep.FinalArbitration &&
+                        x.ProvidedFormId == FinalArbitrationEntity.ProvidedFormId &&
+                        x.ChairmanId == ArbitratorEntity!.Id)
+                    .Select(x => new ChairmanNotesOnFinalArbitrationScoreDto()
+                    {
+                        Id = x.Id,
+                        Note = x.Note,
+                        ChairmanId = x.ChairmanId,
+                        CreatedAt = x.CreatedAt,
+                        ChairmanEmail = x.Chairman!.Email,
+                        ChairmanName = Request.lang == "en"
+                            ? x.Chairman!.EnglishName
+                            : x.Chairman!.ArabicName
+                    }).ToListAsync();
             }
 
             GetFinalArbitrationByIdMainDto FinalResponse = new GetFinalArbitrationByIdMainDto()
@@ -383,7 +899,9 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Queries.Ge
                     ? (Request.lang == "en"
                         ? FinalArbitrationEntity.DoneArbitrationUser!.EnglishName
                         : FinalArbitrationEntity.DoneArbitrationUser!.ArabicName)
-                    : null
+                    : null,
+                SubscriberName = SubscriberName ? .Value ?? string.Empty,
+                ChairmanNotesOnFinalArbitrationScoreDtos = ChairmanNotesOnFinalArbitrationScoreDtos
             };
 
             return new BaseResponse<GetFinalArbitrationByIdMainDto>(ResponseMessage, true, 200, FinalResponse);

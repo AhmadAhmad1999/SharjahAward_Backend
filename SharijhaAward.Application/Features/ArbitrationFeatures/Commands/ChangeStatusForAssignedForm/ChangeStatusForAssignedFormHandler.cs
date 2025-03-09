@@ -46,6 +46,23 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
 
+            if (DateTime.UtcNow < ArbitrationEntity.ProvidedForm!.Category!.SortingFormsStartDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitration sorting didn't start yet for the category of this form"
+                    : "عملية فرز التحكيم للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+            else if (DateTime.UtcNow > ArbitrationEntity.ProvidedForm!.Category!.SortingFormsEndDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Arbitration sorting has already ended for the category of this form"
+                    : "عملية فرز التحكيم للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             Arbitrator? ArbitratorEntity = await _ArbitratorRepository
                 .FirstOrDefaultAsync(x => x.Id == UserId);
 
@@ -57,6 +74,7 @@ namespace SharijhaAward.Application.Features.ArbitrationFeatures.Commands.Change
 
                 return new BaseResponse<object>(ResponseMessage, false, 404);
             }
+
             TransactionOptions TransactionOptions = new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.ReadCommitted,

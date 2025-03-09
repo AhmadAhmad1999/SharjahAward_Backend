@@ -47,6 +47,35 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
         {
             string ResponseMessage = string.Empty;
 
+            FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
+                        .FirstOrDefaultAsync(x => x.Id == Request.FinalArbitrationId);
+
+            if (FinalArbitrationEntity is null)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Final arbitration is not Found"
+                    : "التحكيم النهائي غير موجود";
+
+                return new BaseResponse<object>(ResponseMessage, false, 404);
+            }
+
+            if (DateTime.UtcNow < FinalArbitrationEntity.ProvidedForm!.Category!.FinalArbitrationStartDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Final arbitration didn't start yet for the category of this form"
+                    : "عملية التحكيم النهائي للفئة الخاصة بهذه الإستمارة لم تبدأ بعد";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+            else if (DateTime.UtcNow > FinalArbitrationEntity.ProvidedForm!.Category!.FinalArbitrationEndDate)
+            {
+                ResponseMessage = Request.lang == "en"
+                    ? "Final arbitration has already ended for the category of this form"
+                    : "عملية التحكيم النهائي للفئة الخاصة بهذه الإستمارة انتهت بالفعل";
+
+                return new BaseResponse<object>(ResponseMessage, false, 400);
+            }
+
             int UserId = int.Parse(_JwtProvider.GetUserIdFromToken(Request.Token!));
 
             Domain.Entities.IdentityModels.User? UserEntity = await _UserRepository
@@ -82,18 +111,6 @@ namespace SharijhaAward.Application.Features.FinalArbitrationFeatures.Commands.C
             {
                 try
                 {
-                    FinalArbitration? FinalArbitrationEntity = await _FinalArbitrationRepository
-                        .FirstOrDefaultAsync(x => x.Id == Request.FinalArbitrationId);
-
-                    if (FinalArbitrationEntity is null)
-                    {
-                        ResponseMessage = Request.lang == "en"
-                            ? "Final arbitration is not Found"
-                            : "التحكيم النهائي غير موجود";
-
-                        return new BaseResponse<object>(ResponseMessage, false, 404);
-                    }
-
                     foreach (CreateFinalArbitrationScoreMainCommand CreateFinalArbitrationScoreMainCommand in 
                         Request.CreateFinalArbitrationScoreMainCommand)
                     {
